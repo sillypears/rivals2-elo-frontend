@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.superscript {
+  font-size: 0.7em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.positive {
+  color: limegreen
+}
+
+.negative {
+  color: maroon
+}
