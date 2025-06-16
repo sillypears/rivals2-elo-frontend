@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --host --port 8006",
+    "docker:build": "docker build . -t rivals2-elo-fend",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",

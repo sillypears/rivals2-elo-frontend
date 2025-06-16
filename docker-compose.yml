@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+
+  rivals-elo-fend:
+    build: ./
+    container_name: rivals2-elo-fend
+    ports:
+      - "8006:8006"
+
+
