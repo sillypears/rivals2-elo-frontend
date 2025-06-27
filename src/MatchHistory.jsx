@@ -27,7 +27,7 @@ function MatchCard({ match }) {
 export default function App() {
   const [matches, setMatches] = useState([]);
   const wsRef = useRef(null);
-  
+
   const fetchMatches = () => {
     fetch('http://192.168.1.30:8005/matches')
       .then((res) => res.json())
@@ -47,21 +47,29 @@ export default function App() {
     };
 
     ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === "new_match") {
-        console.log("Got new matches")
-        fetchMatches();
-      }
-    };
+      try {
+        // Skip empty messages or non-JSON
+        if (!event.data || event.data.trim().charAt(0) !== '{') {
+          console.log("ping", event.data);
+          return;
+        }
+        const message = JSON.parse(event.data);
+        if (message.type === "new_match") {
+          console.log("Got new matches")
+          fetchMatches();
+        }
+       } catch (err) {
+        console.warn(`couldn't parse ws: `, err)
+      }};
 
-    ws.onerror = (err) => {
-      console.error("websocket error", err);
-    };
+      ws.onerror = (err) => {
+        console.error("websocket error", err);
+      };
 
-    ws.onclose = () => {
-      ws.close();
-    };
-  }, []);
+      ws.onclose = () => {
+        ws.close();
+      };
+    }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">

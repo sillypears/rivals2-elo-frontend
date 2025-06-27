@@ -1,0 +1,345 @@
+import {
+    useReactTable,
+    getCoreRowModel,
+    getPaginationRowModel,
+    flexRender,
+    createColumnHelper,
+} from '@tanstack/react-table';
+import { useEffect, useMemo, useState } from 'react';
+
+const columnHelper = createColumnHelper();
+
+export default function MatchDataTable({ matches, onCellUpdate }) {
+    const [pageSize, setPageSize] = useState(10);
+    const [pageIndex, setPageIndex] = useState(0);
+
+    // 🔍 Detect max number of games in the data
+    const maxGames = useMemo(() => {
+        let max = 0;
+        for (const match of matches) {
+            const count = Object.keys(match).filter(k => k.startsWith('game_') && k.includes('_winner')).length;
+            max = Math.max(max, count);
+        }
+        return max;
+    }, [matches]);
+
+    const baseColumns = [
+        columnHelper.accessor('ranked_game_number', { header: 'Game #' }),
+        // columnHelper.accessor('match_date', {
+        //     header: 'Date',
+        //     cell: info => {
+        //         const rawDate = new Date(info.getValue());
+        //         const displayDate = rawDate.toLocaleString();
+
+        //         return (
+        //             <span
+        //                 className="block truncate max-w-[140px]"
+        //                 title={displayDate}
+        //             >
+        //                 {displayDate}
+        //             </span>
+        //         );
+        //     },
+        // }),
+
+        columnHelper.accessor('match_win', {
+            header: 'Result',
+            cell: info => info.getValue() ? 'Win' : 'Loss',
+        }),
+        columnHelper.accessor('elo_rank_old', { header: 'ELO Before' }),
+        columnHelper.accessor('elo_rank_new', { header: 'ELO After' }),
+        columnHelper.accessor('elo_change', {
+            header: 'ELO Δ',
+            cell: info => {
+                const val = info.getValue();
+                return (
+                    <span className={val > 0 ? 'text-green-600' : 'text-red-600'}>
+                        {val > 0 ? `+${val}` : val}
+                    </span>
+                );
+            },
+        }),
+        columnHelper.accessor('opponent_elo', {
+            header: 'Opponent ELO',
+            cell: ({ row, getValue }) => {
+                const rankedGameNumber = row.original.ranked_game_number;
+                const externalValue = getValue();
+
+                const [editing, setEditing] = useState(false);
+                const [value, setValue] = useState(externalValue);
+                const [originalValue, setOriginalValue] = useState(externalValue);
+
+                // 🔄 Update local state when external value changes
+                useEffect(() => {
+                    setValue(externalValue);
+                    setOriginalValue(externalValue);
+                }, [externalValue]);
+
+                const handleBlur = () => {
+                    setEditing(false);
+                    if (value === originalValue) return;
+
+                    fetch('http://192.168.1.30:8005/update-match/', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            game_number: rankedGameNumber,
+                            key: 'opponent_elo',
+                            value: value,
+                        }),
+                    })
+                        .then(res => {
+                            if (!res.ok) throw new Error("Bad response");
+                            return res.json();
+                        })
+                        .then(data => {
+                            console.log("Updated:", data);
+                            setOriginalValue(value);
+                        })
+                        .catch(err => {
+                            console.error("Update failed:", err);
+                            setValue(originalValue);
+                            alert("Update failed. Reverting.");
+                        });
+                };
+
+                return editing ? (
+                    <input
+                        type="number"
+                        className="w-20 text-sm p-1 border rounded"
+                        autoFocus
+                        value={value}
+                        onChange={e => setValue(Number(e.target.value))}
+                        onBlur={handleBlur}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') e.target.blur();
+                        }}
+                    />
+                ) : (
+                    <span
+                        className="cursor-pointer hover:underline"
+                        onClick={() => setEditing(true)}
+                        title="Click to edit"
+                    >
+                        {value}
+                    </span>
+                );
+            }
+
+        }),
+        columnHelper.accessor('win_streak_value', { header: 'Win Streak' }),
+    ];
+    const gameColumns = [];
+    for (let i = 1; i <= maxGames; i++) {
+        gameColumns.push(
+            columnHelper.accessor(`game_${i}_char_pick`, {
+                header: `Game ${i} - My Char`,
+                cell: info => {
+                    const val = info.getValue();
+                    const row = info.row.original;
+                    const gameKey = `game_${i}_char_pick`;
+                    const gameNumber = row.ranked_game_number;
+
+                    return (
+                        <select
+                            className="bg-white text-black rounded px-1"
+                            value={val ?? -1}
+                            onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                if (newVal !== val && onCellUpdate) {
+                                    onCellUpdate(gameNumber, gameKey, newVal);
+                                }
+                            }}
+                        >
+                            <option value={-1}>N/A</option>
+                            <option value={1}>Forsburn</option>
+                            <option value={2}>Loxodont</option>
+                            <option value={3}>Clairen</option>
+                            <option value={4}>Zetterburn</option>
+                            <option value={5}>Wrastor</option>
+                            <option value={6}>Fleet</option>
+                            <option value={7}>Absa</option>
+                            <option value={8}>Olympia</option>
+                            <option value={9}>Maypul</option>
+                            <option value={10}>Kragg</option>
+                            <option value={11}>Ranno</option>
+                            <option value={12}>Orcane</option>
+                            <option value={13}>Etalus</option>
+                        </select>
+                    );
+                }
+            }),
+            columnHelper.accessor(`game_${i}_opponent_pick`, {
+                header: `Game ${i} - Opponent Char`,
+                cell: info => {
+                    const val = info.getValue();
+                    const row = info.row.original;
+                    const gameKey = `game_${i}_opponent_pick`;
+                    const gameNumber = row.ranked_game_number;
+
+                    return (
+                        <select
+                            className="bg-white text-black rounded px-1"
+                            value={val ?? -1}
+                            onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                if (newVal !== val && onCellUpdate) {
+                                    onCellUpdate(gameNumber, gameKey, newVal);
+                                }
+                            }}
+                        >
+                            <option value={-1}>N/A</option>
+                            <option value={1}>Forsburn</option>
+                            <option value={2}>Loxodont</option>
+                            <option value={3}>Clairen</option>
+                            <option value={4}>Zetterburn</option>
+                            <option value={5}>Wrastor</option>
+                            <option value={6}>Fleet</option>
+                            <option value={7}>Absa</option>
+                            <option value={8}>Olympia</option>
+                            <option value={9}>Maypul</option>
+                            <option value={10}>Kragg</option>
+                            <option value={11}>Ranno</option>
+                            <option value={12}>Orcane</option>
+                            <option value={13}>Etalus</option>
+                        </select>
+                    );
+                }
+            }),
+            columnHelper.accessor(`game_${i}_stage`, {
+                header: `Game ${i} - Stage`,
+                cell: info => {
+                    const val = info.getValue();
+                    const row = info.row.original;
+                    const gameKey = `game_${i}_stage`;
+                    const gameNumber = row.ranked_game_number;
+
+                    return (
+                        <select
+                            className="bg-white text-black rounded px-1"
+                            value={val ?? -1}
+                            onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                if (newVal !== val && onCellUpdate) {
+                                    onCellUpdate(gameNumber, gameKey, newVal);
+                                }
+                            }}
+                        >
+                            <option value={-1}>N/A</option>
+                            <option value={1}>Aetherian Forest</option>
+                            <option value={2}>Godai Delta</option>
+                            <option value={3}>Hodojo</option>
+                            <option value={4}>Julesvale</option>
+                            <option value={5}>Merchant Port</option>
+                            <option value={6}>Air Armada</option>
+                            <option value={7}>Fire Capital</option>
+                            <option value={8}>Hyberborean Harbor</option>
+                            <option value={9}>Rock Wall</option>
+                            <option value={10}>Tempest Peak</option>
+                        </select>
+                    );
+                }
+            }),
+            columnHelper.accessor(`game_${i}_winner`, {
+                header: `Game ${i} - Winner`,
+                cell: info => {
+                    const val = info.getValue();
+                    const row = info.row.original;
+                    const gameKey = `game_${i}_winner`;
+                    const gameNumber = row.ranked_game_number;
+
+                    return (
+                        <select
+                            className="bg-white text-black rounded px-1"
+                            value={val ?? -1}
+                            onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                if (newVal !== val && onCellUpdate) {
+                                    onCellUpdate(gameNumber, gameKey, newVal);
+                                }
+                            }}
+                        >
+                            <option value={-1}>N/A</option>
+                            <option value={1}>Me</option>
+                            <option value={2}>Opponent</option>
+                        </select>
+                    );
+                }
+            })
+        );
+    }
+
+    const columns = useMemo(() => [...baseColumns, ...gameColumns], [maxGames]);
+
+    const table = useReactTable({
+        data: matches,
+        columns,
+        pageCount: Math.ceil(matches.length / pageSize),
+        state: {
+            pagination: {
+                pageIndex,
+                pageSize,
+            },
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onPaginationChange: updater => {
+            const next = typeof updater === 'function' ? updater({ pageIndex, pageSize }) : updater;
+            setPageIndex(next.pageIndex ?? 0);
+            setPageSize(next.pageSize ?? 10);
+        },
+    });
+
+    return (
+        <div className="overflow-x-auto bg-white text-black p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-4">Match History</h2>
+            <table className="min-w-full border text-sm">
+                <thead>
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id} className="bg-gray-100">
+                            {headerGroup.headers.map(header => (
+                                <th key={header.id} className="p-2 border text-left">
+                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody>
+                    {table.getRowModel().rows.map(row => (
+                        <tr key={row.id} className="odd:bg-gray-50 even:bg-white">
+                            {row.getVisibleCells().map(cell => (
+                                <td key={cell.id} id={cell.id} ranked_game_number={cell.ranked_game_no} className="p-2 border">
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* Pagination controls */}
+            <div className="flex justify-left items-center mt-4">
+                <div>
+                    Page {pageIndex + 1} of {table.getPageCount()}
+                </div>
+                <div className="space-x-2">
+                    <button
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Prev
+                    </button>
+                    <button
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
