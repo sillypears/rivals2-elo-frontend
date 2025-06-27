@@ -6,14 +6,29 @@ import {
     createColumnHelper,
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
+import { fetchCharacters, fetchStages } from '../utils/api';
 
 const columnHelper = createColumnHelper();
 
 export default function MatchDataTable({ matches, onCellUpdate }) {
     const [pageSize, setPageSize] = useState(10);
     const [pageIndex, setPageIndex] = useState(0);
+    const [characters, setCharacters] = useState([]);
+    const [stages, setStages] = useState([]);
+    useEffect(() => {
+        fetchCharacters().then(setCharacters);
+        fetchStages().then(setStages);
+    }, []);
 
-    // 🔍 Detect max number of games in the data
+    const characterMap = useMemo(() =>
+        Object.fromEntries(characters.map(c => [c.id, c.display_name])),
+        [characters]
+    );
+
+    const stageMap = useMemo(() =>
+        Object.fromEntries(stages.map(s => [s.id, s.display_name])),
+        [stages]
+    );
     const maxGames = useMemo(() => {
         let max = 0;
         for (const match of matches) {
@@ -22,26 +37,11 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         }
         return max;
     }, [matches]);
+    const columns = useMemo(() => {
+    if (characters.length === 0 || stages.length === 0) return [];
 
     const baseColumns = [
         columnHelper.accessor('ranked_game_number', { header: 'Game #' }),
-        // columnHelper.accessor('match_date', {
-        //     header: 'Date',
-        //     cell: info => {
-        //         const rawDate = new Date(info.getValue());
-        //         const displayDate = rawDate.toLocaleString();
-
-        //         return (
-        //             <span
-        //                 className="block truncate max-w-[140px]"
-        //                 title={displayDate}
-        //             >
-        //                 {displayDate}
-        //             </span>
-        //         );
-        //     },
-        // }),
-
         columnHelper.accessor('match_win', {
             header: 'Result',
             cell: info => info.getValue() ? 'Win' : 'Loss',
@@ -64,12 +64,10 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
             cell: ({ row, getValue }) => {
                 const rankedGameNumber = row.original.ranked_game_number;
                 const externalValue = getValue();
-
                 const [editing, setEditing] = useState(false);
                 const [value, setValue] = useState(externalValue);
                 const [originalValue, setOriginalValue] = useState(externalValue);
 
-                // 🔄 Update local state when external value changes
                 useEffect(() => {
                     setValue(externalValue);
                     setOriginalValue(externalValue);
@@ -78,7 +76,6 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 const handleBlur = () => {
                     setEditing(false);
                     if (value === originalValue) return;
-
                     fetch('http://192.168.1.30:8005/update-match/', {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
@@ -92,10 +89,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             if (!res.ok) throw new Error("Bad response");
                             return res.json();
                         })
-                        .then(data => {
-                            console.log("Updated:", data);
-                            setOriginalValue(value);
-                        })
+                        .then(() => setOriginalValue(value))
                         .catch(err => {
                             console.error("Update failed:", err);
                             setValue(originalValue);
@@ -125,10 +119,10 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     </span>
                 );
             }
-
         }),
         columnHelper.accessor('win_streak_value', { header: 'Win Streak' }),
     ];
+
     const gameColumns = [];
     for (let i = 1; i <= maxGames; i++) {
         gameColumns.push(
@@ -144,30 +138,21 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                         <select
                             className="bg-white text-black rounded px-1"
                             value={val ?? -1}
-                            onChange={(e) => {
+                            onChange={e => {
                                 const newVal = parseInt(e.target.value);
                                 if (newVal !== val && onCellUpdate) {
                                     onCellUpdate(gameNumber, gameKey, newVal);
                                 }
                             }}
                         >
-                            <option value={-1}>N/A</option>
-                            <option value={1}>Forsburn</option>
-                            <option value={2}>Loxodont</option>
-                            <option value={3}>Clairen</option>
-                            <option value={4}>Zetterburn</option>
-                            <option value={5}>Wrastor</option>
-                            <option value={6}>Fleet</option>
-                            <option value={7}>Absa</option>
-                            <option value={8}>Olympia</option>
-                            <option value={9}>Maypul</option>
-                            <option value={10}>Kragg</option>
-                            <option value={11}>Ranno</option>
-                            <option value={12}>Orcane</option>
-                            <option value={13}>Etalus</option>
+                            {characters.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.display_name}
+                                </option>
+                            ))}
                         </select>
                     );
-                }
+                },
             }),
             columnHelper.accessor(`game_${i}_opponent_pick`, {
                 header: `Game ${i} - Opponent Char`,
@@ -181,30 +166,21 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                         <select
                             className="bg-white text-black rounded px-1"
                             value={val ?? -1}
-                            onChange={(e) => {
+                            onChange={e => {
                                 const newVal = parseInt(e.target.value);
                                 if (newVal !== val && onCellUpdate) {
                                     onCellUpdate(gameNumber, gameKey, newVal);
                                 }
                             }}
                         >
-                            <option value={-1}>N/A</option>
-                            <option value={1}>Forsburn</option>
-                            <option value={2}>Loxodont</option>
-                            <option value={3}>Clairen</option>
-                            <option value={4}>Zetterburn</option>
-                            <option value={5}>Wrastor</option>
-                            <option value={6}>Fleet</option>
-                            <option value={7}>Absa</option>
-                            <option value={8}>Olympia</option>
-                            <option value={9}>Maypul</option>
-                            <option value={10}>Kragg</option>
-                            <option value={11}>Ranno</option>
-                            <option value={12}>Orcane</option>
-                            <option value={13}>Etalus</option>
+                            {characters.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.display_name}
+                                </option>
+                            ))}
                         </select>
                     );
-                }
+                },
             }),
             columnHelper.accessor(`game_${i}_stage`, {
                 header: `Game ${i} - Stage`,
@@ -218,27 +194,21 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                         <select
                             className="bg-white text-black rounded px-1"
                             value={val ?? -1}
-                            onChange={(e) => {
+                            onChange={e => {
                                 const newVal = parseInt(e.target.value);
                                 if (newVal !== val && onCellUpdate) {
                                     onCellUpdate(gameNumber, gameKey, newVal);
                                 }
                             }}
                         >
-                            <option value={-1}>N/A</option>
-                            <option value={1}>Aetherian Forest</option>
-                            <option value={2}>Godai Delta</option>
-                            <option value={3}>Hodojo</option>
-                            <option value={4}>Julesvale</option>
-                            <option value={5}>Merchant Port</option>
-                            <option value={6}>Air Armada</option>
-                            <option value={7}>Fire Capital</option>
-                            <option value={8}>Hyberborean Harbor</option>
-                            <option value={9}>Rock Wall</option>
-                            <option value={10}>Tempest Peak</option>
+                            {stages.map(s => (
+                                <option key={s.id} value={s.id}>
+                                    {s.display_name}
+                                </option>
+                            ))}
                         </select>
                     );
-                }
+                },
             }),
             columnHelper.accessor(`game_${i}_winner`, {
                 header: `Game ${i} - Winner`,
@@ -252,7 +222,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                         <select
                             className="bg-white text-black rounded px-1"
                             value={val ?? -1}
-                            onChange={(e) => {
+                            onChange={e => {
                                 const newVal = parseInt(e.target.value);
                                 if (newVal !== val && onCellUpdate) {
                                     onCellUpdate(gameNumber, gameKey, newVal);
@@ -264,12 +234,13 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             <option value={2}>Opponent</option>
                         </select>
                     );
-                }
+                },
             })
         );
     }
 
-    const columns = useMemo(() => [...baseColumns, ...gameColumns], [maxGames]);
+    return [...baseColumns, ...gameColumns];
+}, [characters, stages, maxGames, onCellUpdate]);
 
     const table = useReactTable({
         data: matches,
