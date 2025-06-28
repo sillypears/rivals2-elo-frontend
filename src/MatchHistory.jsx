@@ -3,21 +3,45 @@ import { useEffect, useState, useRef } from 'react';
 function MatchCard({ match }) {
   return (
     <div className="relative bg-gradient-to-b from-orange-300 to-blue-500 text-white rounded-2xl shadow-lg p-4">
-      <div className="absolute top-2 right-2 text-l">{match.elo_change > 0 ? '👍' : '👎'}</div>
+      {/* <div className="absolute top-2 right-2 text-l">{match.elo_change > 0 ? '👍' : '👎'}</div> */}
+
+      {/* 🧠 Character icon */}
+      <div className="mb-2 flex items-center gap-2">
+        <div className="absolute top-2 right-2 flex items-center gap-1">
+          <img
+            src={`/images/chars/${match.game_1_opponent_pick_image}.png`}
+            alt={match.game_1_opponent_pick_name}
+            onError={(e) => { e.target.src = '/images/chars/na.png'; }}
+            className={`w-8 h-8 object-contain ${match.match_win ? 'grayscale' : ''}`}
+            title={match.game_1_opponent_pick_name}
+          />
+          <span className="text-lg">
+            {match.elo_change > 0 ? '👍' : '👎'}
+          </span>
+        </div>
+      </div>
+
       <div className="text-lg font-bold text-black">Game #{match.ranked_game_number}</div>
       <div className="text-sm text-gray-200">Date: {new Date(`${match.match_date}Z`).toLocaleString("en-US", { timeZone: "America/New_York" })}</div>
+
       <div className="mt-2">
-        <span className="font-semibold text-black">ELO:</span> {match.elo_rank_old}<span class={`superscript ${match.elo_change >= 0 ? 'positive' : 'negative'}`}>{match.elo_change >= 0 ? '+' : ''}{match.elo_change}</span> → {match.elo_rank_new}
+        <span className="font-semibold text-black">ELO:</span> {match.elo_rank_old}
+        <span className={`superscript ${match.elo_change >= 0 ? 'positive' : 'negative'}`}>
+          {match.elo_change >= 0 ? '+' : ''}{match.elo_change}
+        </span> → {match.elo_rank_new}
       </div>
+
       <div>
         <span className="font-semibold text-black">Opponent ELO:</span> {match.opponent_elo}
         {match.opponent_estimated_elo > -1 && (
           <span className="superscript"> ({match.opponent_estimated_elo})</span>
         )}
       </div>
+
       <div>
         <span className="font-semibold text-black">Total Wins:</span> {match.total_wins}
       </div>
+
       {match.win_streak_value > 0 && (
         <div>
           <span className="font-semibold text-black">Streak:</span> {match.win_streak_value}
@@ -26,6 +50,7 @@ function MatchCard({ match }) {
     </div>
   );
 }
+
 
 export default function App() {
   const [matches, setMatches] = useState([]);

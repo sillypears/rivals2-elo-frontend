@@ -143,52 +143,68 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                         const row = info.row.original;
                         const gameKey = `game_${i}_char_pick`;
                         const gameNumber = row.ranked_game_number;
-
+                        const imageKey = row[`game_${i}_char_pick_image`] || 'na';
                         return (
-                            <select
-                                className="bg-white text-black rounded px-1"
-                                value={val ?? -1}
-                                onChange={e => {
-                                    const newVal = parseInt(e.target.value);
-                                    if (newVal !== val && onCellUpdate) {
-                                        onCellUpdate(gameNumber, gameKey, newVal);
-                                    }
-                                }}
-                            >
-                                {characters.map(c => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.display_name}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="flex items-center gap-2">
+                                <img
+                                    src={`/images/chars/${imageKey}.png`}
+                                    alt={characterMap[val] || 'N/A'}
+                                    onError={e => { e.target.src = '/images/chars/na.png'; }}
+                                    className="w-5 h-5"
+                                />
+                                <select
+                                    className="bg-white text-black rounded px-1"
+                                    value={val ?? -1}
+                                    onChange={e => {
+                                        const newVal = parseInt(e.target.value);
+                                        if (newVal !== val && onCellUpdate) {
+                                            onCellUpdate(gameNumber, gameKey, newVal);
+                                        }
+                                    }}
+                                >
+                                    {characters.map(c => (
+                                        <option key={c.id} value={c.id}>
+                                            {c.display_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         );
                     },
                 }),
                 columnHelper.accessor(`game_${i}_opponent_pick`, {
-                    header: `Game ${i} - Opponent Char`,
+                    header: `Game ${i} - Opp Char`,
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
                         const gameKey = `game_${i}_opponent_pick`;
                         const gameNumber = row.ranked_game_number;
-
+                        const imageKey = row[`game_${i}_opponent_pick_image`] || 'na';
                         return (
-                            <select
-                                className="bg-white text-black rounded px-1"
-                                value={val ?? -1}
-                                onChange={e => {
-                                    const newVal = parseInt(e.target.value);
-                                    if (newVal !== val && onCellUpdate) {
-                                        onCellUpdate(gameNumber, gameKey, newVal);
-                                    }
-                                }}
-                            >
-                                {characters.map(c => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.display_name}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="flex items-center gap-2">
+                                <img
+                                    src={`/images/chars/${imageKey}.png`}
+                                    alt={characterMap[val] || 'N/A'}
+                                    onError={e => { e.target.src = '/images/chars/na.png'; }}
+                                    className="w-5 h-5"
+                                />
+                                <select
+                                    className="bg-white text-black rounded px-1"
+                                    value={val ?? -1}
+                                    onChange={e => {
+                                        const newVal = parseInt(e.target.value);
+                                        if (newVal !== val && onCellUpdate) {
+                                            onCellUpdate(gameNumber, gameKey, newVal);
+                                        }
+                                    }}
+                                >
+                                    {characters.map(c => (
+                                        <option key={c.id} value={c.id}>
+                                            {c.display_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         );
                     },
                 }),
@@ -279,7 +295,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id} className="bg-gray-100">
                             {headerGroup.headers.map(header => (
-                                <th key={header.id} className="p-2 border text-left">
+                                <th key={header.id} className="p-2 border text-left text-md">
                                     {flexRender(header.column.columnDef.header, header.getContext())}
                                 </th>
                             ))}
