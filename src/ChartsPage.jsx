@@ -19,6 +19,7 @@ import {
 import 'chartjs-chart-financial';
 
 import EloHistogram from './Charts/EloHistogram';
+import GameCountDoughnut from './Charts/GameCount';
 
 ChartJS.register(
     ScatterController,
@@ -239,8 +240,9 @@ export default function ChartsPage() {
                 <CombinedEloChart combinedEloData={CombinedEloData} />
                 <CandlestickEloChart candlestickData={candlestickData} />
             </div>
-            <div className="grid grid-cols-2 gap-6 p-2">
+            <div className="grid grid-cols-2 gap-4 p-2">
                 <EloHistogram matches={[...winStats, ...loseStats]} />
+                <GameCountDoughnut />
             </div>
         </div>
     );
