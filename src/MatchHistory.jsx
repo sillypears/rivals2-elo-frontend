@@ -11,6 +11,9 @@ function MatchCard({ match }) {
       </div>
       <div>
         <span className="font-semibold text-black">Opponent ELO:</span> {match.opponent_elo}
+        {match.opponent_estimated_elo > -1 && (
+          <span className="superscript"> ({match.opponent_estimated_elo})</span>
+        )}
       </div>
       <div>
         <span className="font-semibold text-black">Total Wins:</span> {match.total_wins}
@@ -58,18 +61,19 @@ export default function App() {
           console.log("Got new matches")
           fetchMatches();
         }
-       } catch (err) {
+      } catch (err) {
         console.warn(`couldn't parse ws: `, err)
-      }};
+      }
+    };
 
-      ws.onerror = (err) => {
-        console.error("websocket error", err);
-      };
+    ws.onerror = (err) => {
+      console.error("websocket error", err);
+    };
 
-      ws.onclose = () => {
-        ws.close();
-      };
-    }, []);
+    ws.onclose = () => {
+      ws.close();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">

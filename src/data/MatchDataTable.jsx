@@ -38,209 +38,219 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         return max;
     }, [matches]);
     const columns = useMemo(() => {
-    if (characters.length === 0 || stages.length === 0) return [];
+        if (characters.length === 0 || stages.length === 0) return [];
 
-    const baseColumns = [
-        columnHelper.accessor('ranked_game_number', { header: 'Game #' }),
-        columnHelper.accessor('match_win', {
-            header: 'Result',
-            cell: info => info.getValue() ? 'Win' : 'Loss',
-        }),
-        columnHelper.accessor('elo_rank_old', { header: 'ELO Before' }),
-        columnHelper.accessor('elo_rank_new', { header: 'ELO After' }),
-        columnHelper.accessor('elo_change', {
-            header: 'ELO Δ',
-            cell: info => {
-                const val = info.getValue();
-                return (
-                    <span className={val > 0 ? 'text-green-600' : 'text-red-600'}>
-                        {val > 0 ? `+${val}` : val}
-                    </span>
-                );
-            },
-        }),
-        columnHelper.accessor('opponent_elo', {
-            header: 'Opponent ELO',
-            cell: ({ row, getValue }) => {
-                const rankedGameNumber = row.original.ranked_game_number;
-                const externalValue = getValue();
-                const [editing, setEditing] = useState(false);
-                const [value, setValue] = useState(externalValue);
-                const [originalValue, setOriginalValue] = useState(externalValue);
+        const baseColumns = [
+            columnHelper.accessor('ranked_game_number', { header: 'Game #' }),
+            columnHelper.accessor('match_win', {
+                header: 'Result',
+                cell: info => info.getValue() ? 'Win' : 'Loss',
+            }),
+            columnHelper.accessor('elo_rank_old', {
+                header: 'ELO Before',
+                cell: ({ row }) => {
+                    const oldElo = row.original.elo_rank_old;
+                    const delta = row.original.elo_change;
 
-                useEffect(() => {
-                    setValue(externalValue);
-                    setOriginalValue(externalValue);
-                }, [externalValue]);
+                    return (
+                        <span className="relative">
+                            {oldElo}
+                            {delta !== 0 && (
+                                <sup
+                                    className={`ml-1 text-xs ${delta > 0 ? 'text-green-600' : 'text-red-600'
+                                        }`}
+                                >
+                                    {delta > 0 ? `+${delta}` : delta}
+                                </sup>
+                            )}
+                        </span>
+                    );
+                },
+            }),
+            columnHelper.accessor('elo_rank_new', { header: 'ELO After' }),
+            columnHelper.accessor('opponent_elo', {
+                header: 'Opponent ELO',
+                cell: ({ row, getValue }) => {
+                    const rankedGameNumber = row.original.ranked_game_number;
+                    const externalValue = getValue();
+                    const [editing, setEditing] = useState(false);
+                    const [value, setValue] = useState(externalValue);
+                    const [originalValue, setOriginalValue] = useState(externalValue);
 
-                const handleBlur = () => {
-                    setEditing(false);
-                    if (value === originalValue) return;
-                    fetch('http://192.168.1.30:8005/update-match/', {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            game_number: rankedGameNumber,
-                            key: 'opponent_elo',
-                            value: value,
-                        }),
-                    })
-                        .then(res => {
-                            if (!res.ok) throw new Error("Bad response");
-                            return res.json();
+                    useEffect(() => {
+                        setValue(externalValue);
+                        setOriginalValue(externalValue);
+                    }, [externalValue]);
+
+                    const handleBlur = () => {
+                        setEditing(false);
+                        if (value === originalValue) return;
+                        fetch('http://192.168.1.30:8005/update-match/', {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                game_number: rankedGameNumber,
+                                key: 'opponent_elo',
+                                value: value,
+                            }),
                         })
-                        .then(() => setOriginalValue(value))
-                        .catch(err => {
-                            console.error("Update failed:", err);
-                            setValue(originalValue);
-                            alert("Update failed. Reverting.");
-                        });
-                };
+                            .then(res => {
+                                if (!res.ok) throw new Error("Bad response");
+                                return res.json();
+                            })
+                            .then(() => setOriginalValue(value))
+                            .catch(err => {
+                                console.error("Update failed:", err);
+                                setValue(originalValue);
+                                alert("Update failed. Reverting.");
+                            });
+                    };
 
-                return editing ? (
-                    <input
-                        type="number"
-                        className="w-20 text-sm p-1 border rounded"
-                        autoFocus
-                        value={value}
-                        onChange={e => setValue(Number(e.target.value))}
-                        onBlur={handleBlur}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter') e.target.blur();
-                        }}
-                    />
-                ) : (
-                    <span
-                        className="cursor-pointer hover:underline"
-                        onClick={() => setEditing(true)}
-                        title="Click to edit"
-                    >
-                        {value}
-                    </span>
-                );
-            }
-        }),
-        columnHelper.accessor('win_streak_value', { header: 'Win Streak' }),
-    ];
-
-    const gameColumns = [];
-    for (let i = 1; i <= maxGames; i++) {
-        gameColumns.push(
-            columnHelper.accessor(`game_${i}_char_pick`, {
-                header: `Game ${i} - My Char`,
-                cell: info => {
-                    const val = info.getValue();
-                    const row = info.row.original;
-                    const gameKey = `game_${i}_char_pick`;
-                    const gameNumber = row.ranked_game_number;
-
-                    return (
-                        <select
-                            className="bg-white text-black rounded px-1"
-                            value={val ?? -1}
-                            onChange={e => {
-                                const newVal = parseInt(e.target.value);
-                                if (newVal !== val && onCellUpdate) {
-                                    onCellUpdate(gameNumber, gameKey, newVal);
-                                }
+                    return editing ? (
+                        <input
+                            type="number"
+                            className="w-20 text-sm p-1 border rounded"
+                            autoFocus
+                            value={value}
+                            onChange={e => setValue(Number(e.target.value))}
+                            onBlur={handleBlur}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter') e.target.blur();
                             }}
+                        />
+                    ) : (
+                        <span
+                            className="cursor-pointer hover:underline"
+                            onClick={() => setEditing(true)}
+                            title="Click to edit"
                         >
-                            {characters.map(c => (
-                                <option key={c.id} value={c.id}>
-                                    {c.display_name}
-                                </option>
-                            ))}
-                        </select>
+                            {value}
+                        </span>
                     );
-                },
+                }
             }),
-            columnHelper.accessor(`game_${i}_opponent_pick`, {
-                header: `Game ${i} - Opponent Char`,
-                cell: info => {
-                    const val = info.getValue();
-                    const row = info.row.original;
-                    const gameKey = `game_${i}_opponent_pick`;
-                    const gameNumber = row.ranked_game_number;
+            columnHelper.accessor('opponent_estimated_elo', { header: 'Estimated ELO' }),
+            columnHelper.accessor('win_streak_value', { header: 'Win Streak' }),
+        ];
 
-                    return (
-                        <select
-                            className="bg-white text-black rounded px-1"
-                            value={val ?? -1}
-                            onChange={e => {
-                                const newVal = parseInt(e.target.value);
-                                if (newVal !== val && onCellUpdate) {
-                                    onCellUpdate(gameNumber, gameKey, newVal);
-                                }
-                            }}
-                        >
-                            {characters.map(c => (
-                                <option key={c.id} value={c.id}>
-                                    {c.display_name}
-                                </option>
-                            ))}
-                        </select>
-                    );
-                },
-            }),
-            columnHelper.accessor(`game_${i}_stage`, {
-                header: `Game ${i} - Stage`,
-                cell: info => {
-                    const val = info.getValue();
-                    const row = info.row.original;
-                    const gameKey = `game_${i}_stage`;
-                    const gameNumber = row.ranked_game_number;
+        const gameColumns = [];
+        for (let i = 1; i <= maxGames; i++) {
+            gameColumns.push(
+                columnHelper.accessor(`game_${i}_char_pick`, {
+                    header: `Game ${i} - My Char`,
+                    cell: info => {
+                        const val = info.getValue();
+                        const row = info.row.original;
+                        const gameKey = `game_${i}_char_pick`;
+                        const gameNumber = row.ranked_game_number;
 
-                    return (
-                        <select
-                            className="bg-white text-black rounded px-1"
-                            value={val ?? -1}
-                            onChange={e => {
-                                const newVal = parseInt(e.target.value);
-                                if (newVal !== val && onCellUpdate) {
-                                    onCellUpdate(gameNumber, gameKey, newVal);
-                                }
-                            }}
-                        >
-                            {stages.map(s => (
-                                <option key={s.id} value={s.id}>
-                                    {s.display_name}
-                                </option>
-                            ))}
-                        </select>
-                    );
-                },
-            }),
-            columnHelper.accessor(`game_${i}_winner`, {
-                header: `Game ${i} - Winner`,
-                cell: info => {
-                    const val = info.getValue();
-                    const row = info.row.original;
-                    const gameKey = `game_${i}_winner`;
-                    const gameNumber = row.ranked_game_number;
+                        return (
+                            <select
+                                className="bg-white text-black rounded px-1"
+                                value={val ?? -1}
+                                onChange={e => {
+                                    const newVal = parseInt(e.target.value);
+                                    if (newVal !== val && onCellUpdate) {
+                                        onCellUpdate(gameNumber, gameKey, newVal);
+                                    }
+                                }}
+                            >
+                                {characters.map(c => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.display_name}
+                                    </option>
+                                ))}
+                            </select>
+                        );
+                    },
+                }),
+                columnHelper.accessor(`game_${i}_opponent_pick`, {
+                    header: `Game ${i} - Opponent Char`,
+                    cell: info => {
+                        const val = info.getValue();
+                        const row = info.row.original;
+                        const gameKey = `game_${i}_opponent_pick`;
+                        const gameNumber = row.ranked_game_number;
 
-                    return (
-                        <select
-                            className="bg-white text-black rounded px-1"
-                            value={val ?? -1}
-                            onChange={e => {
-                                const newVal = parseInt(e.target.value);
-                                if (newVal !== val && onCellUpdate) {
-                                    onCellUpdate(gameNumber, gameKey, newVal);
-                                }
-                            }}
-                        >
-                            <option value={-1}>N/A</option>
-                            <option value={1}>Me</option>
-                            <option value={2}>Opponent</option>
-                        </select>
-                    );
-                },
-            })
-        );
-    }
+                        return (
+                            <select
+                                className="bg-white text-black rounded px-1"
+                                value={val ?? -1}
+                                onChange={e => {
+                                    const newVal = parseInt(e.target.value);
+                                    if (newVal !== val && onCellUpdate) {
+                                        onCellUpdate(gameNumber, gameKey, newVal);
+                                    }
+                                }}
+                            >
+                                {characters.map(c => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.display_name}
+                                    </option>
+                                ))}
+                            </select>
+                        );
+                    },
+                }),
+                columnHelper.accessor(`game_${i}_stage`, {
+                    header: `Game ${i} - Stage`,
+                    cell: info => {
+                        const val = info.getValue();
+                        const row = info.row.original;
+                        const gameKey = `game_${i}_stage`;
+                        const gameNumber = row.ranked_game_number;
 
-    return [...baseColumns, ...gameColumns];
-}, [characters, stages, maxGames, onCellUpdate]);
+                        return (
+                            <select
+                                className="bg-white text-black rounded px-1"
+                                value={val ?? -1}
+                                onChange={e => {
+                                    const newVal = parseInt(e.target.value);
+                                    if (newVal !== val && onCellUpdate) {
+                                        onCellUpdate(gameNumber, gameKey, newVal);
+                                    }
+                                }}
+                            >
+                                {stages.map(s => (
+                                    <option key={s.id} value={s.id}>
+                                        {s.display_name}
+                                    </option>
+                                ))}
+                            </select>
+                        );
+                    },
+                }),
+                columnHelper.accessor(`game_${i}_winner`, {
+                    header: `Game ${i} - Winner`,
+                    cell: info => {
+                        const val = info.getValue();
+                        const row = info.row.original;
+                        const gameKey = `game_${i}_winner`;
+                        const gameNumber = row.ranked_game_number;
+
+                        return (
+                            <select
+                                className="bg-white text-black rounded px-1"
+                                value={val ?? -1}
+                                onChange={e => {
+                                    const newVal = parseInt(e.target.value);
+                                    if (newVal !== val && onCellUpdate) {
+                                        onCellUpdate(gameNumber, gameKey, newVal);
+                                    }
+                                }}
+                            >
+                                <option value={-1}>N/A</option>
+                                <option value={1}>Me</option>
+                                <option value={2}>Opponent</option>
+                            </select>
+                        );
+                    },
+                })
+            );
+        }
+
+        return [...baseColumns, ...gameColumns];
+    }, [characters, stages, maxGames, onCellUpdate]);
 
     const table = useReactTable({
         data: matches,
