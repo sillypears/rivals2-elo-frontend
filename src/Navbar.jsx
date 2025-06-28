@@ -25,6 +25,12 @@ export default function Navbar() {
                 >
                     Matches
                 </Link>
+                <Link
+                    to="/add-match"
+                    className={location.pathname === "/add-match" ? "text-teal-400" : "hover:text-teal-400"}
+                >
+                    Add
+                </Link>
             </div>
         </nav>
     );
