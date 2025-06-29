@@ -1,0 +1,159 @@
+import { useEffect, useState } from 'react';
+import { fetchCharacters, fetchStages } from './utils/api';
+
+export default function ManualMatchEntry() {
+    const [characters, setCharacters] = useState([]);
+    const [stages, setStages] = useState([]);
+    const [form, setForm] = useState({
+        match_date: new Date().toISOString().slice(0, 16),
+        elo_rank_old: 0,
+        elo_rank_new: 0,
+        elo_change: 0,
+        match_win: 1,
+        match_forfeit: 0,
+        ranked_game_number: 0,
+        total_wins: 0,
+        win_streak_value: 0,
+        opponent_elo: 0,
+        opponent_estimated_elo: -1,
+        opponent_name: '',
+        game_1_char_pick: -1,
+        game_1_opponent_pick: -1,
+        game_1_stage: -1,
+        game_1_winner: -1,
+        game_2_char_pick: -1,
+        game_2_opponent_pick: -1,
+        game_2_stage: -1,
+        game_2_winner: -1,
+        game_3_char_pick: -1,
+        game_3_opponent_pick: -1,
+        game_3_stage: -1,
+        game_3_winner: -1,
+    });
+
+    useEffect(() => {
+        fetchCharacters().then(setCharacters);
+        fetchStages().then(setStages);
+    }, []);
+
+    const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
+
+    const handleStageChange = (gameNum, stageId) => {
+        // const stage = stages.find(s => s.id === stageId);
+        update(`game_${gameNum}_stage`, stageId);
+        // update(`game_${gameNum}_stage_name`, stage?.display_name || '');
+    };
+
+    const handleSubmit = async () => {
+        const response = await fetch('http://192.168.1.30:8005/insert-match', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form),
+        });
+        alert(response.ok ? 'Match submitted!' : 'Submission failed');
+    };
+
+    const gameBlock = (num) => (
+        <div key={num} className="border rounded p-2 text-xs space-y-1">
+            <div className="font-semibold">Game {num}</div>
+            <select value={form[`game_${num}_char_pick`]} onChange={e => update(`game_${num}_char_pick`, +e.target.value)} className="w-full">
+                <option value={-1}>My Char</option>
+                {characters.map(c => <option key={c.id} value={c.id}>{c.display_name}</option>)}
+            </select>
+            <select value={form[`game_${num}_opponent_pick`]} onChange={e => update(`game_${num}_opponent_pick`, +e.target.value)} className="w-full">
+                <option value={-1}>Opponent Char</option>
+                {characters.map(c => <option key={c.id} value={c.id}>{c.display_name}</option>)}
+            </select>
+            <select value={form[`game_${num}_stage`]} onChange={e => handleStageChange(num, +e.target.value)} className="w-full">
+                <option value={-1}>Stage</option>
+                {stages.map(s => <option key={s.id} value={s.id}>{s.display_name}</option>)}
+            </select>
+            <select value={form[`game_${num}_winner`]} onChange={e => update(`game_${num}_winner`, +e.target.value)} className="w-full">
+                <option value={-1}>Winner</option>
+                <option value={1}>Me</option>
+                <option value={2}>Opponent</option>
+            </select>
+        </div>
+    );
+
+    return (
+        <div className="p-4 bg-white rounded shadow text-black max-w-screen-xl mx-auto text-sm space-y-4">
+            <h2 className="text-lg font-bold">Manual Match Entry</h2>
+
+            {/* Horizontal grid of main fields */}
+            <div className="grid grid-cols-4 gap-4">
+                <label className="flex flex-col">
+                    Match Date
+                    <input type="datetime-local" value={form.match_date} onChange={e => update('match_date', e.target.value)} className="p-1 border rounded" />
+                </label>
+                <label className="flex flex-col">
+                    Game #
+                    <input type="number" value={form.ranked_game_number} onChange={e => update('ranked_game_number', +e.target.value)} className="p-1 border rounded" />
+                </label>
+                <label className="flex flex-col">
+                    ELO Before
+                    <input type="number" value={form.elo_rank_old} onChange={e => {
+                        const val = +e.target.value;
+                        update('elo_rank_old', val);
+                        update('elo_rank_new', val + form.elo_change);
+                    }} className="p-1 border rounded" />
+                </label>
+                <label className="flex flex-col">
+                    ELO Change
+                    <input type="number" value={form.elo_change} onChange={e => {
+                        const delta = +e.target.value;
+                        update('elo_change', delta);
+                        update('elo_rank_new', form.elo_rank_old + delta);
+                    }} className="p-1 border rounded" />
+                </label>
+
+                <label className="flex flex-col">
+                    ELO After
+                    <input type="number" value={form.elo_rank_new} disabled className="p-1 border rounded bg-gray-100" />
+                </label>
+                <label className="flex flex-col">
+                    Match Win
+                    <select value={form.match_win} onChange={e => update('match_win', +e.target.value)} className="p-1 border rounded">
+                        <option value={1}>Win</option>
+                        <option value={0}>Loss</option>
+                    </select>
+                </label>
+                <label className="flex flex-col">
+                    Forfeit
+                    <select value={form.match_forfeit} onChange={e => update('match_forfeit', +e.target.value)} className="p-1 border rounded">
+                        <option value={0}>No</option>
+                        <option value={1}>Yes</option>
+                    </select>
+                </label>
+                <label className="flex flex-col">
+                    Opponent Name
+                    <input type="text" value={form.opponent_name} onChange={e => update('opponent_name', e.target.value)} className="p-1 border rounded" />
+                </label>
+
+                <label className="flex flex-col">
+                    Opponent ELO
+                    <input type="number" value={form.opponent_elo} onChange={e => update('opponent_elo', +e.target.value)} className="p-1 border rounded" />
+                </label>
+                <label className="flex flex-col">
+                    Est. ELO
+                    <input type="number" value={form.opponent_estimated_elo} onChange={e => update('opponent_estimated_elo', +e.target.value)} className="p-1 border rounded" />
+                </label>
+                <label className="flex flex-col">
+                    Win Streak
+                    <input type="number" value={form.win_streak_value} onChange={e => update('win_streak_value', +e.target.value)} className="p-1 border rounded" />
+                </label>
+                <label className="flex flex-col">
+                    Total Wins
+                    <input type="number" value={form.total_wins} onChange={e => update('total_wins', +e.target.value)} className="p-1 border rounded" />
+                </label>
+            </div>
+
+            {/* Game Entry */}
+            <div className="grid grid-cols-3 gap-2">{[1, 2, 3].map(gameBlock)}</div>
+
+            <button onClick={handleSubmit} className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mt-4">
+                Submit
+            </button>
+        </div>
+    );
+}
