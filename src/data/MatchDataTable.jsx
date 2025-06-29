@@ -25,10 +25,6 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         [characters]
     );
 
-    const stageMap = useMemo(() =>
-        Object.fromEntries(stages.map(s => [s.id, s.display_name])),
-        [stages]
-    );
     const maxGames = useMemo(() => {
         let max = 0;
         for (const match of matches) {
@@ -76,6 +72,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     const [editing, setEditing] = useState(false);
                     const [value, setValue] = useState(externalValue);
                     const [originalValue, setOriginalValue] = useState(externalValue);
+                    const estimated_elo = row.original.opponent_estimated_elo;
 
                     useEffect(() => {
                         setValue(externalValue);
@@ -117,6 +114,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             onKeyDown={e => {
                                 if (e.key === 'Enter') e.target.blur();
                             }}
+
                         />
                     ) : (
                         <span
@@ -125,11 +123,14 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             title="Click to edit"
                         >
                             {value}
+                            <sup title="Estimated ELO" className="ml-2 text-gray-400">
+                                {estimated_elo > -1 ? `${estimated_elo}` : ''}
+                            </sup>
                         </span>
+
                     );
                 }
             }),
-            columnHelper.accessor('opponent_estimated_elo', { header: 'Estimated ELO' }),
             columnHelper.accessor('win_streak_value', { header: 'Win Streak' }),
         ];
 
@@ -137,7 +138,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         for (let i = 1; i <= maxGames; i++) {
             gameColumns.push(
                 columnHelper.accessor(`game_${i}_char_pick`, {
-                    header: `Game ${i} - My Char`,
+                    header: `Game ${i} Me`,
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
@@ -173,7 +174,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     },
                 }),
                 columnHelper.accessor(`game_${i}_opponent_pick`, {
-                    header: `Game ${i} - Opp Char`,
+                    header: `Game ${i} Opp`,
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
@@ -209,7 +210,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     },
                 }),
                 columnHelper.accessor(`game_${i}_stage`, {
-                    header: `Game ${i} - Stage`,
+                    header: `Game ${i} Stage`,
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
@@ -237,7 +238,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     },
                 }),
                 columnHelper.accessor(`game_${i}_winner`, {
-                    header: `Game ${i} - Winner`,
+                    header: `Game ${i} Winner`,
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
