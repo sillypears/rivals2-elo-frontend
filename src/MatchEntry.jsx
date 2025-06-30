@@ -30,7 +30,23 @@ export default function ManualMatchEntry() {
         game_3_stage: -1,
         game_3_winner: -1,
     });
-
+    const loadLatestMatch = async () => {
+        try {
+            const res = await fetch('http://192.168.1.30:8005/matches/1');
+            const json = await res.json();
+            const data = json[0];
+            setForm(prev => ({
+                ...prev,
+                ranked_game_number: data.ranked_game_number,
+                elo_rank_old: data.elo_rank_new,
+                win_streak_value: data.win_streak_value,
+                total_wins: data.total_wins,
+            }));
+        } catch (err) {
+            alert('Failed to load latest match');
+            console.error(err);
+        }
+    };
     useEffect(() => {
         fetchCharacters().then(setCharacters);
         fetchStages().then(setStages);
@@ -79,8 +95,13 @@ export default function ManualMatchEntry() {
     return (
         <div className="p-4 bg-white rounded shadow text-black max-w-screen-xl mx-auto text-sm space-y-4">
             <h2 className="text-lg font-bold">Manual Match Entry</h2>
+            <button
+                onClick={loadLatestMatch}
+                className="bg-gray-200 border border-gray-400 px-4 py-1 rounded hover:bg-gray-300 text-sm"
+            >
+                Load Latest Match
+            </button>
 
-            {/* Horizontal grid of main fields */}
             <div className="grid grid-cols-4 gap-4">
                 <label className="flex flex-col">
                     Match Date
