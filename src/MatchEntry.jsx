@@ -121,7 +121,7 @@ export default function ManualMatchEntry() {
                 <label className="flex flex-col">
                     Forfeit
                     <select value={form.match_forfeit} onChange={e => update('match_forfeit', +e.target.value)} className="p-1 border rounded">
-                        <option value={0}>No</option>
+                        <option value={0} defaultChecked>No</option>
                         <option value={1}>Yes</option>
                     </select>
                 </label>
