@@ -14,8 +14,15 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 export default function EloHistogram({ matches }) {
     const binSize = 25;
-    const minElo = 750;
-    const maxElo = 1450;
+    const offset = 25; 
+    const [minElo, maxElo] = useMemo(() => {
+        if (!matches || matches.length === 0) return [0, 0];
+
+        const elos = matches.map(m => m.opponent_elo);
+        const min = Math.floor(Math.min(...elos) / binSize) * binSize - offset ;
+        const max = Math.ceil(Math.max(...elos) / binSize) * binSize + offset;
+        return [min, max];
+    }, [matches]);
 
     const histogramData = useMemo(() => {
         const bins = {};

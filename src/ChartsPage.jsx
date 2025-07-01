@@ -52,12 +52,6 @@ const WinLoseElochartOptions = {
     scales: {
         x: {
             type: 'linear',
-            // time: {
-            //     unit: 'year',
-            //     displayFormats: {
-            //         day: 'MMM d',
-            //     }
-            // },
             ticks: {
                 autoSkip: true,
                 display: false,
@@ -72,6 +66,11 @@ const WinLoseElochartOptions = {
 };
 const candlestickOptions = {
     responsive: true,
+    plugins: {
+        legend: {
+            display: false,
+        },
+    },
     scales: {
         x: {
             type: 'linear',
@@ -89,7 +88,9 @@ const candlestickOptions = {
 
 function CandlestickEloChart({ candlestickData }) {
     return (
-        <div className="bg-white rounded-lg p-4 text-black h-96">
+        <div className="bg-white text-black pb-10 pl-6 pt-1 rounded-lg h-96">
+            <h3 className="text-lg font-bold mb-2">Candles</h3>
+
             <Chart type="candlestick" data={candlestickData} options={candlestickOptions} />
         </div>
     )
@@ -192,8 +193,8 @@ export default function ChartsPage() {
     const candlestickData = {
         datasets: [
             {
-                label: 'ELO Range per Match',
-                data: [...stats] 
+                title: 'ELO Progression',
+                data: [...stats]
                     .sort((a, b) => a.ranked_game_number - b.ranked_game_number)
                     .map(match => ({
                         x: match.ranked_game_number,
@@ -201,31 +202,30 @@ export default function ChartsPage() {
                         h: Math.max(match.elo_rank_old, match.opponent_elo),
                         l: Math.min(match.elo_rank_old, match.opponent_elo),
                         c: match.elo_rank_new
-            })),
-            color: {
-                up: '#00ff00',
-                down: '#ff0000',
-                unchanged: '#999999'
-            }
-            }
-        ]
-};
-return (
-    <div className="min-h-screen bg-gray-800 text-white p-6">
-        <h2 className="text-3xl font-bold mb-4">ELO Progression</h2>
-        <div className="grid grid-cols-2 gap-4 p-2">
-            {/* <WinEloChart winEloData={winEloData} />
+                    })),
+                color: {
+                    up: '#00ff00',
+                    down: '#ff0000',
+                    unchanged: '#999999'
+                }
+            }]
+    };
+    return (
+        <div className="min-h-screen bg-gray-800 text-white p-6">
+            <h2 className="text-3xl font-bold mb-4">ELO Progression</h2>
+            <div className="grid grid-cols-2 gap-4 p-2">
+                {/* <WinEloChart winEloData={winEloData} />
                 <LoseEloChart loseEloData={loseEloData} /> */}
-            <CombinedEloChart combinedEloData={CombinedEloData} />
-            <CandlestickEloChart candlestickData={candlestickData} />
+                <CombinedEloChart combinedEloData={CombinedEloData} />
+                <CandlestickEloChart candlestickData={candlestickData} />
+            </div>
+            <div className="grid grid-cols-2 gap-4 p-2">
+                <EloHistogram matches={stats} />
+            </div>
+            <div className="grid grid-cols-2 gap-4 p-2">
+                <CharWinLossChart />
+                <GameCountChart />
+            </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 p-2">
-            <EloHistogram matches={stats} />
-        </div>
-        <div className="grid grid-cols-2 gap-4 p-2">
-            <CharWinLossChart />
-            <GameCountChart />
-        </div>
-    </div>
-);
+    );
 }

@@ -4,10 +4,11 @@ import {
     Chart as ChartJS,
     ArcElement,
     Tooltip,
-    Legend
+    Legend,
+    Colors
 } from 'chart.js';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 const chartOptions = {
     plugins: {
         legend: {
@@ -54,7 +55,6 @@ export default function CharWinLossChart() {
                     datasets: [{
                         label: 'Wins vs Character',
                         data: winValues,
-                        backgroundColor: winColors,
                         borderWidth: 1,
                     }]
                 });
@@ -64,7 +64,6 @@ export default function CharWinLossChart() {
                     datasets: [{
                         label: 'Losses vs Character',
                         data: lossValues,
-                        backgroundColor: lossColors,
                         borderWidth: 1,
                     }]
                 });
