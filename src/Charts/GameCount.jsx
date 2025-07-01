@@ -8,8 +8,22 @@ import {
 } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+const chartOptions = {
+    plugins: {
+        legend: {
+            labels: {
+                font: {
+                    size: 10  // smaller text
+                },
+                boxWidth: 10, // smaller color boxes
+                padding: 8,   // less padding between items
+            },
+            position: 'bottom' // or 'right', 'top'
+        }
+    }
+};
 
-export default function GameCountDoughnut() {
+export default function GameCountChart() {
     const [winData, setWinData] = useState({
         labels: [],
         datasets: [{
@@ -65,13 +79,13 @@ export default function GameCountDoughnut() {
             <div className="bg-white rounded-lg p-4 flex flex-col items-center">
                 <h3 className="text-lg font-semibold mb-2">Wins by Game Count</h3>
                 <div className="h-64 w-64">
-                    <Doughnut data={winData} />
+                    <Doughnut data={winData} options={chartOptions}/>
                 </div>
             </div>
             <div className="bg-white rounded-lg p-4 flex flex-col items-center">
                 <h3 className="text-lg font-semibold mb-2">Losses by Game Count</h3>
                 <div className="h-64 w-64">
-                    <Doughnut data={loseData} />
+                    <Doughnut data={loseData} options={chartOptions} />
                 </div>
             </div>
         </div>
