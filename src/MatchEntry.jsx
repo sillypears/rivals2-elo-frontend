@@ -1,20 +1,50 @@
 import { useEffect, useState } from 'react';
 import { fetchCharacters, fetchStages } from './utils/api';
 
+Math.log10 = Math.log10 || function (x) {
+    return Math.log(x) / Math.LN10;
+};
+function estimateOpponentElo(myElo, eloChange, result, k = 25) {
+    if ((result === 1 && eloChange < 0) || (result === 0 && eloChange > 0)) {
+        throw new Error("Mismatch between match result and elo change sign.");
+    }
+
+    let expectedScore = result - (eloChange / k);
+
+    const epsilon = 1e-6;
+    expectedScore = Math.max(epsilon, Math.min(1 - epsilon, expectedScore));
+
+    const oddsRatio = (1 - expectedScore) / expectedScore;
+
+    const log10 = x => Math.log(x) / Math.LN10;
+
+    const opponentElo = myElo + 400 * log10(oddsRatio);
+
+    console.log("estimateOpponentElo debug", {
+        myElo, eloChange, result, expectedScore, oddsRatio,
+        log10: log10(oddsRatio),
+        opponentElo
+    });
+
+    return Math.floor(opponentElo);
+}
+
+
+
 export default function ManualMatchEntry() {
     const [characters, setCharacters] = useState([]);
     const [stages, setStages] = useState([]);
     const [form, setForm] = useState({
         match_date: new Date().toISOString().slice(0, 16),
-        elo_rank_old: 0,
-        elo_rank_new: 0,
-        elo_change: 0,
+        elo_rank_old: -1,
+        elo_rank_new: -1,
+        elo_change: -1,
         match_win: 1,
-        match_forfeit: 0,
-        ranked_game_number: 0,
-        total_wins: 0,
-        win_streak_value: 0,
-        opponent_elo: 0,
+        match_forfeit: -1,
+        ranked_game_number: -1,
+        total_wins: -1,
+        win_streak_value: -1,
+        opponent_elo: -1,
         opponent_estimated_elo: -1,
         opponent_name: '',
         game_1_char_pick: -1,
@@ -47,6 +77,7 @@ export default function ManualMatchEntry() {
             console.error(err);
         }
     };
+
     useEffect(() => {
         fetchCharacters().then(setCharacters);
         fetchStages().then(setStages);
@@ -121,11 +152,27 @@ export default function ManualMatchEntry() {
                 </label>
                 <label className="flex flex-col">
                     ELO Change
-                    <input type="number" value={form.elo_change} onChange={e => {
-                        const delta = +e.target.value;
-                        update('elo_change', delta);
-                        update('elo_rank_new', form.elo_rank_old + delta);
-                    }} className="p-1 border rounded" />
+                    <input
+                        type="number"
+                        value={form.elo_change}
+                        onChange={e => {
+                            const delta = +e.target.value;
+                            const oldElo = form.elo_rank_old;
+                            const matchWin = form.match_win;
+
+                            let estimated = -1;
+                            try {
+                                estimated = estimateOpponentElo(oldElo, delta, matchWin);
+                            } catch (err) {
+                                console.warn("Could not estimate opponent ELO:", err.message);
+                            }
+
+                            update('elo_change', delta);
+                            update('elo_rank_new', oldElo + delta);
+                            update('opponent_estimated_elo', estimated);
+                        }}
+                        className="p-1 border rounded"
+                    />
                 </label>
 
                 <label className="flex flex-col">
@@ -156,8 +203,8 @@ export default function ManualMatchEntry() {
                     <input type="number" value={form.opponent_elo} onChange={e => update('opponent_elo', +e.target.value)} className="p-1 border rounded" />
                 </label>
                 <label className="flex flex-col">
-                    Est. ELO
-                    <input type="number" value={form.opponent_estimated_elo} onChange={e => update('opponent_estimated_elo', +e.target.value)} className="p-1 border rounded" />
+                    Est ELO
+                    <input type="number" value={form.opponent_estimated_elo} disabled onChange={e => update('opponent_estimated_elo', +e.target.value)} className="p-1 border rounded bg-gray-100" />
                 </label>
                 <label className="flex flex-col">
                     Win Streak
