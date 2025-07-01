@@ -122,7 +122,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             onClick={() => setEditing(true)}
                             title="Click to edit"
                         >
-                            {value}
+                            {value === -2 ? 'UNRANKED' : value}
                             <sup title="Estimated ELO" className="ml-2 text-gray-400">
                                 {estimated_elo > -1 ? `${estimated_elo}` : ''}
                             </sup>
