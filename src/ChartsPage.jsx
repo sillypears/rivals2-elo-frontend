@@ -211,9 +211,9 @@ export default function ChartsPage() {
             {
                 title: 'ELO Progression',
                 data: [...stats]
-                    .sort((a, b) => a.ranked_game_number - b.ranked_game_number)
+                    .sort((a, b) => a.id - b.id)
                     .map(match => ({
-                        x: match.ranked_game_number,
+                        x: match.id,
                         o: match.elo_rank_old,
                         h: Math.max(match.elo_rank_old, match.opponent_elo),
                         l: Math.min(match.elo_rank_old, match.opponent_elo),
