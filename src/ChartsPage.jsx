@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Scatter, Chart } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
@@ -20,7 +20,7 @@ import 'chartjs-chart-financial';
 
 import EloHistogram from './Charts/EloHistogram';
 import GameCountChart from './Charts/GameCount';
-import CharWinLossChart from './Charts/CharWinRate'; 
+import CharWinLossChart from './Charts/CharWinRate';
 
 ChartJS.register(
     ScatterController,
@@ -87,21 +87,6 @@ const candlestickOptions = {
     }
 };
 
-function WinEloChart({ winEloData }) {
-    return (
-        <div className="bg-white rounded-lg p-4 text-black">
-            <Scatter data={winEloData} options={WinLoseElochartOptions} />
-        </div>
-    );
-}
-function LoseEloChart({ loseEloData }) {
-    return (
-        <div className="bg-white rounded-lg p-4 text-black">
-            <Scatter data={loseEloData} options={WinLoseElochartOptions} />
-        </div>
-    );
-}
-
 function CandlestickEloChart({ candlestickData }) {
     return (
         <div className="bg-white rounded-lg p-4 text-black h-96">
@@ -119,28 +104,22 @@ function CombinedEloChart({ combinedEloData }) {
 
 export default function ChartsPage() {
     const wsRef = useRef(null);
-    const [winStats, setWinStats] = useState([]);
-    const [loseStats, setLoseStats] = useState([]);
+    const [stats, setStats] = useState([]);
+    // const [winStats, setWinStats] = useState([]);
+    // const [loseStats, setLoseStats] = useState([]);
+
     const [searchParams] = useSearchParams();
-    const WinLoseLimit = searchParams.get('win_lose_limit');
+    const WinLoseLimit = searchParams.get('win_lose_limit') || 20;
 
-    const fetchWinEloStats = () => {
-        fetch(`http://192.168.1.30:8005/stats${WinLoseLimit ? `?limit=${WinLoseLimit}` : ''}`)
+    const fetchEloStats = useCallback(() => {
+        fetch(`http://192.168.1.30:8005/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
             .then((res) => res.json())
-            .then((data) => setWinStats(data))
+            .then((data) => setStats(data))
             .catch((err) => console.error('Error fetching win data:', err));
-    }
-
-    const fetchLoseEloStats = () => {
-        fetch(`http://192.168.1.30:8005/stats?match_win=0${WinLoseLimit ? `&limit=${WinLoseLimit}` : ''}`)
-            .then((res) => res.json())
-            .then((data) => setLoseStats(data))
-            .catch((err) => console.error('Error fetching win data:', err));
-    }
+    }, [WinLoseLimit]);
 
     useEffect(() => {
-        fetchWinEloStats()
-        fetchLoseEloStats()
+        fetchEloStats()
     }, [WinLoseLimit]);
 
     useEffect(() => {
@@ -159,14 +138,11 @@ export default function ChartsPage() {
                     return;
                 }
                 const message = JSON.parse(event.data);
-                if (message.type === "new_win_stats") {
+                if (message.type === "new_win_stats" || message.type === "new_lose_stats") {
                     console.log("Got new win stats")
-                    fetchWinEloStats()
+                    fetchEloStats()
                 }
-                if (message.type === "new_lose_stats") {
-                    console.log("Got new lose stats")
-                    fetchLoseEloStats()
-                }
+
             } catch (err) {
                 console.warn("couldn't parse json event", err, event.data)
             }
@@ -179,30 +155,33 @@ export default function ChartsPage() {
         ws.onclose = () => {
             ws.close();
         };
-    }, []);
-
+    }, [fetchEloStats]);
     const CombinedEloData = {
         datasets: [
             {
                 label: "Opponent ELO for Loses",
-                data: loseStats.map(match => ({
-                    x: new Date(match.match_date),
-                    y: match.opponent_elo,
-                    myElo: match.elo_rank_old,
-                    gameNumber: match.ranked_game_number
-                })),
+                data: stats
+                    .filter(match => match.match_win === 0)
+                    .map(match => ({
+                        x: new Date(match.match_date),
+                        y: match.opponent_elo,
+                        myElo: match.elo_rank_old,
+                        gameNumber: match.ranked_game_number
+                    })),
                 borderColor: "rgb(0, 0, 0)",
                 pointRadius: 5,
                 backgroundColor: "rgb(163, 92, 160)",
                 tension: 0.1
             }, {
                 label: "Opponent ELO for Wins",
-                data: winStats.map(match => ({
-                    x: new Date(match.match_date),
-                    y: match.opponent_elo,
-                    myElo: match.elo_rank_old,
-                    gameNumber: match.ranked_game_number
-                })),
+                data: stats
+                    .filter(match => match.match_win === 1)
+                    .map(match => ({
+                        x: new Date(match.match_date),
+                        y: match.opponent_elo,
+                        myElo: match.elo_rank_old,
+                        gameNumber: match.ranked_game_number
+                    })),
                 borderColor: "rgb(0, 0, 0)",
                 pointRadius: 5,
                 backgroundColor: "rgb(162, 255, 182)",
@@ -210,44 +189,43 @@ export default function ChartsPage() {
             }
         ]
     };
-    const combinedStats = [...winStats, ...loseStats].sort(
-        (a, b) => new Date(a.match_date) - new Date(b.match_date)
-    );
     const candlestickData = {
         datasets: [
             {
                 label: 'ELO Range per Match',
-                data: combinedStats.map((match, index) => ({
-                    x: match.ranked_game_number,
-                    o: match.elo_rank_old,
-                    h: Math.max(match.elo_rank_old, match.opponent_elo),
-                    l: Math.min(match.elo_rank_old, match.opponent_elo),
-                    c: match.elo_rank_new
-                })),
-                color: {
-                    up: '#00ff00',
-                    down: '#ff0000',
-                    unchanged: '#999999'
-                }
+                data: [...stats] 
+                    .sort((a, b) => a.ranked_game_number - b.ranked_game_number)
+                    .map(match => ({
+                        x: match.ranked_game_number,
+                        o: match.elo_rank_old,
+                        h: Math.max(match.elo_rank_old, match.opponent_elo),
+                        l: Math.min(match.elo_rank_old, match.opponent_elo),
+                        c: match.elo_rank_new
+            })),
+            color: {
+                up: '#00ff00',
+                down: '#ff0000',
+                unchanged: '#999999'
+            }
             }
         ]
-    };
-    return (
-        <div className="min-h-screen bg-gray-800 text-white p-6">
-            <h2 className="text-3xl font-bold mb-4">ELO Progression</h2>
-            <div className="grid grid-cols-2 gap-4 p-2">
-                {/* <WinEloChart winEloData={winEloData} />
+};
+return (
+    <div className="min-h-screen bg-gray-800 text-white p-6">
+        <h2 className="text-3xl font-bold mb-4">ELO Progression</h2>
+        <div className="grid grid-cols-2 gap-4 p-2">
+            {/* <WinEloChart winEloData={winEloData} />
                 <LoseEloChart loseEloData={loseEloData} /> */}
-                <CombinedEloChart combinedEloData={CombinedEloData} />
-                <CandlestickEloChart candlestickData={candlestickData} />
-            </div>
-            <div className="grid grid-cols-2 gap-4 p-2">
-                <EloHistogram matches={[...winStats, ...loseStats]} />
-            </div>
-            <div className="grid grid-cols-2 gap-4 p-2">
-                <CharWinLossChart />
-                <GameCountChart />
-            </div>
+            <CombinedEloChart combinedEloData={CombinedEloData} />
+            <CandlestickEloChart candlestickData={candlestickData} />
         </div>
-    );
+        <div className="grid grid-cols-2 gap-4 p-2">
+            <EloHistogram matches={stats} />
+        </div>
+        <div className="grid grid-cols-2 gap-4 p-2">
+            <CharWinLossChart />
+            <GameCountChart />
+        </div>
+    </div>
+);
 }
