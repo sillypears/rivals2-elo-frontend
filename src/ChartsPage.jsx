@@ -124,11 +124,9 @@ function CombinedEloChart({ combinedEloData }) {
 export default function ChartsPage() {
     const wsRef = useRef(null);
     const [stats, setStats] = useState([]);
-    // const [winStats, setWinStats] = useState([]);
+    const [WinLoseLimit, setWinLoseLimit] = useState(20);
     // const [loseStats, setLoseStats] = useState([]);
 
-    const [searchParams] = useSearchParams();
-    const WinLoseLimit = searchParams.get('win_lose_limit') || 20;
 
     const fetchEloStats = useCallback(() => {
         fetch(`http://192.168.1.30:8005/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
@@ -230,7 +228,21 @@ export default function ChartsPage() {
     };
     return (
         <div className="min-h-screen bg-gray-800 text-white p-6">
-            <h2 className="text-3xl font-bold mb-4">ELO Progression</h2>
+            <div className="grid grid-cols-2 gap-4 mb-6 items-center">
+                <h2 className="text-3xl font-bold mb-4  ">ELO Progression</h2>
+                <div className="flex justify-end">
+                    <select className="w-fit p-2 bg-gray-700 text-white rounded" 
+                    onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}
+                    value={WinLoseLimit}
+                    >
+                        <option value="10">10 Matches</option>
+                        <option value="20">20 Matches</option>
+                        <option value="25">25 Matches</option>
+                        <option value="50">50 Matches</option>
+                        <option value="100">100 Matches</option>
+                    </select>
+                </div>
+            </div>
             <div className="grid grid-cols-2 gap-4 p-2">
                 {/* <WinEloChart winEloData={winEloData} />
                 <LoseEloChart loseEloData={loseEloData} /> */}

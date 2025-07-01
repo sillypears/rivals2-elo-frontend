@@ -52,7 +52,7 @@ export default function GameCountChart() {
                 });
 
                 setWinData({
-                    labels: Object.keys(winCounts).map(k => `${k} Games`),
+                    labels: Object.keys(winCounts).map(k => `${k} Game${k > 1 ? 's' : ''}`),
                     datasets: [{
                         label: 'Wins',
                         data: Object.values(winCounts),
@@ -62,7 +62,7 @@ export default function GameCountChart() {
                 });
 
                 setLoseData({
-                    labels: Object.keys(loseCounts).map(k => `${k} Games`),
+                    labels: Object.keys(loseCounts).map(k => `${k} Game${k > 1 ? 's' : ''}`),
                     datasets: [{
                         label: 'Losses',
                         data: Object.values(loseCounts),
