@@ -66,6 +66,8 @@ const WinLoseElochartOptions = {
 };
 const candlestickOptions = {
     responsive: true,
+    aspectRatio: 2.1,
+    maintainAspectRatio: true,
     plugins: {
         legend: {
             display: false,
@@ -74,6 +76,14 @@ const candlestickOptions = {
     scales: {
         x: {
             type: 'linear',
+            title: {
+                display: true,
+                text: 'Game Number',
+                font: {
+                    size: 14,
+                    weight: 'bold'
+                }
+            },
             ticks: {
                 autoSkip: true,
                 maxRotation: 0,
@@ -81,6 +91,14 @@ const candlestickOptions = {
             }
         },
         y: {
+            title: {
+                display: true,
+                text: 'ELO',
+                font: {
+                    size: 14,
+                    weight: 'bold'
+                }
+            },
             beginAtZero: false
         }
     }

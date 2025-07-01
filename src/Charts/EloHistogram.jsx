@@ -14,12 +14,12 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 export default function EloHistogram({ matches }) {
     const binSize = 25;
-    const offset = 25; 
+    const offset = 25;
     const [minElo, maxElo] = useMemo(() => {
         if (!matches || matches.length === 0) return [0, 0];
 
         const elos = matches.map(m => m.opponent_elo);
-        const min = Math.floor(Math.min(...elos) / binSize) * binSize - offset ;
+        const min = Math.floor(Math.min(...elos) / binSize) * binSize - offset;
         const max = Math.ceil(Math.max(...elos) / binSize) * binSize + offset;
         return [min, max];
     }, [matches]);
@@ -53,7 +53,7 @@ export default function EloHistogram({ matches }) {
                 }
             ]
         };
-    }, [matches]);
+    }, [matches, maxElo, minElo]);
 
     return (
         <div className="bg-white text-black pb-8 pl-4 pt-1 rounded-lg h-96">
@@ -62,6 +62,8 @@ export default function EloHistogram({ matches }) {
                 data={histogramData}
                 options={{
                     responsive: true,
+                    aspectRatio: 2.2,
+                    maintainAspectRatio: true,
                     scales: {
                         y: {
                             beginAtZero: false,
