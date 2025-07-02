@@ -213,7 +213,7 @@ export default function ChartsPage() {
                 data: [...stats]
                     .sort((a, b) => a.id - b.id)
                     .map(match => ({
-                        x: match.id,
+                        x: match.ranked_game_number,
                         o: match.elo_rank_old,
                         h: Math.max(match.elo_rank_old, match.opponent_elo),
                         l: Math.min(match.elo_rank_old, match.opponent_elo),
