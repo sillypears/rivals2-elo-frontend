@@ -68,6 +68,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 header: 'Opponent ELO',
                 cell: ({ row, getValue }) => {
                     const rankedGameNumber = row.original.ranked_game_number;
+                    const row_id = row.original.id;
                     const externalValue = getValue();
                     const [editing, setEditing] = useState(false);
                     const [value, setValue] = useState(externalValue);
@@ -87,6 +88,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 game_number: rankedGameNumber,
+                                row_id: row_id,
                                 key: 'opponent_elo',
                                 value: value,
                             }),
