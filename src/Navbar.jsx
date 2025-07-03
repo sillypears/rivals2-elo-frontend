@@ -8,8 +8,8 @@ export default function Navbar() {
             <div className="text-xl font-bold">ELO Tracker</div>
             <div className="space-x-6">
                 <Link
-                    to="/"
-                    className={location.pathname === "/" ? "text-teal-400" : "hover:text-teal-400"}
+                    to="/history"
+                    className={location.pathname === "/history" ? "text-teal-400" : "hover:text-teal-400"}
                 >
                     History
                 </Link>

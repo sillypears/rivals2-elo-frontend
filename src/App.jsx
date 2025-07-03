@@ -12,11 +12,10 @@ export default function App() {
         <Navbar />
         <main className="pt-10">
           <Routes>
-            <Route path="/" element={<MatchHistory />} />
+            <Route path="/history" element={<MatchHistory />} />
             <Route path="/stats" element={<ChartsPage />} />
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/add-match" element={<ManualMatchEntry />} />
-
           </Routes>
         </main>
       </div>
