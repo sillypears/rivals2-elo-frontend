@@ -21,6 +21,7 @@ import 'chartjs-chart-financial';
 import EloHistogram from './Charts/EloHistogram';
 import GameCountChart from './Charts/GameCount';
 import CharWinLossChart from './Charts/CharWinRate';
+import ForfeitCard from './Charts/ForfeitsCard';
 
 ChartJS.register(
     ScatterController,
@@ -231,9 +232,9 @@ export default function ChartsPage() {
             <div className="grid grid-cols-2 gap-4 mb-6 items-center">
                 <h2 className="text-3xl font-bold mb-4  ">ELO Progression</h2>
                 <div className="flex justify-end">
-                    <select className="w-fit p-2 bg-gray-700 text-white rounded" 
-                    onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}
-                    value={WinLoseLimit}
+                    <select className="w-fit p-2 bg-gray-700 text-white rounded"
+                        onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}
+                        value={WinLoseLimit}
                     >
                         <option value="10">10 Matches</option>
                         <option value="20">20 Matches</option>
@@ -251,6 +252,9 @@ export default function ChartsPage() {
             </div>
             <div className="grid grid-cols-2 gap-4 p-2">
                 <EloHistogram matches={stats} />
+                <div className="grid grid-cols-2">
+                    <ForfeitCard />
+                </div>
             </div>
             <div className="grid grid-cols-2 gap-4 p-2">
                 <CharWinLossChart />
