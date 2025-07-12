@@ -1,45 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import MatchDataTable from './data/MatchDataTable';
 
-const handleCellUpdate = async (gameNumber, key, value) => {
-    try {
-        const res = await fetch('http://192.168.1.30:8005/update-match/', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ game_number: gameNumber, key, value }),
-        });
-        const result = await res.json();
-
-        if (result.status === 'ok') {
-            console.log(`Updated ${key} to "${value}" for game #${gameNumber}`);
-
-            // ✅ Update local state
-            setMatches(prevMatches =>
-                prevMatches.map(match =>
-                    match.ranked_game_number === gameNumber
-                        ? { ...match, [key]: value }
-                        : match
-                )
-            );
-        } else {
-            console.error("Failed to update:", result.message);
-        }
-    } catch (err) {
-        console.error("Error updating match data:", err);
-    }
-};
-
-
 export default function MatchesPage() {
     const wsRef = useRef(null);
     const [matches, setMatches] = useState([]);
 
-    const handleCellUpdate = async (gameNumber, key, value) => {
+    const handleCellUpdate = async (row, gameNumber, key, value) => {
         try {
             const res = await fetch('http://192.168.1.30:8005/update-match/', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ game_number: gameNumber, key, value }),
+                body: JSON.stringify({ row_id: row, game_number: gameNumber, key, value }),
             });
             const result = await res.json();
 

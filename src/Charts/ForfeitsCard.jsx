@@ -18,7 +18,7 @@ export default function ForfeitCard() {
     }, []);
 
     return (
-        <div className="w-full h-full bg-white text-black gap-4 rounded-lg shadow-md text-center flex flex-col items-center justify-center">
+        <div className="bg-gray-200 w-full h-full text-black gap-4 rounded-lg shadow-md text-center flex flex-col items-center justify-center">
             <h2 className="text-xl font-semibold mb-2">Forfeits</h2>
             {error ? (
                 <p className="text-red-600">Error loading data</p>

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
+import BottomFooter from './Footer';
 import MatchHistory from './MatchHistory';
 import ChartsPage from './ChartsPage';
 import MatchesPage from './MatchesPage';
@@ -17,8 +18,15 @@ export default function App() {
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/add-match" element={<ManualMatchEntry />} />
           </Routes>
+          <div className="p-10">
+            <a href="/history">History</a>
+            <a href="/stats">Charts</a>
+            <a href="/matches">Matches</a>
+          </div>
         </main>
+        <BottomFooter />
       </div>
     </Router>
+
   );
 }

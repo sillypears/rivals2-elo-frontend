@@ -17,7 +17,7 @@ import {
     CandlestickElement,
 } from 'chartjs-chart-financial';
 import 'chartjs-chart-financial';
-
+import zoomPlugin from 'chartjs-plugin-zoom';
 import EloHistogram from './Charts/EloHistogram';
 import GameCountChart from './Charts/GameCount';
 import CharWinLossChart from './Charts/CharWinRate';
@@ -32,7 +32,9 @@ ChartJS.register(
     CandlestickController,
     CandlestickElement,
     Tooltip,
-    Legend);
+    Legend,
+    zoomPlugin
+);
 
 const WinLoseElochartOptions = {
     maintainAspectRatio: false,
@@ -48,7 +50,27 @@ const WinLoseElochartOptions = {
                     ];
                 }
             }
-        }
+        },
+        zoom: {
+            zoom: {
+                wheel: {
+                    enabled: true,
+                },
+                pan: {
+                    enabled: true,
+                    modifierKey: 'ctrl',
+                    onPanStart({ chart, point }) {
+                        const area = chart.chartArea;
+                        const w25 = area.width * 0.25;
+                        const h25 = area.height * 0.25;
+                        if (point.x < area.left + w25 || point.x > area.right - w25
+                            || point.y < area.top + h25 || point.y > area.bottom - h25) {
+                            return false; // abort
+                        }
+                    },
+                },
+            },
+        },
     },
     scales: {
         x: {
@@ -67,12 +89,36 @@ const WinLoseElochartOptions = {
 };
 const candlestickOptions = {
     responsive: true,
-    aspectRatio: 2.1,
+    aspectRatio: 2.2,
     maintainAspectRatio: true,
     plugins: {
         legend: {
             display: false,
         },
+        zoom: {
+            pan: {
+                modifierKey: 'ctrl',
+                enabled: true,
+                onPanStart({ chart, point }) {
+                    const area = chart.chartArea;
+                    const w25 = area.width * 0.25;
+                    const h25 = area.height * 0.25;
+                    if (point.x < area.left + w25 || point.x > area.right - w25
+                        || point.y < area.top + h25 || point.y > area.bottom - h25) {
+                        return false; // abort
+                    }
+                },
+            },
+            zoom: {
+                wheel: {
+                    enabled: true,
+                },
+                pinch: {
+                    enabled: true
+                },
+                mode: 'xy',
+            }
+        }
     },
     scales: {
         x: {
@@ -100,14 +146,14 @@ const candlestickOptions = {
                     weight: 'bold'
                 }
             },
-            beginAtZero: false
+            beginAtZero: true
         }
     }
 };
 
 function CandlestickEloChart({ candlestickData }) {
     return (
-        <div className="bg-white text-black pb-10 pl-6 pt-1 rounded-lg h-96">
+        <div className="bg-gray-200 text-black pb-10 pl-6 pt-1 rounded-lg h-96">
             <h3 className="text-lg font-bold mb-2">Candles</h3>
 
             <Chart type="candlestick" data={candlestickData} options={candlestickOptions} />
@@ -116,7 +162,7 @@ function CandlestickEloChart({ candlestickData }) {
 }
 function CombinedEloChart({ combinedEloData }) {
     return (
-        <div className="bg-white rounded-lg p-4 text-black h-96">
+        <div className="bg-gray-200 rounded-lg p-4 text-black h-96">
             <Scatter data={combinedEloData} options={WinLoseElochartOptions} />
         </div>
     );

@@ -8,6 +8,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { fetchCharacters, fetchStages } from '../utils/api';
 
+
 const columnHelper = createColumnHelper();
 
 export default function MatchDataTable({ matches, onCellUpdate }) {
@@ -144,6 +145,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
+                        const row_id = info.row.original.id;
                         const gameKey = `game_${i}_char_pick`;
                         const gameNumber = row.ranked_game_number;
                         const imageKey = row[`game_${i}_char_pick_image`] || 'na';
@@ -161,7 +163,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                                     onChange={e => {
                                         const newVal = parseInt(e.target.value);
                                         if (newVal !== val && onCellUpdate) {
-                                            onCellUpdate(gameNumber, gameKey, newVal);
+                                            onCellUpdate(row_id, gameNumber, gameKey, newVal);
                                         }
                                     }}
                                 >
@@ -180,6 +182,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
+                        const row_id = info.row.original.id;
                         const gameKey = `game_${i}_opponent_pick`;
                         const gameNumber = row.ranked_game_number;
                         const imageKey = row[`game_${i}_opponent_pick_image`] || 'na';
@@ -197,7 +200,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                                     onChange={e => {
                                         const newVal = parseInt(e.target.value);
                                         if (newVal !== val && onCellUpdate) {
-                                            onCellUpdate(gameNumber, gameKey, newVal);
+                                            onCellUpdate(row_id, gameNumber, gameKey, newVal);
                                         }
                                     }}
                                 >
@@ -216,6 +219,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
+                        const row_id = info.row.original.id;
                         const gameKey = `game_${i}_stage`;
                         const gameNumber = row.ranked_game_number;
 
@@ -226,7 +230,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                                 onChange={e => {
                                     const newVal = parseInt(e.target.value);
                                     if (newVal !== val && onCellUpdate) {
-                                        onCellUpdate(gameNumber, gameKey, newVal);
+                                        onCellUpdate(row_id, gameNumber, gameKey, newVal);
                                     }
                                 }}
                             >
@@ -244,6 +248,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     cell: info => {
                         const val = info.getValue();
                         const row = info.row.original;
+                        const row_id = info.row.original.id;
                         const gameKey = `game_${i}_winner`;
                         const gameNumber = row.ranked_game_number;
 
@@ -254,7 +259,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                                 onChange={e => {
                                     const newVal = parseInt(e.target.value);
                                     if (newVal !== val && onCellUpdate) {
-                                        onCellUpdate(gameNumber, gameKey, newVal);
+                                        onCellUpdate(row_id, gameNumber, gameKey, newVal);
                                     }
                                 }}
                             >
@@ -291,12 +296,12 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
     });
 
     return (
-        <div className="overflow-x-auto bg-white text-black p-4 rounded-lg">
+        <div className="overflow-x-auto bg-gray-200 text-black p-4 rounded-lg">
             <h2 className="text-xl font-bold mb-4">Match History</h2>
-            <table className="min-w-full border text-sm">
+            <table className="min-w-full border text-sm table-auto">
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id} className="bg-gray-100">
+                        <tr key={headerGroup.id} className="bg-gray-400">
                             {headerGroup.headers.map(header => (
                                 <th key={header.id} className="p-2 border text-left text-md">
                                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -307,7 +312,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map(row => (
-                        <tr key={row.id} className="odd:bg-gray-50 even:bg-white">
+                        <tr key={row.id} className="odd:bg-gray-200 even:bg-gray-100 hover:bg-gray-300">
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id} id={cell.id} ranked_game_number={cell.ranked_game_no} className="p-2 border">
                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
