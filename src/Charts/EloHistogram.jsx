@@ -12,7 +12,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-export default function EloHistogram({ matches }) {
+export default function EloHistogram({ matches, className = '' }) {
     const binSize = 25;
     const offset = 25;
     const [minElo, maxElo] = useMemo(() => {
@@ -56,7 +56,7 @@ export default function EloHistogram({ matches }) {
     }, [matches, maxElo, minElo]);
 
     return (
-        <div className="bg-gray-200 text-black pb-8 pl-4 pt-1 rounded-lg h-96">
+        <div className={`bg-gray-200 text-black pb-8 pl-4 pt-1 rounded-lg h-96 ${className}`}>
             <h3 className="text-lg font-bold mb-2">Opponent Elo Distribution</h3>
             <Bar
                 data={histogramData}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function ForfeitCard() {
+export default function ForfeitCard(className = '') {
     const [forfeitCount, setForfeitCount] = useState(null);
     const [error, setError] = useState(false);
 
@@ -18,7 +18,7 @@ export default function ForfeitCard() {
     }, []);
 
     return (
-        <div className="bg-gray-200 w-full h-full text-black gap-4 rounded-lg shadow-md text-center flex flex-col items-center justify-center">
+        <div className={`bg-gray-200 w-full h-full text-black gap-4 rounded-lg shadow-md text-center flex flex-col items-center justify-center ${className}`}>
             <h2 className="text-xl font-semibold mb-2">Forfeits</h2>
             {error ? (
                 <p className="text-red-600">Error loading data</p>

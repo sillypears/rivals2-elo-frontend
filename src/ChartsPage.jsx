@@ -22,6 +22,8 @@ import EloHistogram from './Charts/EloHistogram';
 import GameCountChart from './Charts/GameCount';
 import CharWinLossChart from './Charts/CharWinRate';
 import ForfeitCard from './Charts/ForfeitsCard';
+import EloChangeCard from './Charts/EloChangeCard';
+import SeasonStatsCard from './Charts/SeasonStatsCard';
 
 ChartJS.register(
     ScatterController,
@@ -274,11 +276,11 @@ export default function ChartsPage() {
             }]
     };
     return (
-        <div className="min-h-screen bg-gray-800 text-white p-6">
-            <div className="grid grid-cols-2 gap-4 mb-6 items-center">
-                <h2 className="text-3xl font-bold mb-4  ">ELO Progression</h2>
+        <div className=" bg-gray-00 text-white p-2">
+            <div className="grid grid-cols-2 gap-4 mb-2 items-center">
+                <h2 className="text-2xl font-bold mb-2">ELO Progression</h2>
                 <div className="flex justify-end">
-                    <select className="w-fit p-2 bg-gray-700 text-white rounded"
+                    <select className="w-fit p-1 bg-gray-700 text-white rounded"
                         onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}
                         value={WinLoseLimit}
                     >
@@ -290,19 +292,19 @@ export default function ChartsPage() {
                     </select>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 p-2">
-                {/* <WinEloChart winEloData={winEloData} />
-                <LoseEloChart loseEloData={loseEloData} /> */}
+            <div className="grid grid-cols-2 gap-4 p-1">
                 <CombinedEloChart combinedEloData={CombinedEloData} />
                 <CandlestickEloChart candlestickData={candlestickData} />
             </div>
-            <div className="grid grid-cols-2 gap-4 p-2">
-                <EloHistogram matches={stats} />
-                <div className="grid grid-cols-2">
+            <div className="grid  grid-cols-2 p-1 gap-x-4 gap-y-2">
+                <EloHistogram matches={stats} className="row-span-2" />
+                <div className="grid grid-cols-2 gap-4">
                     <ForfeitCard />
+                    <SeasonStatsCard />
                 </div>
+                <EloChangeCard />
             </div>
-            <div className="grid grid-cols-2 gap-4 p-2">
+            <div className="grid grid-cols-2 p-1 gap-4" >
                 <CharWinLossChart />
                 <GameCountChart />
             </div>

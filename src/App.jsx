@@ -9,7 +9,7 @@ import ManualMatchEntry from './MatchEntry';
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 text-gray-900">
+      <div className="min-h-screen bg-gray-800 text-gray-900">
         <Navbar />
         <main className="pt-10">
           <Routes>
@@ -18,11 +18,6 @@ export default function App() {
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/add-match" element={<ManualMatchEntry />} />
           </Routes>
-          <div className="p-10">
-            <a href="/history">History</a>
-            <a href="/stats">Charts</a>
-            <a href="/matches">Matches</a>
-          </div>
         </main>
         <BottomFooter />
       </div>
