@@ -5,7 +5,7 @@ export default function Navbar() {
 
     return (
         <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 py-2 shadow-md flex justify-between items-center">
-            <div className="text-xl font-bold">ELO Tracker</div>
+            <div className="text-xl font-bold">Tracker</div>
             <div className="space-x-6">
                 <Link
                     to="/history"
