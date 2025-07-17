@@ -180,7 +180,7 @@ export default function ChartsPage() {
     const fetchEloStats = useCallback(() => {
         fetch(`http://192.168.1.30:8005/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
             .then((res) => res.json())
-            .then((data) => setStats(data))
+            .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
     }, [WinLoseLimit]);
 
@@ -302,7 +302,9 @@ export default function ChartsPage() {
                     <ForfeitCard />
                     <SeasonStatsCard />
                 </div>
-                <EloChangeCard />
+                <div className="grid grid-cols-2 gap-4">
+                    <EloChangeCard />
+                </div>
             </div>
             <div className="grid grid-cols-2 p-1 gap-4" >
                 <CharWinLossChart />

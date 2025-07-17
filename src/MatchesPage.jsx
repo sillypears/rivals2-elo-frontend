@@ -36,7 +36,7 @@ export default function MatchesPage() {
     const fetchMatchStats = () => {
         fetch('http://192.168.1.30:8005/matches')
             .then(res => res.json())
-            .then(setMatches)
+            .then((data) => setMatches(data.data))
             .catch(err => console.error('Failed to fetch matches:', err));
     }
     useEffect(() => {

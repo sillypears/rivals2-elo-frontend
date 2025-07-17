@@ -31,7 +31,7 @@ export default function SeasonStatsCard({ className = '' }) {
             try {
                 if (!event.data || event.data.trim().charAt(0) !== '{') return;
                 const message = JSON.parse(event.data);
-                if (message.type === "new_win_stats" || message.type === "new_lose_stats") {
+                if (message.type === "new_match") {
                     fetchSeasonStats();
                 }
             } catch (err) {

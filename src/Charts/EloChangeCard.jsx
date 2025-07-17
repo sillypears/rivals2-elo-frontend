@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 export default function EloChangeCard() {
     const [numMatches, setNumMatches] = useState(10);
     const [eloData, setEloData] = useState(null);
     const [error, setError] = useState(false);
+    const wsRef = useRef(null);
 
     const fetchEloData = (count) => {
         fetch(`http://192.168.1.30:8005/elo-change/${count}`)
@@ -21,10 +22,33 @@ export default function EloChangeCard() {
 
     useEffect(() => {
         fetchEloData(numMatches);
+
+        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
+        wsRef.current = ws;
+
+        ws.onopen = () => console.log("WebSocket connected");
+
+        ws.onmessage = (event) => {
+            try {
+                if (!event.data || event.data.trim().charAt(0) !== '{') return;
+                const message = JSON.parse(event.data);
+                if (message.type === "new_match") {
+                    fetchEloData(numMatches);;
+                }
+            } catch (err) {
+                console.warn("Error parsing WebSocket message", err);
+            }
+        };
+
+        ws.onerror = (err) => console.error("WebSocket error", err);
+
+        ws.onclose = () => console.log("WebSocket closed");
+
+        return () => ws.close();
     }, [numMatches]);
 
     return (
-        <div className="w-full h-full bg-white text-black p-6 rounded-lg shadow-md text-center flex flex-col items-center justify-center">
+        <div className="w-full h-full bg-gray-200 text-black p-6 rounded-lg shadow-md text-center flex flex-col items-center justify-center">
             <h2 className="text-xl font-semibold mb-2">ELO Change (Last {numMatches} Matches)</h2>
 
             <div className="flex items-center gap-2 mb-4">
@@ -33,7 +57,6 @@ export default function EloChangeCard() {
                     id="match-count"
                     type="number"
                     min="2"
-                    step="2"
                     className="w-20 p-1 border rounded text-sm bg-white text-black"
                     value={numMatches}
                     onChange={(e) => setNumMatches(parseInt(e.target.value) || 1)}

@@ -6,19 +6,23 @@ import {
     createColumnHelper,
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
-import { fetchCharacters, fetchStages } from '../utils/api';
+import { fetchCharacters, fetchStages, fetchMoves } from '../utils/api';
+import { data } from 'react-router-dom';
 
 
 const columnHelper = createColumnHelper();
 
 export default function MatchDataTable({ matches, onCellUpdate }) {
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [pageIndex, setPageIndex] = useState(0);
     const [characters, setCharacters] = useState([]);
     const [stages, setStages] = useState([]);
+    const [moves, setMoves] = useState([]);
+
     useEffect(() => {
-        fetchCharacters().then(setCharacters);
-        fetchStages().then(setStages);
+        fetchCharacters().then((cdata) => setCharacters(cdata.data));
+        fetchStages().then((sdata) => setStages(sdata.data));
+        fetchMoves().then((mdata) => setMoves(mdata.data));
     }, []);
 
     const characterMap = useMemo(() =>
@@ -273,8 +277,41 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
             );
         }
 
-        return [...baseColumns, ...gameColumns];
-    }, [characters, stages, maxGames, onCellUpdate]);
+        const endColumns = [
+            columnHelper.accessor('finisher_move_id', {
+                header: 'Finisher',
+                cell: info => {
+                    const row = info.row.original;
+                    const value = info.getValue();
+                    const row_id = row.id;
+                    const gameNumber = row.ranked_game_number;
+                    const final_move_key = "final_move_id";
+                    const finsher_id = row.final_move_id;
+                    return (
+                        <select
+                            className="bg-white text-black px-2 py-1 rounded"
+                            value={parseInt(finsher_id) ?? -1}
+                            onChange={e => {
+                                const newVal = parseInt(e.target.value);
+                                if (newVal !== value && onCellUpdate) {
+                                    onCellUpdate(row_id, gameNumber, final_move_key, newVal);
+                                }
+                            }}
+                        >
+                            {moves.map(m => (
+                                <option key={m.id} value={m.id}>
+                                    {m.display_name}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                },
+            })
+        ];
+
+        return [...baseColumns, ...gameColumns, ...endColumns];
+
+    }, [characters, stages, moves, maxGames, onCellUpdate]);
 
     const table = useReactTable({
         data: matches,

@@ -43,7 +43,7 @@ export default function GameCountChart() {
             .then(data => {
                 const winCounts = {};
                 const loseCounts = {};
-                data.forEach(entry => {
+                data.data.forEach(entry => {
                     if (entry.match_win === 1) {
                         winCounts[entry.game_count] = entry.match_count;
                     } else if (entry.match_win === 0) {

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import Tooltip from './components/ui/Tooltip';
 
 function MatchCard({ match }) {
   return (
@@ -15,9 +16,11 @@ function MatchCard({ match }) {
             className={`w-8 h-8 object-contain ${match.match_win ? 'grayscale' : ''}`}
             title={match.game_1_opponent_pick_name}
           />
-          <span className="text-lg">
-            {match.elo_change > 0 ? '👍' : '👎'}
-          </span>
+          <Tooltip message={`${(match.match_win && match.final_move_id != -1) ? match.final_move_name : ''}`} >
+            <span className="text-lg" aria-describedby="tooltip-id" >
+              {match.elo_change > 0 ? '👍' : '👎'}
+            </span>
+          </Tooltip>
         </div>
       </div>
 
@@ -59,13 +62,12 @@ export default function App() {
   const fetchMatches = () => {
     fetch('http://192.168.1.30:8005/matches')
       .then((res) => res.json())
-      .then((data) => setMatches(data))
+      .then((data) => setMatches(data.data))
       .catch((err) => console.error('Error fetching match data:', err));
   };
   useEffect(() => {
     fetchMatches();
   }, []);
-
   useEffect(() => {
     const ws = new WebSocket("ws://192.168.1.30:8005/ws");
     wsRef.current = ws;
