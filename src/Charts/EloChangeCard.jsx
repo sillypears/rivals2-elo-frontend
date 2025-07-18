@@ -56,7 +56,7 @@ export default function EloChangeCard() {
                 <input
                     id="match-count"
                     type="number"
-                    min="2"
+                    min="1"
                     className="w-20 p-1 border rounded text-sm bg-white text-black"
                     value={numMatches}
                     onChange={(e) => setNumMatches(parseInt(e.target.value) || 1)}
