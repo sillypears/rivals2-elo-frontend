@@ -16,11 +16,11 @@ function MatchCard({ match }) {
               className={`w-8 h-8 object-contain ${match.match_win ? 'grayscale' : ''}`}
               title={match.game_1_opponent_pick_name}
             />
-            <span className="text-lg" aria-describedby="tooltip-id" >
-              {/* <Tooltip message="" > */}
+            <span className="text-lg" aria-describedby="tooltip-id" title={`${(match.match_win && match.final_move_id != -1) ? match.final_move_name.replace("-", "&#x2011;") : ''}`}>
+              {/* <Tooltip message= > */}
                 {match.elo_change > 0 ? '👍' : '👎'}
-              {/* </Tooltip>             */}
-              </span>
+              {/* </Tooltip>            */}
+               </span>
           </div>
         </div>
 
