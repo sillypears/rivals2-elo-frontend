@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchCharacters, fetchStages } from './utils/api';
+import { data } from 'autoprefixer';
 
 Math.log10 = Math.log10 || function (x) {
     return Math.log(x) / Math.LN10;
@@ -59,12 +60,13 @@ export default function ManualMatchEntry() {
         game_3_opponent_pick: -1,
         game_3_stage: -1,
         game_3_winner: -1,
+        final_move_id: -1,
     });
     const loadLatestMatch = async () => {
         try {
             const res = await fetch('http://192.168.1.30:8005/matches/1');
             const json = await res.json();
-            const data = json[0];
+            const data = json['data'][0];
             setForm(prev => ({
                 ...prev,
                 ranked_game_number: data.ranked_game_number,
@@ -79,8 +81,8 @@ export default function ManualMatchEntry() {
     };
 
     useEffect(() => {
-        fetchCharacters().then(setCharacters);
-        fetchStages().then(setStages);
+        fetchCharacters().then((data) => setCharacters(data.data));
+        fetchStages().then((data) => setStages(data.data));
     }, []);
 
     const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));

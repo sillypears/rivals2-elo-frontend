@@ -7,22 +7,22 @@ function MatchCard({ match }) {
       {/* <div className="absolute top-2 right-2 text-l">{match.elo_change > 0 ? '👍' : '👎'}</div> */}
 
       {/* 🧠 Character icon */}
-      <div className="mb-2 flex items-center gap-2">
-        <div className="absolute top-2 right-2 flex items-center gap-1">
-          <img
-            src={`/images/chars/${match.game_1_opponent_pick_image}.png`}
-            alt={match.game_1_opponent_pick_name}
-            onError={(e) => { e.target.src = '/images/chars/na.png'; }}
-            className={`w-8 h-8 object-contain ${match.match_win ? 'grayscale' : ''}`}
-            title={match.game_1_opponent_pick_name}
-          />
-          <Tooltip message={`${(match.match_win && match.final_move_id != -1) ? match.final_move_name : ''}`} >
+        <div className="mb-2 flex items-center gap-2">
+          <div className="absolute top-2 right-2 flex items-center gap-1">
+            <img
+              src={`/images/chars/${match.game_1_opponent_pick_image}.png`}
+              alt={match.game_1_opponent_pick_name}
+              onError={(e) => { e.target.src = '/images/chars/na.png'; }}
+              className={`w-8 h-8 object-contain ${match.match_win ? 'grayscale' : ''}`}
+              title={match.game_1_opponent_pick_name}
+            />
             <span className="text-lg" aria-describedby="tooltip-id" >
-              {match.elo_change > 0 ? '👍' : '👎'}
-            </span>
-          </Tooltip>
+              {/* <Tooltip message="" > */}
+                {match.elo_change > 0 ? '👍' : '👎'}
+              {/* </Tooltip>             */}
+              </span>
+          </div>
         </div>
-      </div>
 
       <div className="text-lg font-bold text-black">Game #{match.ranked_game_number}</div>
       <div className="text-sm text-gray-200">Date: {new Date(`${match.match_date}Z`).toLocaleString("en-US", { timeZone: "America/New_York" })}</div>
