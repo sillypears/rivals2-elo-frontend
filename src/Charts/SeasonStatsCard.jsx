@@ -43,7 +43,7 @@ export default function SeasonStatsCard({ className = '' }) {
 
         ws.onclose = () => console.log("WebSocket closed");
 
-        return () => ws.close(); // cleanup on unmount
+        return () => ws.close(); 
     }, []);
 
     const selected = seasonStats[selectedIndex];
@@ -54,7 +54,7 @@ export default function SeasonStatsCard({ className = '' }) {
                 <h2 className="text-base font-semibold">Season Stats</h2>
                 {seasonStats.length > 1 && (
                     <select
-                        className="bg-white rounded px-2 py-1 text-sm rounded-lg[``t"
+                        className="bg-white rounded px-2 py-1 text-sm rounded-lg"
                         value={selectedIndex}
                         onChange={(e) => setSelectedIndex(Number(e.target.value))}
                     >

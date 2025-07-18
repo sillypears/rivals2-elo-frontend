@@ -24,6 +24,7 @@ import CharWinLossChart from './Charts/CharWinRate';
 import ForfeitCard from './Charts/ForfeitsCard';
 import EloChangeCard from './Charts/EloChangeCard';
 import SeasonStatsCard from './Charts/SeasonStatsCard';
+import TopFinalMoveCard from './Charts/FinalMoveChart';
 
 ChartJS.register(
     ScatterController,
@@ -296,7 +297,7 @@ export default function ChartsPage() {
                 <CombinedEloChart combinedEloData={CombinedEloData} />
                 <CandlestickEloChart candlestickData={candlestickData} />
             </div>
-            <div className="grid  grid-cols-2 p-1 gap-x-4 gap-y-2">
+            <div className="grid  grid-cols-2 p-1 gap-4 ">
                 <EloHistogram matches={stats} className="row-span-2" />
                 <div className="grid grid-cols-2 gap-4">
                     <ForfeitCard />
@@ -304,6 +305,7 @@ export default function ChartsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <EloChangeCard />
+                    <TopFinalMoveCard />
                 </div>
             </div>
             <div className="grid grid-cols-2 p-1 gap-4" >
