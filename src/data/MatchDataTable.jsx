@@ -42,7 +42,17 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         if (characters.length === 0 || stages.length === 0) return [];
 
         const baseColumns = [
-            columnHelper.accessor('ranked_game_number', { header: 'Game #' }),
+            columnHelper.accessor('ranked_game_number', { 
+                header: 'Game #',
+                cell: ({ row }) => {
+                    return (
+                        <a href={`/match/${row.original.id}`} >
+                            {row.original.ranked_game_number}
+                        </a>
+                    )
+                } 
+
+            }),
             columnHelper.accessor('match_win', {
                 header: 'Result',
                 cell: info => info.getValue() ? 'Win' : 'Loss',
