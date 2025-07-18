@@ -2,7 +2,7 @@
 import * as React from "react";
 
 export function Card({ className, ...props }) {
-  return <div className={`rounded-lg bg-gray-200 px-4 text-black shadow-md text-center flex flex-col justify-center ${className}`} {...props} />;
+  return <div className={`rounded-lg bg-gray-200 p-4 text-black shadow-md text-center flex flex-col flex-row justify-center ${className}`} {...props} />;
 }
 
 export function CardHeader({ className, ...props }) {

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 
 const chartOptions = {
-    cutout: '30%',
+    cutout: '50%',
     responsive: true,
     maintainAspectRatio: false,
     plugins: {

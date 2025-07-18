@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 
-export default function EloChangeCard() {
+export default function EloChangeCard({className = ''}) {
     const [numMatches, setNumMatches] = useState(10);
     const [eloData, setEloData] = useState(null);
     const [error, setError] = useState(false);
@@ -48,7 +48,7 @@ export default function EloChangeCard() {
     }, [numMatches]);
 
     return (
-        <div className="w-full h-full bg-gray-200 text-black p-6 rounded-lg shadow-md text-center flex flex-col items-center justify-center">
+        <div className={`w-full h-full bg-gray-200 text-black p-6 rounded-lg shadow-md text-center flex flex-col items-center justify-center ${className}`}>
             <h2 className="text-xl font-semibold mb-2">ELO Change (Last {numMatches} Matches)</h2>
 
             <div className="flex items-center gap-2 mb-4">

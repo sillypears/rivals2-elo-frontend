@@ -278,7 +278,7 @@ export default function ChartsPage() {
     };
     return (
         <div className=" bg-gray-00 text-white p-2">
-            <div className="grid grid-cols-2 gap-4 mb-2 items-center">
+            <div className="grid grid-cols-2 gap-2 mb-2 items-center">
                 <h2 className="text-2xl font-bold mb-2">ELO Progression</h2>
                 <div className="flex justify-end">
                     <select className="w-fit p-1 bg-gray-700 text-white rounded"
@@ -293,22 +293,20 @@ export default function ChartsPage() {
                     </select>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 p-1">
+            <div className="grid grid-cols-2 gap-2 p-1">
                 <CombinedEloChart combinedEloData={CombinedEloData} />
                 <CandlestickEloChart candlestickData={candlestickData} />
             </div>
-            <div className="grid  grid-cols-2 p-1 gap-4 ">
-                <EloHistogram matches={stats} className="row-span-2" />
-                <div className="grid grid-cols-2 gap-4">
-                    <ForfeitCard />
-                    <SeasonStatsCard />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <EloChangeCard />
-                    <TopFinalMoveCard />
+            <div className="grid grid-cols-3 p-1 gap-2 ">
+                <EloHistogram matches={stats} className="h-2/3" />
+                <TopFinalMoveCard className="" />
+                <div className="grid grid-cols-1 gap-2 ">
+                    <ForfeitCard className="h-full" />
+                    <SeasonStatsCard className="h-full" />
+                    <EloChangeCard className="h-full" />                    
                 </div>
             </div>
-            <div className="grid grid-cols-2 p-1 gap-4" >
+            <div className="grid grid-cols-2 p-1 gap-2" >
                 <CharWinLossChart />
                 <GameCountChart />
             </div>
