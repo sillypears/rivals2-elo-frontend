@@ -83,7 +83,6 @@ export default function TopFinalMoveCard({ className = '' }) {
         const filtered = finalMoves.filter(m => m.season_display_name === selectedSeason);
         return filtered
             .sort((a, b) => b.final_move_count - a.final_move_count)
-            .slice(0, 5);
     }, [finalMoves, selectedSeason]);
 
 
@@ -101,8 +100,8 @@ export default function TopFinalMoveCard({ className = '' }) {
     };
 
     return (
-        <Card className="w-full">
-            <CardHeader className={`flex flex-row justify-between ${className}`}>
+        <Card className="w-full h-[400]-px flex flex-col">
+            <CardHeader className={`flex justify-between ${className}`}>
                 <CardTitle>Finish Moves</CardTitle>
                 <select
                     className="bg-white border rounded-lg px-2 py-1 text-sm"
@@ -114,9 +113,9 @@ export default function TopFinalMoveCard({ className = '' }) {
                     ))}
                 </select>
             </CardHeader>
-            <CardContent className="flex justify-center items-center ">
+            <CardContent className="justify-center items-center flex h-[300px] ">
                 {topMoves.length > 0 ? (
-                    <Doughnut data={chartData} options={chartOptions} />
+                        <Doughnut data={chartData} options={chartOptions} />
                 ) : (
                     <p className="text-muted-foreground">No data</p>
                 )}

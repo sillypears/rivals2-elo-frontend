@@ -5,7 +5,7 @@ export default function ForfeitCard(className = '') {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        fetch('http://192.168.1.30:8005/match/forfeits')
+        fetch('http://192.168.1.30:8005/match_forfeits')
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'OK' && json.data?.forfeits !== undefined) {
