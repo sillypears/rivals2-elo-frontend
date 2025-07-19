@@ -149,7 +149,7 @@ const candlestickOptions = {
                     weight: 'bold'
                 }
             },
-            beginAtZero: true
+            beginAtZero: false
         }
     }
 };
@@ -265,8 +265,8 @@ export default function ChartsPage() {
                     .map(match => ({
                         x: match.ranked_game_number,
                         o: match.elo_rank_old,
-                        h: Math.max(match.elo_rank_old, match.opponent_elo),
-                        l: Math.min(match.elo_rank_old, match.opponent_elo),
+                        h: Math.max(match.elo_rank_old, (match.opponent_elo == -2) ? match.opponent_estimated_elo : match.opponent_elo),
+                        l: Math.min(match.elo_rank_old, (match.opponent_elo == -2) ? match.opponent_estimated_elo : match.opponent_elo),
                         c: match.elo_rank_new
                     })),
                 color: {
