@@ -283,40 +283,41 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             </select>
                         );
                     },
+                }),
+                columnHelper.accessor(`game_${i}_final_move_id`, {
+                    header: `Game ${i} Finish`,
+                    cell: info => {
+                        const val = info.getValue();
+                        const row = info.row.original;
+                        const row_id = info.row.original.id;
+                        const gameKey = `game_${i}_final_move_id`;
+                        const gameNumber = row.ranked_game_number;
+
+                        return (
+                            <select
+                                className="bg-white text-black rounded px-1"
+                                value={val ?? -1}
+                                onChange={e => {
+                                    const newVal = parseInt(e.target.value);
+                                    if (newVal !== val && onCellUpdate) {
+                                        onCellUpdate(row_id, gameNumber, gameKey, newVal);
+                                    }
+                                }}
+                            >
+                                {moves.map(m => (
+                                    <option key={m.id} value={m.id}>
+                                        {m.display_name}
+                                    </option>
+                                ))}
+                            </select>
+                        );
+                    },
                 })
             );
         }
 
         const endColumns = [
-            columnHelper.accessor('finisher_move_id', {
-                header: 'Finisher',
-                cell: info => {
-                    const row = info.row.original;
-                    const value = info.getValue();
-                    const row_id = row.id;
-                    const gameNumber = row.ranked_game_number;
-                    const final_move_key = "final_move_id";
-                    const finsher_id = row.final_move_id;
-                    return (
-                        <select
-                            className="bg-white text-black px-2 py-1 rounded"
-                            value={parseInt(finsher_id) ?? -1}
-                            onChange={e => {
-                                const newVal = parseInt(e.target.value);
-                                if (newVal !== value && onCellUpdate) {
-                                    onCellUpdate(row_id, gameNumber, final_move_key, newVal);
-                                }
-                            }}
-                        >
-                            {moves.map(m => (
-                                <option key={m.id} value={m.id}>
-                                    {m.display_name}
-                                </option>
-                            ))}
-                        </select>
-                    );
-                },
-            })
+            
         ];
 
         return [...baseColumns, ...gameColumns, ...endColumns];
