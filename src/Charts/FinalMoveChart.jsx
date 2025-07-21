@@ -17,8 +17,21 @@ const chartOptions = {
                 padding: 8,   // less padding between items
             },
             position: 'bottom' // or 'right', 'top'
+        },
+        tooltip: {
+            callbacks: {
+                label: function (context) {
+                    const label = context.label || '';
+                    const value = context.parsed;
+                    const data = context.dataset.data;
+                    const total = data.reduce((sum, val) => sum + val, 0);
+                    const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+
+                    return `${label}: ${value} (${percent}%)`;
+                }
+            }
         }
-    }
+    },
 };
 
 export default function TopFinalMoveCard({ className = '' }) {
@@ -115,7 +128,7 @@ export default function TopFinalMoveCard({ className = '' }) {
             </CardHeader>
             <CardContent className="justify-center items-center flex h-[300px] ">
                 {topMoves.length > 0 ? (
-                        <Doughnut data={chartData} options={chartOptions} />
+                    <Doughnut data={chartData} options={chartOptions} />
                 ) : (
                     <p className="text-muted-foreground">No data</p>
                 )}
