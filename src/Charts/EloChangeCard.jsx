@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-
-export default function EloChangeCard({className = ''}) {
+import { connectWebSocket, subscribe } from '../utils/websocket';
+export default function EloChangeCard({ className = '' }) {
     const [numMatches, setNumMatches] = useState(10);
     const [eloData, setEloData] = useState(null);
     const [error, setError] = useState(false);
@@ -20,32 +20,19 @@ export default function EloChangeCard({className = ''}) {
             .catch(() => setError(true));
     };
 
+
     useEffect(() => {
         fetchEloData(numMatches);
-
-        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
-        wsRef.current = ws;
-
-        ws.onopen = () => console.log("WebSocket connected");
-
-        ws.onmessage = (event) => {
-            try {
-                if (!event.data || event.data.trim().charAt(0) !== '{') return;
-                const message = JSON.parse(event.data);
-                if (message.type === "new_match") {
-                    fetchEloData(numMatches);;
-                }
-            } catch (err) {
-                console.warn("Error parsing WebSocket message", err);
+        connectWebSocket("ws://192.168.1.30:8005/ws");
+        const unsubscribe = subscribe((message) => {
+            if (message.type === "new_match") {
+                fetchEloData(numMatches);
             }
-        };
+        });
 
-        ws.onerror = (err) => console.error("WebSocket error", err);
-
-        ws.onclose = () => console.log("WebSocket closed");
-
-        return () => ws.close();
+        return () => unsubscribe();
     }, [numMatches]);
+    
 
     return (
         <div className={`w-full h-full bg-gray-200 text-black p-6 rounded-lg shadow-md text-center flex flex-col items-center justify-center ${className}`}>

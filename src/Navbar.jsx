@@ -1,5 +1,6 @@
 import { Link, useLocation  } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
+import { connectWebSocket, subscribe } from './utils/websocket';
 
 export default function Navbar() {
     const location = useLocation();
@@ -22,29 +23,16 @@ export default function Navbar() {
     useEffect(() => {
         fetchCurrentElo();
 
-        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
-        wsRef.current = ws;
-
-        ws.onopen = () => console.log("WebSocket connected");
-
-        ws.onmessage = (event) => {
-            try {
-                if (!event.data || event.data.trim().charAt(0) !== '{') return;
-                const message = JSON.parse(event.data);
-                if (message.type === "new_match") {
-                    fetchCurrentElo();
-                }
-            } catch (err) {
-                console.warn("Error parsing WebSocket message", err);
+        connectWebSocket("ws://192.168.1.30:8005/ws");
+        const unsubscribe = subscribe((message) => {
+            if (message.type === "new_match") {
+                fetchCurrentElo(); // local refetch
             }
-        };
+        });
 
-        ws.onerror = (err) => console.error("WebSocket error", err);
-
-        ws.onclose = () => console.log("WebSocket closed");
-
-        return () => ws.close(); 
+        return () => unsubscribe(); // clean up on unmount
     }, []);
+    
     return (
         <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 py-2 shadow-md flex justify-between items-center">
             <div className="text-xl font-bold">Tracker</div>

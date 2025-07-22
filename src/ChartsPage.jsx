@@ -25,7 +25,7 @@ import ForfeitCard from './Charts/ForfeitsCard';
 import EloChangeCard from './Charts/EloChangeCard';
 import SeasonStatsCard from './Charts/SeasonStatsCard';
 import TopFinalMoveCard from './Charts/FinalMoveChart';
-
+import { connectWebSocket, subscribe } from './utils/websocket';
 ChartJS.register(
     ScatterController,
     CategoryScale,
@@ -172,7 +172,6 @@ function CombinedEloChart({ combinedEloData }) {
 }
 
 export default function ChartsPage() {
-    const wsRef = useRef(null);
     const [stats, setStats] = useState([]);
     const [WinLoseLimit, setWinLoseLimit] = useState(20);
     // const [loseStats, setLoseStats] = useState([]);
@@ -185,43 +184,18 @@ export default function ChartsPage() {
             .catch((err) => console.error('Error fetching win data:', err));
     }, [WinLoseLimit]);
 
-    useEffect(() => {
-        fetchEloStats()
-    }, [WinLoseLimit]);
 
     useEffect(() => {
-        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
-        wsRef.current = ws;
-
-        ws.onopen = () => {
-            console.log("Websocket connected");
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                // Skip empty messages or non-JSON
-                if (!event.data || event.data.trim().charAt(0) !== '{') {
-                    console.log("ping", event.data);
-                    return;
-                }
-                const message = JSON.parse(event.data);
-                if (message.type === "new_win_stats" || message.type === "new_lose_stats") {
-                    console.log("Got new win stats")
-                    fetchEloStats()
-                }
-
-            } catch (err) {
-                console.warn("couldn't parse json event", err, event.data)
+        fetchEloStats();
+        connectWebSocket("ws://192.168.1.30:8005/ws");
+        const unsubscribe = subscribe((message) => {
+            if (message.type === "new_match") {
+                fetchEloStats()
             }
-        };
+        });
 
-        ws.onerror = (err) => {
-            console.error("websocket error", err);
-        };
+        return () => unsubscribe();
 
-        ws.onclose = () => {
-            ws.close();
-        };
     }, [fetchEloStats]);
     const CombinedEloData = {
         datasets: [
@@ -303,7 +277,7 @@ export default function ChartsPage() {
                 <div className="grid grid-cols-1 gap-2 ">
                     <ForfeitCard className="h-full" />
                     <SeasonStatsCard className="h-full" />
-                    <EloChangeCard className="h-full" />                    
+                    <EloChangeCard className="h-full" />
                 </div>
             </div>
             <div className="grid grid-cols-2 p-1 gap-2" >

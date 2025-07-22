@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { connectWebSocket, subscribe } from "../utils/websocket";
 
 const chartOptions = {
     cutout: '50%',
@@ -40,7 +40,6 @@ export default function TopFinalMoveCard({ className = '' }) {
     const [seasons, setSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState("");
 
-    const wsRef = useRef(null);
     const fetchSeasons = async () => {
         fetch("http://192.168.1.30:8005/seasons")
             .then(res => res.json())
@@ -65,30 +64,20 @@ export default function TopFinalMoveCard({ className = '' }) {
                 }
             })
             .catch(() => setError(true));
-
     };
 
     useEffect(() => {
         fetchSeasons();
         fetchFinalMoves();
 
-        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
-        wsRef.current = ws;
-        ws.onopen = () => console.log("WebSocket connected");
-        ws.onmessage = (event) => {
-            try {
-                if (!event.data || event.data.trim().charAt(0) !== '{') return;
-                const message = JSON.parse(event.data);
-                if (message.type === "new_match") {
-                    fetchFinalMoves();
-                }
-            } catch (err) {
-                console.warn("Error parsing WebSocket message", err);
+        connectWebSocket("ws://192.168.1.30:8005/ws");
+        const unsubscribe = subscribe((message) => {
+            if (message.type === "new_match") {
+                fetchFinalMoves()
             }
-        };
-        ws.onerror = (err) => console.error("WebSocket error", err);
-        ws.onclose = () => console.log("WebSocket closed");
-        return () => ws.close();
+        });
+
+        return () => unsubscribe();
     }, []);
 
 

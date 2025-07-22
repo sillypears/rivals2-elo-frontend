@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import MatchDataTable from './data/MatchDataTable';
-
+import { connectWebSocket, subscribe } from './utils/websocket';
 export default function MatchesPage() {
     const wsRef = useRef(null);
     const [matches, setMatches] = useState([]);
@@ -43,39 +43,17 @@ export default function MatchesPage() {
         fetchMatchStats()
     }, []);
 
-    useEffect(() => {
-        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
-        wsRef.current = ws;
-
-        ws.onopen = () => {
-            console.log("Websocket connected");
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                // Skip empty messages or non-JSON
-                if (!event.data || event.data.trim().charAt(0) !== '{') {
-                    console.log("ping", event.data);
-                    return;
-                }
-                const message = JSON.parse(event.data);
-                if (message.type === "new_match") {
-                    console.log("Got new matches")
-                    fetchMatchStats();
-                }
-            } catch (err) {
-                console.warn(`couldn't parse ws: `, err)
-            }
-        };
-
-        ws.onerror = (err) => {
-            console.error("websocket error", err);
-        };
-
-        ws.onclose = () => {
-            ws.close();
-        };
-    }, []);
+      useEffect(() => {
+        fetchMatchStats();
+        connectWebSocket("ws://192.168.1.30:8005/ws");
+        const unsubscribe = subscribe((message) => {
+          if (message.type === "new_match") {
+            fetchMatchStats()
+          }
+        });
+    
+        return () => unsubscribe();
+      }, []);
 
     return (
         <div className="min-h-screen bg-gray-800 text-white p-6">

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-
+import { connectWebSocket, subscribe } from '../utils/websocket';
 export default function SeasonStatsCard({ className = '' }) {
     const [seasonStats, setSeasonStats] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -19,33 +19,17 @@ export default function SeasonStatsCard({ className = '' }) {
             .catch(() => setError(true));
     };
 
-    useEffect(() => {
-        fetchSeasonStats();
-
-        const ws = new WebSocket("ws://192.168.1.30:8005/ws");
-        wsRef.current = ws;
-
-        ws.onopen = () => console.log("WebSocket connected");
-
-        ws.onmessage = (event) => {
-            try {
-                if (!event.data || event.data.trim().charAt(0) !== '{') return;
-                const message = JSON.parse(event.data);
-                if (message.type === "new_match") {
-                    fetchSeasonStats();
-                }
-            } catch (err) {
-                console.warn("Error parsing WebSocket message", err);
-            }
-        };
-
-        ws.onerror = (err) => console.error("WebSocket error", err);
-
-        ws.onclose = () => console.log("WebSocket closed");
-
-        return () => ws.close(); 
-    }, []);
-
+     useEffect(() => {
+       fetchSeasonStats();
+       connectWebSocket("ws://192.168.1.30:8005/ws");
+       const unsubscribe = subscribe((message) => {
+         if (message.type === "new_match") {
+           fetchSeasonStats()
+         }
+       });
+   
+       return () => unsubscribe();
+     }, []);
     const selected = seasonStats[selectedIndex];
 
     return (
