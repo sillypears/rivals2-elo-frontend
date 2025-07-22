@@ -1,12 +1,11 @@
 import { Link, useLocation  } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
 export default function Navbar() {
     const location = useLocation();
     const [currentTier, setCurrentTier] = useState({});
     const [error, setError] = useState(false);
-    const wsRef = useRef(null);
 
     const fetchCurrentElo = () => {
         fetch('http://192.168.1.30:8005/current_tier')
