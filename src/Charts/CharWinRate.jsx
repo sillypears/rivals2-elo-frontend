@@ -46,8 +46,8 @@ export default function CharWinLossChart() {
                     }
                 });
 
-                const winColors = winLabels.map(() => '#4ade80'); // green
-                const lossColors = lossLabels.map(() => '#f87171'); // red
+                // const winColors = winLabels.map(() => '#4ade80'); // green
+                // const lossColors = lossLabels.map(() => '#f87171'); // red
 
                 setWinData({
                     labels: winLabels,

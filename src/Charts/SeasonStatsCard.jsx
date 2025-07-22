@@ -1,10 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 export default function SeasonStatsCard({ className = '' }) {
     const [seasonStats, setSeasonStats] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [error, setError] = useState(false);
-    const wsRef = useRef(null);
 
     const fetchSeasonStats = () => {
         fetch('http://192.168.1.30:8005/all-seasons-stats')

@@ -1,10 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 export default function EloChangeCard({ className = '' }) {
     const [numMatches, setNumMatches] = useState(10);
     const [eloData, setEloData] = useState(null);
     const [error, setError] = useState(false);
-    const wsRef = useRef(null);
 
     const fetchEloData = (count) => {
         fetch(`http://192.168.1.30:8005/elo-change/${count}`)
@@ -19,7 +18,6 @@ export default function EloChangeCard({ className = '' }) {
             })
             .catch(() => setError(true));
     };
-
 
     useEffect(() => {
         fetchEloData(numMatches);
