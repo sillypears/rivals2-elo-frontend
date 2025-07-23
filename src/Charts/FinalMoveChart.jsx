@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/myui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { connectWebSocket, subscribe } from "../utils/websocket";
 
 const chartOptions = {
@@ -11,7 +12,7 @@ const chartOptions = {
         legend: {
             labels: {
                 font: {
-                    size: 10 
+                    size: 10
                 },
                 boxWidth: 10,
                 padding: 8,
@@ -102,18 +103,21 @@ export default function TopFinalMoveCard({ className = '' }) {
     };
 
     return (
-        <Card className="w-full h-[400]-px flex flex-col">
-            <CardHeader className={`flex justify-between ${className}`}>
-                <CardTitle>Finish Moves</CardTitle>
-                <select
-                    className="bg-white border rounded-lg px-2 py-1 text-sm"
-                    value={selectedSeason}
-                    onChange={(e) => setSelectedSeason(e.target.value)}
-                >
-                    {seasons.map(season => (
-                        <option key={season.id} value={season.display_name}>{season.display_name}</option>
-                    ))}
-                </select>
+        <Card className="bg-gray-200 text-black  flex flex-col">
+            <CardHeader className={``}>
+                <div className="flex justify-between">
+                    <CardTitle className="">Finish Moves</CardTitle>
+                <Select className="" value={selectedSeason} onValueChange={(e) => setSelectedSeason(e)} >
+                    <SelectTrigger className="w-[180px] bg-white">
+                        <SelectValue placeholder="Select a timezone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {seasons.map(season => (
+                            <SelectItem key={season.id} value={season.display_name}>{season.display_name}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             </CardHeader>
             <CardContent className="justify-center items-center flex h-[300px] ">
                 {topMoves.length > 0 ? (
