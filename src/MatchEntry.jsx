@@ -88,9 +88,7 @@ export default function ManualMatchEntry() {
     const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
     const handleStageChange = (gameNum, stageId) => {
-        // const stage = stages.find(s => s.id === stageId);
         update(`game_${gameNum}_stage`, stageId);
-        // update(`game_${gameNum}_stage_name`, stage?.display_name || '');
     };
 
     const handleSubmit = async () => {

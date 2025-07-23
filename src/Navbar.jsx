@@ -25,11 +25,11 @@ export default function Navbar() {
         connectWebSocket("ws://192.168.1.30:8005/ws");
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
-                fetchCurrentElo(); // local refetch
+                fetchCurrentElo(); 
             }
         });
 
-        return () => unsubscribe(); // clean up on unmount
+        return () => unsubscribe(); 
     }, []);
     
     return (

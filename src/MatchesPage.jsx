@@ -17,7 +17,6 @@ export default function MatchesPage() {
             if (result.status === 'ok') {
                 console.log(`Updated ${key} to "${value}" for game #${gameNumber}`);
 
-                // ✅ Update local state
                 setMatches(prevMatches =>
                     prevMatches.map(match =>
                         match.ranked_game_number === gameNumber

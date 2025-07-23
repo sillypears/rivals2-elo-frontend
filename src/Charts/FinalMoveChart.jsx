@@ -11,12 +11,12 @@ const chartOptions = {
         legend: {
             labels: {
                 font: {
-                    size: 10  // smaller text
+                    size: 10 
                 },
-                boxWidth: 10, // smaller color boxes
-                padding: 8,   // less padding between items
+                boxWidth: 10,
+                padding: 8,
             },
-            position: 'bottom' // or 'right', 'top'
+            position: 'bottom'
         },
         tooltip: {
             callbacks: {

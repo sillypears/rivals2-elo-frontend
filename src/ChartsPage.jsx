@@ -68,7 +68,7 @@ const WinLoseElochartOptions = {
                         const h25 = area.height * 0.25;
                         if (point.x < area.left + w25 || point.x > area.right - w25
                             || point.y < area.top + h25 || point.y > area.bottom - h25) {
-                            return false; // abort
+                            return false; 
                         }
                     },
                 },
@@ -108,7 +108,7 @@ const candlestickOptions = {
                     const h25 = area.height * 0.25;
                     if (point.x < area.left + w25 || point.x > area.right - w25
                         || point.y < area.top + h25 || point.y > area.bottom - h25) {
-                        return false; // abort
+                        return false; 
                     }
                 },
             },
@@ -174,8 +174,6 @@ function CombinedEloChart({ combinedEloData }) {
 export default function ChartsPage() {
     const [stats, setStats] = useState([]);
     const [WinLoseLimit, setWinLoseLimit] = useState(20);
-    // const [loseStats, setLoseStats] = useState([]);
-
 
     const fetchEloStats = useCallback(() => {
         fetch(`http://192.168.1.30:8005/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)

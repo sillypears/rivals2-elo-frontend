@@ -1,4 +1,3 @@
-// websocket.js
 let socket;
 const listeners = new Set();
 
@@ -30,5 +29,5 @@ export function connectWebSocket(url) {
 
 export function subscribe(listener) {
     listeners.add(listener);
-    return () => listeners.delete(listener); // cleanup
+    return () => listeners.delete(listener); 
 }
