@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import Tooltip from './components/ui/Tooltip';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
 function MatchCard({ match }) {
