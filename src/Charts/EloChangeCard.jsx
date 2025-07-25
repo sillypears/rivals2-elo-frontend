@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 export default function EloChangeCard({ className = '' }) {
-    const [numMatches, setNumMatches] = useState(10);
+    const [numMatches, setNumMatches] = useState(20);
     const [eloData, setEloData] = useState(null);
     const [error, setError] = useState(false);
 

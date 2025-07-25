@@ -5,6 +5,7 @@ import MatchHistory from './MatchHistory';
 import ChartsPage from './ChartsPage';
 import MatchesPage from './MatchesPage';
 import ManualMatchEntry from './MatchEntry';
+import MatchDetailPage from './MatchDetailPage';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
             <Route path="/stats" element={<ChartsPage />} />
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/add-match" element={<ManualMatchEntry />} />
+            <Route path="/match/:id" element={<MatchDetailPage />} />
           </Routes>
         </main>
         <BottomFooter />
