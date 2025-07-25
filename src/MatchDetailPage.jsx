@@ -47,7 +47,6 @@ export default function MatchDetailPage() {
                     <div>ELO After: {match.elo_rank_new} ({match.elo_change >= 0 ? "+" : ""}{match.elo_change})</div>
                     <div>Opponent ELO: {match.opponent_elo}</div>
                     <div>Streak: {match.win_streak_value}</div>
-                    <div>Final Move: {match.final_move_name}</div>
                 </div>
 
                 {[1, 2, 3].map(game => (
