@@ -46,7 +46,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 header: 'Game #',
                 cell: ({ row }) => {
                     return (
-                        <a href={`/match/${row.original.id}`} >
+                        <a href={`/match/${row.original.id}`} target="_blank">
                             {row.original.ranked_game_number}
                         </a>
                     )
