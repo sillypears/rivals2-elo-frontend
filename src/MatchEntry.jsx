@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchCharacters, fetchStages } from './utils/api';
 import { data } from 'autoprefixer';
 
+
 Math.log10 = Math.log10 || function (x) {
     return Math.log(x) / Math.LN10;
 };
@@ -62,6 +63,21 @@ export default function ManualMatchEntry() {
         game_3_winner: -1,
         final_move_id: -1,
     });
+    const handlePasteJson = (e) => {
+        try {
+            const json = JSON.parse(e.target.value);
+            if (typeof json === 'object' && json !== null) {
+                setForm(prev => ({ ...prev, ...json }));
+            } else {
+                alert("Invalid JSON object.");
+            }
+        } catch (err) {
+            alert("Failed to parse JSON.");
+            console.error(err);
+        }
+    };
+
+
     const loadLatestMatch = async () => {
         try {
             const res = await fetch('http://192.168.1.30:8005/matches/1');
@@ -222,6 +238,18 @@ export default function ManualMatchEntry() {
             <button onClick={handleSubmit} className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mt-4">
                 Submit
             </button>
+            <div className="space-y-2">
+                <label className="block font-semibold">Paste Match JSON</label>
+                <textarea
+                    rows={6}
+                    onBlur={handlePasteJson}
+                    placeholder="Paste JSON here"
+                    className="w-full border p-2 rounded bg-gray-100 text-sm"
+                />
+                <p className="text-xs text-gray-600">Paste full JSON and click outside the box to apply it.</p>
+            </div>
+
         </div>
+
     );
 }
