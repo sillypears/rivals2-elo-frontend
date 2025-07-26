@@ -68,7 +68,7 @@ const WinLoseElochartOptions = {
                         const h25 = area.height * 0.25;
                         if (point.x < area.left + w25 || point.x > area.right - w25
                             || point.y < area.top + h25 || point.y > area.bottom - h25) {
-                            return false; 
+                            return false;
                         }
                     },
                 },
@@ -108,7 +108,7 @@ const candlestickOptions = {
                     const h25 = area.height * 0.25;
                     if (point.x < area.left + w25 || point.x > area.right - w25
                         || point.y < area.top + h25 || point.y > area.bottom - h25) {
-                        return false; 
+                        return false;
                     }
                 },
             },
@@ -134,11 +134,14 @@ const candlestickOptions = {
                     weight: 'bold'
                 }
             },
+            grid: {
+                color: 'rgba(145, 145, 145, 0.1)',
+            },
             ticks: {
                 autoSkip: true,
                 maxRotation: 0,
                 minRotation: 0
-            }
+            },
         },
         y: {
             title: {
@@ -148,6 +151,9 @@ const candlestickOptions = {
                     size: 14,
                     weight: 'bold'
                 }
+            },
+            grid: {
+                color: 'rgba(145, 145, 145, 0.2)',
             },
             beginAtZero: false
         }
@@ -245,8 +251,9 @@ export default function ChartsPage() {
                     up: '#00ff00',
                     down: '#ff0000',
                     unchanged: '#999999'
-                }
-            }]
+                },
+                
+            }],
     };
     return (
         <div className=" bg-gray-00 text-white p-2">
