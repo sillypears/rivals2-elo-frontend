@@ -42,7 +42,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         if (characters.length === 0 || stages.length === 0) return [];
 
         const baseColumns = [
-            columnHelper.accessor('ranked_game_number', { 
+            columnHelper.accessor('ranked_game_number', {
                 header: 'Game #',
                 cell: ({ row }) => {
                     return (
@@ -50,7 +50,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                             {row.original.ranked_game_number}
                         </a>
                     )
-                } 
+                }
 
             }),
             columnHelper.accessor('match_win', {
@@ -89,6 +89,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     const [value, setValue] = useState(externalValue);
                     const [originalValue, setOriginalValue] = useState(externalValue);
                     const estimated_elo = row.original.opponent_estimated_elo;
+                    const opp_name = row.original.opponent_name;
 
                     useEffect(() => {
                         setValue(externalValue);
@@ -134,16 +135,17 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
 
                         />
                     ) : (
-                        <span
-                            className="cursor-pointer hover:underline"
-                            onClick={() => setEditing(true)}
-                            title="Click to edit"
-                        >
-                            {value === -2 ? 'UNRANKED' : value}
-                            <sup title="Estimated ELO" className="ml-2 text-gray-400">
-                                {estimated_elo > -1 ? `${estimated_elo}` : ''}
-                            </sup>
-                        </span>
+                            <span
+                                className="cursor-pointer hover:underline"
+                                onClick={() => setEditing(true)}
+                                title={`${opp_name}`}
+                            >
+                                {value === -2 ? 'UNRANKED' : value}
+                                <sup title="Estimated ELO" className="ml-2 text-gray-400">
+                                    {estimated_elo > -1 ? `${estimated_elo}` : ''}
+                                </sup>
+
+                            </span>
 
                     );
                 }
@@ -317,7 +319,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
         }
 
         const endColumns = [
-            
+
         ];
 
         return [...baseColumns, ...gameColumns, ...endColumns];
