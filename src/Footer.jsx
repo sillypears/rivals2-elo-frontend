@@ -7,6 +7,9 @@ export default function BottomFooter() {
                 <a href="https://rivals2.com/nolt" title="Nolt Board" target="_blank">
                     <img width="16px" src="/images/nolt-mark.jpg" />
                 </a>
+                <a href="https://dragdown.wiki/wiki/RoA2" title="Dragdown" target="_blank">
+                    <img width="16px" src="/images/dragdown.png" />
+                </a>
         </div>
     )
 }
