@@ -17,6 +17,7 @@ import {
     CandlestickElement,
 } from 'chartjs-chart-financial';
 import 'chartjs-chart-financial';
+import { connectWebSocket, subscribe } from './utils/websocket';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import EloHistogram from './Charts/EloHistogram';
 import GameCountChart from './Charts/GameCount';
@@ -25,7 +26,7 @@ import ForfeitCard from './Charts/ForfeitsCard';
 import EloChangeCard from './Charts/EloChangeCard';
 import SeasonStatsCard from './Charts/SeasonStatsCard';
 import TopFinalMoveCard from './Charts/FinalMoveChart';
-import { connectWebSocket, subscribe } from './utils/websocket';
+import StageWinLossCard from './Charts/StageWinRate';
 ChartJS.register(
     ScatterController,
     CategoryScale,
@@ -252,39 +253,52 @@ export default function ChartsPage() {
                     down: '#ff0000',
                     unchanged: '#999999'
                 },
-                
+
             }],
     };
     return (
-        <div className=" bg-gray-00 text-white p-2">
-            <div className="grid grid-cols-2 gap-2 mb-2 items-center">
-                <h2 className="text-2xl font-bold mb-2">ELO Progression</h2>
-                <div className="flex justify-end">
-                    <select className="w-fit p-1 bg-gray-700 text-white rounded"
-                        onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}
-                        value={WinLoseLimit}
-                    >
-                        <option value="10">10 Matches</option>
-                        <option value="20">20 Matches</option>
-                        <option value="25">25 Matches</option>
-                        <option value="50">50 Matches</option>
-                        <option value="100">100 Matches</option>
-                    </select>
+        <div className=" bg-gray-800 text-white p-2 mb-10">
+            <div className="grid">
+                <div className="grid grid-cols-2 gap-2 mb-2 justify-center items-center">
+                    <h2 className="text-2xl font-bold mb-2">ELO Progression</h2>
+                    <div className="flex justify-end">
+                        <select className="w-fit p-1 bg-gray-700 text-white rounded"
+                            onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}
+                            value={WinLoseLimit}
+                        >
+                            <option value="10">10 Matches</option>
+                            <option value="20">20 Matches</option>
+                            <option value="25">25 Matches</option>
+                            <option value="50">50 Matches</option>
+                            <option value="100">100 Matches</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 p-1">
+                    <CombinedEloChart combinedEloData={CombinedEloData} />
+                    <CandlestickEloChart candlestickData={candlestickData} />
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 p-1">
-                <CombinedEloChart combinedEloData={CombinedEloData} />
-                <CandlestickEloChart candlestickData={candlestickData} />
-            </div>
-            <div className="grid grid-cols-3 p-1 gap-2 ">
-                <EloHistogram matches={stats} className="h-2/3" />
-                <TopFinalMoveCard className="" />
-                <div className="grid grid-cols-1 gap-2 ">
+            <div className="grid grid-cols-3 p-1 gap-2 items-start">
+                {/* Column 1 */}
+                <div className="flex flex-col gap-2">
+                    <EloHistogram matches={stats} />
+                    <StageWinLossCard className="h-full" />
+                </div>
+
+                {/* Column 2 */}
+                <div className="flex flex-col gap-2">
+                    <TopFinalMoveCard className="h-full" />
+                </div>
+
+                {/* Column 3 */}
+                <div className="flex flex-col gap-2 w-full">
                     <ForfeitCard className="h-full" />
                     <SeasonStatsCard className="h-full" />
                     <EloChangeCard className="h-full" />
                 </div>
             </div>
+
             <div className="grid grid-cols-2 p-1 gap-2" >
                 <CharWinLossChart />
                 <GameCountChart />

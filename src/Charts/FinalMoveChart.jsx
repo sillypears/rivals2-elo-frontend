@@ -103,12 +103,12 @@ export default function TopFinalMoveCard({ className = '' }) {
     };
 
     return (
-        <Card className="bg-gray-200 text-black  flex flex-col">
+        <Card className="bg-gray-200 text-black flex flex-col">
             <CardHeader className={``}>
                 <div className="flex justify-between">
                     <CardTitle className="">Finish Moves</CardTitle>
                 <Select className="" value={selectedSeason} onValueChange={(e) => setSelectedSeason(e)} >
-                    <SelectTrigger className="w-[180px] bg-white">
+                    <SelectTrigger className=" bg-white">
                         <SelectValue placeholder="Select a timezone" />
                     </SelectTrigger>
                     <SelectContent>
@@ -119,7 +119,7 @@ export default function TopFinalMoveCard({ className = '' }) {
                 </Select>
             </div>
             </CardHeader>
-            <CardContent className="justify-center items-center flex h-[300px] ">
+            <CardContent className="justify-center items-center flex min-h-[300px]">
                 {topMoves.length > 0 ? (
                     <Doughnut data={chartData} options={chartOptions} />
                 ) : (

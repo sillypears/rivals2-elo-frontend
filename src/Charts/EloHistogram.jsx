@@ -8,6 +8,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -55,8 +56,9 @@ export default function EloHistogram({ matches, className = '' }) {
     }, [matches, maxElo, minElo]);
 
     return (
-        <div className={`bg-gray-200 text-black p-4 pt-1 rounded-lg h-full w-full ${className}`}>
-            <h3 className="text-lg font-bold w-full mb-2">Opponent Elo Distribution</h3>
+        <Card className={`bg-gray-200 text-black p-4 pt-1 rounded-lg h-full w-full ${className}`}>
+            <CardHeader className="text-lg font-bold  mb-2">Opponent Elo Distribution</CardHeader>
+            <CardContent>
             <Bar
                 data={histogramData}
                 options={{
@@ -74,6 +76,7 @@ export default function EloHistogram({ matches, className = '' }) {
                     }
                 }}
             />
-        </div>
+            </CardContent>
+        </Card>
     );
 }
