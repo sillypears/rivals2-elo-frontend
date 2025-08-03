@@ -2,6 +2,12 @@ import { useEffect, useState, useRef } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
 function MatchCard({ match }) {
+  const opponentChars = [
+    { id: match.game_1_opponent_pick, img: match.game_1_opponent_pick_image, name: match.game_1_opponent_pick_name, winner: match.game_1_winner },
+    { id: match.game_2_opponent_pick, img: match.game_2_opponent_pick_image, name: match.game_2_opponent_pick_name, winner: match.game_2_winner },
+    { id: match.game_3_opponent_pick, img: match.game_3_opponent_pick_image, name: match.game_3_opponent_pick_name, winner: match.game_3_winner },
+  ].filter(c => c.id !== -1 && c.name !== "N/A" && c.img && c.img !== "na");
+  const uniqueOpponents = Array.from(new Map(opponentChars.map(c => [c.img, c])).values());
   return (
     <div className="relative bg-gradient-to-b from-orange-300 to-blue-500 text-white rounded-2xl shadow-lg p-4">
       {/* <div className="absolute top-2 right-2 text-l">{match.elo_change > 0 ? '👍' : '👎'}</div> */}
@@ -9,13 +15,18 @@ function MatchCard({ match }) {
       {/* 🧠 Character icon */}
       <div className="mb-2 flex items-center gap-2">
         <div className="absolute top-2 right-2 flex items-center gap-1">
-          <img
-            src={`/images/chars/${match.game_1_opponent_pick_image}.png`}
-            alt={match.game_1_opponent_pick_name}
-            onError={(e) => { e.target.src = '/images/chars/na.png'; }}
-            className={`w-8 h-8 object-contain ${match.match_win ? 'grayscale' : ''}`}
-            title={match.game_1_opponent_pick_name}
-          />
+          <div className="flex -space-x-5">
+            {uniqueOpponents.map((char, index) => (
+            <img
+              key={char.img}
+              src={`/images/chars/${char.img}.png`}
+              alt={char.name}
+              onError={(e) => { e.target.src = '/images/chars/na.png'; }}
+              className={`w-8 h-8 object-contain z-${(uniqueOpponents.length - index)*5} ${match.match_win ? 'grayscale' : ''}`}
+              title={char.name}
+            />
+          ))}
+          </div>
           <span className="text-lg" aria-describedby="tooltip-id" title={`${(match.match_win && match.final_move_id != -1) ? match.final_move_name : ''}`}>
             {/* <Tooltip message= > */}
             {match.elo_change > 0 ? '👍' : '👎'}
