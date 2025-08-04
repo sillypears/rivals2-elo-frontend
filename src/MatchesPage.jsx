@@ -14,7 +14,7 @@ export default function MatchesPage() {
             });
             const result = await res.json();
 
-            if (result.status === 'ok') {
+            if (result.status === 'SUCCESS') {
                 console.log(`Updated ${key} to "${value}" for game #${gameNumber}`);
 
                 setMatches(prevMatches =>

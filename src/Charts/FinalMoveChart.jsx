@@ -45,7 +45,7 @@ export default function TopFinalMoveCard({ className = '' }) {
         fetch("http://192.168.1.30:8005/seasons")
             .then(res => res.json())
             .then(json => {
-                if (json.status === "OK" && json.data) {
+                if (json.status === "SUCCESS" && json.data) {
                     setSeasons(json.data);
                 } else {
                     setError(true);
@@ -57,7 +57,7 @@ export default function TopFinalMoveCard({ className = '' }) {
         fetch("http://192.168.1.30:8005/final-move-stats")
             .then(res => res.json())
             .then(json => {
-                if (json.status === "OK" && json.data) {
+                if (json.status === "SUCCESS" && json.data) {
                     setFinalMoves(json.data);
                     if (!selectedSeason) { setSelectedSeason(json.data[0].season_display_name) }
                 } else {

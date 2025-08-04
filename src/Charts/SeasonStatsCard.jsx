@@ -9,7 +9,7 @@ export default function SeasonStatsCard({ className = '' }) {
         fetch('http://192.168.1.30:8005/all-seasons-stats')
             .then(res => res.json())
             .then(json => {
-                if (json.status === 'OK' && json.data) {
+                if (json.status === 'SUCCESS' && json.data) {
                     setSeasonStats(json.data);
                 } else {
                     setError(true);

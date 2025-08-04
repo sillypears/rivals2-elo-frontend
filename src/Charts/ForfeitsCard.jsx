@@ -8,7 +8,7 @@ export default function ForfeitCard(className = '') {
         fetch('http://192.168.1.30:8005/match_forfeits')
             .then(res => res.json())
             .then(json => {
-                if (json.status === 'OK' && json.data?.forfeits !== undefined) {
+                if (json.status === 'SUCCESS' && json.data?.forfeits !== undefined) {
                     setForfeitCount(json.data.forfeits);
                 } else {
                     setError(true);

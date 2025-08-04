@@ -9,7 +9,7 @@ export default function EloChangeCard({ className = '' }) {
         fetch(`http://192.168.1.30:8005/elo-change/${count}`)
             .then(res => res.json())
             .then(json => {
-                if (json.status === 'OK' && json.data) {
+                if (json.status === 'SUCCESS' && json.data) {
                     setEloData(json.data);
                     setError(false);
                 } else {

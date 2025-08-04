@@ -35,7 +35,7 @@ export default function CharWinLossChart() {
                 const winValues = [];
                 const lossLabels = [];
                 const lossValues = [];
-                data.data.forEach(entry => {
+                data.forEach(entry => {
                     if (entry.wins > 0) {
                         winLabels.push(entry.opponent_pick);
                         winValues.push(entry.wins);

@@ -12,7 +12,7 @@ export default function StageWinLossCard({ className = ""}) {
 
             .then(res => res.json())
             .then(json => {
-                if (json.status === 'OK' && json.data) {
+                if (json.status === 'SUCCESS' && json.data) {
                     setStageData(json.data);
                 } else {
                     setError(true);
