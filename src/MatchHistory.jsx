@@ -35,7 +35,7 @@ function MatchCard({ match }) {
         </div>
       </div>
 
-      <div className="text-lg font-bold text-black">Game #{match.ranked_game_number}</div>
+      <div className="text-lg font-bold text-black">Game #<a href={`/match/${match.id}`}>{match.ranked_game_number}</a></div>
       <div className="text-sm text-gray-200">Date: {new Date(`${match.match_date}Z`).toLocaleString("en-US", { timeZone: "America/New_York" })}</div>
 
       <div className="mt-2">

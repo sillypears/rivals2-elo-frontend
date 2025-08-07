@@ -6,7 +6,7 @@ import ChartsPage from './ChartsPage';
 import MatchesPage from './MatchesPage';
 import ManualMatchEntry from './MatchEntry';
 import MatchDetailPage from './MatchDetailPage';
-
+import HeadToHeadPage from './HeadToHead';
 export default function App() {
   return (
     <Router>
@@ -19,6 +19,8 @@ export default function App() {
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/add-match" element={<ManualMatchEntry />} />
             <Route path="/match/:id" element={<MatchDetailPage />} />
+            <Route path="/head-to-head/" element={<HeadToHeadPage />} />
+
           </Routes>
         </main>
         <BottomFooter />

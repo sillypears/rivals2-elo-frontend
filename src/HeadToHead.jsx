@@ -1,0 +1,228 @@
+import { Card, CardTitle, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
+import { useEffect, useState, useCallback } from 'react';
+import { connectWebSocket, subscribe } from './utils/websocket';
+
+export default function HeadToHeadPage() {
+    // const { oppName } = useParams();
+    const [oppNames, setOppNames] = useState([])
+    const [stats, setStats] = useState(null)
+    const [selectedIndex, setSelectedIndex] = useState("N/A")
+
+    const fetchOpponentNames = useCallback(() => {
+        fetch(`http://192.168.1.30:8005/opponent_names`)
+            .then((res) => res.json())
+            .then((data) => setOppNames(data.data))
+            .catch((err) => console.error('Error fetching win data:', err));
+    }, []);
+    const fetchOpponentData = useCallback((oppName) => {
+        if (!oppName || oppName === "N/A") return;
+        fetch(`http://192.168.1.30:8005/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
+            .then((res) => res.json())
+            .then((data) => setStats(data.data))
+            .catch((err) => console.error('Error fetching win data:', err));
+    }, []);
+    useEffect(() => {
+        fetchOpponentNames();
+        connectWebSocket("ws://192.168.1.30:8005/ws");
+        const unsubscribe = subscribe((message) => {
+            if (message.type === "new_match") {
+                fetchOpponentNames()
+
+                if (selectedIndex !== "N/A") {
+                    fetchOpponentData(selectedIndex);
+                }
+            }
+        });
+
+        return () => unsubscribe();
+
+    }, [fetchOpponentNames, fetchOpponentData, selectedIndex]);
+
+    useEffect(() => {
+        if (selectedIndex !== "N/A") {
+            fetchOpponentData(selectedIndex);
+        } else {
+            setStats(null);
+        }
+    }, [selectedIndex, fetchOpponentData]);
+
+    const ProgressBar = ({ percentage, color = "bg-blue-500" }) => (
+        <div className="w-full bg-slate-600 rounded-full h-2">
+            <div
+                className={`h-2 rounded-full transition-all duration-300 ${color}`}
+                style={{ width: `${percentage}%` }}
+                title={`${percentage}%`}
+            ></div>
+        </div>
+    );
+
+    const getWinRateColor = (winRate) => {
+        if (winRate >= 70) return "bg-green-500";
+        if (winRate >= 50) return "bg-yellow-500";
+        return "bg-red-500";
+    };
+    return (
+        <div className="bg-gray-800 text-white p-2">
+            <h2 className="justify-between text-3xl font-bold flex">
+                <span className="">
+                    Head to Head {stats ? `against: ${selectedIndex}` : ""}
+                </span>
+                <span className="">
+                    {oppNames.length > 1 && (
+                        <select
+                            className="bg-white p-2 m-2 rounded text-black text-sm rounded-lg"
+                            value={selectedIndex}
+                            onChange={(e) => setSelectedIndex(e.target.value)}
+                        >
+                            <option value="N/A" defaultValue="N/A" disabled>N/A</option>
+                            {oppNames.map((opp, i) => (
+                                <option key={i} value={opp}>
+                                    {opp}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+                </span>
+            </h2>
+            {stats ? (
+                <div className="">
+                    <div className="gap-2 mb-2 mt-2 grid grid-cols-3">
+                        {stats.overall ?
+                            <Card className="bg-gray-400">
+                                <CardHeader>
+                                    <CardTitle className="text-center">Overall Record</CardTitle>
+                                </CardHeader>
+                                <CardContent className="grid grid-cols-5 text-center gap-4">
+                                    <div>
+                                        <div className="text-2xl font-bold">{stats.overall.total_matches}</div>
+                                        <div className="text-sm">Matches</div>
+                                    </div>
+                                    <div className="text-green-700">
+                                        <div className="text-2xl font-bold">{stats.overall.matches_won}</div>
+                                        <div className="text-sm">Wins</div>
+                                    </div>
+                                    <div className="text-red-700">
+                                        <div className="text-2xl font-bold">{stats.overall.matches_lost}</div>
+                                        <div className="text-sm">Losses</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-2xl font-bold">{stats.overall.win_percentage}%</div>
+                                        <div className="text-sm">Win Rate</div>
+                                    </div>
+                                    <div>
+                                        <div className={`text-2xl font-bold ${stats.overall.avg_elo_change >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                                            {stats.overall.avg_elo_change}
+                                        </div>
+                                        <div className=" text-sm">Avg ELO Δ</div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            :
+                            <Card>
+                                <div>No Overall Stats</div>
+                            </Card>
+                        }
+                        {stats.stages ?
+                            <Card className="bg-gray-400">
+                                <CardHeader>
+                                    <CardTitle className="text-center">Stage Performance</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                    {stats.stages.map((stage, i) => (
+                                        <div key={i}>
+                                            <div className="flex justify-between text-sm mb-1">
+                                                <span>{stage.stage_name}</span>
+                                                <span>{stage.win_rate}%</span>
+                                            </div>
+                                            <ProgressBar percentage={stage.win_rate} color={getWinRateColor(stage.win_rate)} />
+                                        </div>
+                                    ))}
+                                </CardContent>
+                            </Card>
+                            :
+                            <Card>
+                                <p>No Match Data</p>
+                            </Card>
+                        }
+                        {stats.matchup ?
+                            <Card className="bg-gray-400">
+                                <CardHeader>
+                                    <CardTitle className="text-center">Character Matchups</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                    {stats.matchup.map((mu, i) => (
+                                        <div key={i}>
+                                            <div className="flex justify-between text-sm mb-1">
+                                                <span>vs {mu.opponent_character}</span>
+                                                <span>{mu.win_rate}%</span>
+                                            </div>
+                                            <ProgressBar percentage={mu.win_rate} color={getWinRateColor(mu.win_rate)} />
+                                        </div>
+                                    ))}
+                                </CardContent>
+                            </Card>
+                            :
+                            <Card>
+                                <p>No Character Data</p>
+                            </Card>
+                        }
+                    </div>
+                    {stats.matches ?
+                        <Card className="bg-gray-400 p-2">
+                            <CardTitle className="font-bold text-center p-2 ">Match Data</CardTitle>
+                            <CardContent className="pt-2 grid grid-cols-5">
+                                {stats.matches.map((match, i) => (
+                                    <Card
+                                        key={match.id}
+                                        className={`p-2 ${match.match_win ? 'bg-green-300' : 'bg-red-300'}`}
+                                    >
+                                        <CardHeader>
+                                            <CardTitle className="flex justify-between">
+                                                <span>#{match.ranked_game_number}</span>
+                                                <span>{match.elo_change >= 0 ? `+${match.elo_change}` : match.elo_change}</span>
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-1 text-sm">
+                                            {match.game_2_winner != -1 ?
+
+                                                <div className="flex justify-between">
+                                                    <span>Game 1</span>
+                                                    <span>{match.game_1_stage_name}</span>
+                                                    <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} className={match.game_1_winner == 1 ? "grayscale" : ""} />
+                                                </div>
+                                                : ""
+                                            }
+                                            {match.game_2_winner != -1 ?
+
+                                                <div className="flex justify-between">
+                                                    <span>Game 2</span>
+                                                    <span>{match.game_2_stage_name}</span>
+                                                    <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`} className={match.game_2_winner == 1 ? "grayscale" : ""} />
+                                                </div>
+                                                : ""
+                                            }
+                                            {match.game_3_winner != -1 ?
+                                                <div className="flex justify-between">
+                                                    <span>Game 3</span>
+                                                    <span>{match.game_3_stage_name}</span>
+                                                    <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`} className={match.game_3_winner == 1 ? "grayscale" : ""} />
+
+                                                </div>
+                                                : ""
+                                            }
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </CardContent>
+                        </Card>
+                        :
+                        <p>No Match Data</p>
+                    }
+
+                </div >
+            ) : (
+                <p className="text-center text-3xl">Pick an opponent</p>
+            )}
+        </div >
+    )
+}

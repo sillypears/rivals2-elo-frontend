@@ -63,6 +63,12 @@ export default function Navbar() {
                 >
                     Add
                 </Link>
+                <Link
+                    to="/head-to-head"
+                    className={location.pathname === "/add-match" ? "text-teal-400" : "hover:text-teal-400"}
+                >
+                    H2H
+                </Link>
             </div>
         </nav>
     );
