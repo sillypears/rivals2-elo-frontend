@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { Link, useLocation  } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
@@ -8,7 +9,7 @@ export default function Navbar() {
     const [error, setError] = useState(false);
 
     const fetchCurrentElo = () => {
-        fetch('http://192.168.1.30:8005/current_tier')
+        fetch(`http://${API_BASE_URL}/current_tier`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -22,7 +23,7 @@ export default function Navbar() {
     useEffect(() => {
         fetchCurrentElo();
 
-        connectWebSocket("ws://192.168.1.30:8005/ws");
+        connectWebSocket(`ws://${API_BASE_URL}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchCurrentElo(); 

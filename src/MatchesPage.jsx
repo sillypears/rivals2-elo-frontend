@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { useEffect, useState, useRef } from 'react';
 import MatchDataTable from './data/MatchDataTable';
 import { connectWebSocket, subscribe } from './utils/websocket';
@@ -7,7 +8,7 @@ export default function MatchesPage() {
 
     const handleCellUpdate = async (row, gameNumber, key, value) => {
         try {
-            const res = await fetch('http://192.168.1.30:8005/update-match/', {
+            const res = await fetch(`http://${API_BASE_URL}/update-match/`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ row_id: row, game_number: gameNumber, key, value }),
@@ -33,7 +34,7 @@ export default function MatchesPage() {
     };
 
     const fetchMatchStats = () => {
-        fetch('http://192.168.1.30:8005/matches')
+        fetch(`http://${API_BASE_URL}/matches`)
             .then(res => res.json())
             .then((data) => setMatches(data.data))
             .catch(err => console.error('Failed to fetch matches:', err));
@@ -44,7 +45,7 @@ export default function MatchesPage() {
 
       useEffect(() => {
         fetchMatchStats();
-        connectWebSocket("ws://192.168.1.30:8005/ws");
+        connectWebSocket(`ws://${API_BASE_URL}/ws`);
         const unsubscribe = subscribe((message) => {
           if (message.type === "new_match") {
             fetchMatchStats()

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Scatter, Chart } from 'react-chartjs-2';
@@ -27,6 +28,7 @@ import EloChangeCard from './Charts/EloChangeCard';
 import SeasonStatsCard from './Charts/SeasonStatsCard';
 import TopFinalMoveCard from './Charts/FinalMoveChart';
 import StageWinLossCard from './Charts/StageWinRate';
+
 ChartJS.register(
     ScatterController,
     CategoryScale,
@@ -183,7 +185,7 @@ export default function ChartsPage() {
     const [WinLoseLimit, setWinLoseLimit] = useState(20);
 
     const fetchEloStats = useCallback(() => {
-        fetch(`http://192.168.1.30:8005/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
+        fetch(`http://${API_BASE_URL}/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
             .then((res) => res.json())
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
@@ -192,7 +194,7 @@ export default function ChartsPage() {
 
     useEffect(() => {
         fetchEloStats();
-        connectWebSocket("ws://192.168.1.30:8005/ws");
+        connectWebSocket(`ws://${API_BASE_URL}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchEloStats()

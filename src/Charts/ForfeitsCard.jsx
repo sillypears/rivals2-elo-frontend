@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { useEffect, useState } from 'react';
 
 export default function ForfeitCard(className = '') {
@@ -5,7 +6,7 @@ export default function ForfeitCard(className = '') {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        fetch('http://192.168.1.30:8005/match_forfeits')
+        fetch(`http://${API_BASE_URL}/match_forfeits`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data?.forfeits !== undefined) {

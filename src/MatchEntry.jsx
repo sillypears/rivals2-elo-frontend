@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { useEffect, useState } from 'react';
 import { fetchCharacters, fetchStages } from './utils/api';
 import { data } from 'autoprefixer';
@@ -80,7 +81,7 @@ export default function ManualMatchEntry() {
 
     const loadLatestMatch = async () => {
         try {
-            const res = await fetch('http://192.168.1.30:8005/matches/1');
+            const res = await fetch(`http://${API_BASE_URL}/matches/1`);
             const json = await res.json();
             const data = json['data'][0];
             setForm(prev => ({
@@ -108,7 +109,7 @@ export default function ManualMatchEntry() {
     };
 
     const handleSubmit = async () => {
-        const response = await fetch('http://192.168.1.30:8005/insert-match', {
+        const response = await fetch(`http://${API_BASE_URL}/insert-match`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),

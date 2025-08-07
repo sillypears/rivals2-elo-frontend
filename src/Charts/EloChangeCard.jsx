@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 export default function EloChangeCard({ className = '' }) {
@@ -6,7 +7,7 @@ export default function EloChangeCard({ className = '' }) {
     const [error, setError] = useState(false);
 
     const fetchEloData = (count) => {
-        fetch(`http://192.168.1.30:8005/elo-change/${count}`)
+        fetch(`http://${API_BASE_URL}/elo-change/${count}`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -21,7 +22,7 @@ export default function EloChangeCard({ className = '' }) {
 
     useEffect(() => {
         fetchEloData(numMatches);
-        connectWebSocket("ws://192.168.1.30:8005/ws");
+        connectWebSocket(`ws://${API_BASE_URL}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchEloData(numMatches);

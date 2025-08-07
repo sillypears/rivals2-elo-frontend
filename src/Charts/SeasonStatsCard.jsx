@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 export default function SeasonStatsCard({ className = '' }) {
@@ -6,7 +7,7 @@ export default function SeasonStatsCard({ className = '' }) {
     const [error, setError] = useState(false);
 
     const fetchSeasonStats = () => {
-        fetch('http://192.168.1.30:8005/all-seasons-stats')
+        fetch(`http://${API_BASE_URL}/all-seasons-stats`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -20,7 +21,7 @@ export default function SeasonStatsCard({ className = '' }) {
 
      useEffect(() => {
        fetchSeasonStats();
-       connectWebSocket("ws://192.168.1.30:8005/ws");
+       connectWebSocket(`ws://${API_BASE_URL}/ws`);
        const unsubscribe = subscribe((message) => {
          if (message.type === "new_match") {
            fetchSeasonStats()

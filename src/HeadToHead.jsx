@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { Card, CardTitle, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState, useCallback } from 'react';
@@ -10,21 +11,21 @@ export default function HeadToHeadPage() {
     const [selectedIndex, setSelectedIndex] = useState("N/A")
 
     const fetchOpponentNames = useCallback(() => {
-        fetch(`http://192.168.1.30:8005/opponent_names`)
+        fetch(`http://${API_BASE_URL}/opponent_names`)
             .then((res) => res.json())
             .then((data) => setOppNames(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
     }, []);
     const fetchOpponentData = useCallback((oppName) => {
         if (!oppName || oppName === "N/A") return;
-        fetch(`http://192.168.1.30:8005/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
+        fetch(`http://${API_BASE_URL}/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
             .then((res) => res.json())
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
     }, []);
     useEffect(() => {
         fetchOpponentNames();
-        connectWebSocket("ws://192.168.1.30:8005/ws");
+        connectWebSocket(`ws://${API_BASE_URL}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchOpponentNames()
