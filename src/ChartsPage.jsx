@@ -28,6 +28,7 @@ import EloChangeCard from './Charts/EloChangeCard';
 import SeasonStatsCard from './Charts/SeasonStatsCard';
 import TopFinalMoveCard from './Charts/FinalMoveChart';
 import StageWinLossCard from './Charts/StageWinRate';
+import TopPlayersCard from './Charts/TopOpponents';
 
 ChartJS.register(
     ScatterController,
@@ -291,6 +292,7 @@ export default function ChartsPage() {
                 {/* Column 2 */}
                 <div className="flex flex-col gap-2">
                     <TopFinalMoveCard className="h-full" />
+                    <TopPlayersCard className="p-2" />
                 </div>
 
                 {/* Column 3 */}
