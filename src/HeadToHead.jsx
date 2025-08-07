@@ -1,4 +1,5 @@
 import { Card, CardTitle, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useEffect, useState, useCallback } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
@@ -85,8 +86,8 @@ export default function HeadToHeadPage() {
                 </span>
             </h2>
             {stats ? (
-                <div className="">
-                    <div className="gap-2 mb-2 mt-2 grid grid-cols-3">
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {stats.overall ?
                             <Card className="bg-gray-400">
                                 <CardHeader>
@@ -110,7 +111,7 @@ export default function HeadToHeadPage() {
                                         <div className="text-sm">Win Rate</div>
                                     </div>
                                     <div>
-                                        <div className={`text-2xl font-bold ${stats.overall.avg_elo_change >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                                        <div className={`text-2xl font-bold `}>
                                             {stats.overall.avg_elo_change}
                                         </div>
                                         <div className=" text-sm">Avg ELO Δ</div>
@@ -169,7 +170,7 @@ export default function HeadToHeadPage() {
                     </div>
                     {stats.matches ?
                         <Card className="bg-gray-400 p-2">
-                            <CardTitle className="font-bold text-center p-2 ">Match Data</CardTitle>
+                            <CardTitle className="font-bold text-center p-2 ">Last {stats.matches.length} Match{stats.matches.length != 1 ? "es" : ""}</CardTitle>
                             <CardContent className="pt-2 grid grid-cols-5">
                                 {stats.matches.map((match, i) => (
                                     <Card
@@ -186,9 +187,12 @@ export default function HeadToHeadPage() {
                                             {match.game_2_winner != -1 ?
 
                                                 <div className="flex justify-between">
+
                                                     <span>Game 1</span>
                                                     <span>{match.game_1_stage_name}</span>
-                                                    <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} className={match.game_1_winner == 1 ? "grayscale" : ""} />
+                                                    <Badge variant="outline " className={`${match.game_1_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
+                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} title={match.game_1_final_move_id != -1 ? match.game_1_final_move_name : ""}/>
+                                                    </Badge>
                                                 </div>
                                                 : ""
                                             }
@@ -197,7 +201,9 @@ export default function HeadToHeadPage() {
                                                 <div className="flex justify-between">
                                                     <span>Game 2</span>
                                                     <span>{match.game_2_stage_name}</span>
-                                                    <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`} className={match.game_2_winner == 1 ? "grayscale" : ""} />
+                                                    <Badge variant="outline" className={`${match.game_2_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
+                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`}  title={`${match.game_2_final_move_id != -1 ? match.game_2_final_move_name : ""}`}/>
+                                                    </Badge>
                                                 </div>
                                                 : ""
                                             }
@@ -205,7 +211,9 @@ export default function HeadToHeadPage() {
                                                 <div className="flex justify-between">
                                                     <span>Game 3</span>
                                                     <span>{match.game_3_stage_name}</span>
-                                                    <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`} className={match.game_3_winner == 1 ? "grayscale" : ""} />
+                                                    <Badge variant="outline" className={`${match.game_3_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
+                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`}  title={match.game_3_final_move_id != -1 ? match.game_3_final_move_name : ""}/>
+                                                    </Badge>
 
                                                 </div>
                                                 : ""
