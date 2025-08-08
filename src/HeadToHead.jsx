@@ -6,14 +6,14 @@ import { connectWebSocket, subscribe } from './utils/websocket';
 
 export default function HeadToHeadPage() {
     // const { oppName } = useParams();
-    const [oppNames, setOppNames] = useState([])
+    const [oppNameData, setOppNameData] = useState([])
     const [stats, setStats] = useState(null)
     const [selectedIndex, setSelectedIndex] = useState("N/A")
 
     const fetchOpponentNames = useCallback(() => {
         fetch(`http://${API_BASE_URL}/opponent_names`)
             .then((res) => res.json())
-            .then((data) => setOppNames(data.data))
+            .then((data) => setOppNameData(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
     }, []);
     const fetchOpponentData = useCallback((oppName) => {
@@ -70,16 +70,16 @@ export default function HeadToHeadPage() {
                     Head to Head {stats ? `against: ${selectedIndex}` : ""}
                 </span>
                 <span className="">
-                    {oppNames.length > 1 && (
+                    {oppNameData.names.length > 1 && (
                         <select
                             className="bg-white p-2 m-2 rounded text-black text-sm rounded-lg"
                             value={selectedIndex}
                             onChange={(e) => setSelectedIndex(e.target.value)}
                         >
                             <option value="N/A" defaultValue="N/A" disabled>N/A</option>
-                            {oppNames.map((opp, i) => (
+                            {oppNameData.names.map((opp, i) => (
                                 <option key={i} value={opp}>
-                                    {opp}
+                                    {opp} ({oppNameData.counts[opp]})
                                 </option>
                             ))}
                         </select>
