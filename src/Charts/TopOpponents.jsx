@@ -39,8 +39,8 @@ export default function TopPlayersCard({ className = '' }) {
                 Top {players.length} Opponent{players.length != 1 ? 's' : ''}
             </CardTitle>
             <CardContent className="grid grid-cols-5 text-center pt-2 gap-4">
-                {players.map((player) =>
-                        <div>
+                {players.map((player, i) =>
+                        <div key={i}>
                             <div className="text-xl font-semibold">{player.count}</div>
                             <div className="text-sm">{player.opponent_name}</div>
                         </div>
