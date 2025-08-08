@@ -8,7 +8,7 @@ export default function TopPlayersCard({ className = '' }) {
     const [error, setError] = useState(false);
 
     const fetchPlayerData = () => {
-        fetch(`${API_BASE_URL}/head-to-head/top`)
+        fetch(`http://${API_BASE_URL}/head-to-head/top`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -29,7 +29,6 @@ export default function TopPlayersCard({ className = '' }) {
                 fetchPlayerData();
             }
         });
-
         return () => unsubscribe();
     }, []);
 
