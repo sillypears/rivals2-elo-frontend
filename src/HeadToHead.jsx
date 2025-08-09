@@ -1,21 +1,21 @@
 import { API_BASE_URL } from '@/config';
 import { Card, CardTitle, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from './components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState, useCallback } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
 export default function HeadToHeadPage() {
-    // const { oppName } = useParams();
-    const [oppNameData, setOppNameData] = useState([])
-    const [stats, setStats] = useState(null)
-    const [selectedIndex, setSelectedIndex] = useState("N/A")
+    const [oppNameData, setOppNameData] = useState({ names: [], counts: [] });
+    const [stats, setStats] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState("N/A");
 
     const fetchOpponentNames = useCallback(() => {
         fetch(`http://${API_BASE_URL}/opponent_names`)
             .then((res) => res.json())
             .then((data) => setOppNameData(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
-    }, []);
+    });
     const fetchOpponentData = useCallback((oppName) => {
         if (!oppName || oppName === "N/A") return;
         fetch(`http://${API_BASE_URL}/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
@@ -38,7 +38,7 @@ export default function HeadToHeadPage() {
 
         return () => unsubscribe();
 
-    }, [fetchOpponentNames, fetchOpponentData, selectedIndex]);
+    }, [fetchOpponentData, selectedIndex]);
 
     useEffect(() => {
         if (selectedIndex !== "N/A") {
@@ -71,18 +71,22 @@ export default function HeadToHeadPage() {
                 </span>
                 <span className="">
                     {oppNameData.names.length > 1 && (
-                        <select
-                            className="bg-white p-2 m-2 rounded text-black text-sm rounded-lg"
+                        <Select
                             value={selectedIndex}
-                            onChange={(e) => setSelectedIndex(e.target.value)}
+                            onValueChange={(e) => setSelectedIndex(e)}
                         >
-                            <option value="N/A" defaultValue="N/A" disabled>N/A</option>
-                            {oppNameData.names.map((opp, i) => (
-                                <option key={i} value={opp}>
-                                    {opp} ({oppNameData.counts[opp]})
-                                </option>
-                            ))}
-                        </select>
+                            <SelectTrigger className="w-[200px]">
+                                <SelectValue placeholder="Select someone" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="N/A" defaultValue="N/A" disabled>N/A</SelectItem>
+                                {oppNameData.names.map((opp, i) => (
+                                    <SelectItem key={i} value={opp} >
+                                        {opp} ({oppNameData.counts[opp]})
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     )}
                 </span>
             </h2>
@@ -172,27 +176,27 @@ export default function HeadToHeadPage() {
                     {stats.matches ?
                         <Card className="bg-gray-400 p-2">
                             <CardTitle className="font-bold text-center p-2 ">Last {stats.matches.length} Match{stats.matches.length != 1 ? "es" : ""}</CardTitle>
-                            <CardContent className="pt-2 grid grid-cols-5">
-                                {stats.matches.map((match, i) => (
+                            <CardContent className="pt-2 grid grid-cols-4">
+                                {stats.matches.map((match) => (
                                     <Card
                                         key={match.id}
                                         className={`p-2 ${match.match_win ? 'bg-green-300' : 'bg-red-300'}`}
                                     >
-                                        <CardHeader>
-                                            <CardTitle className="flex justify-between">
-                                                <span>#{match.ranked_game_number}</span>
-                                                <span>{match.elo_change >= 0 ? `+${match.elo_change}` : match.elo_change}</span>
-                                            </CardTitle>
-                                        </CardHeader>
-                                        <CardContent className="space-y-1 text-sm">
-                                            {match.game_2_winner != -1 ?
-
-                                                <div className="flex justify-between">
-
+                                        <CardTitle className="flex justify-center">
+                                            <span><a href={`/match/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></span>
+                                        </CardTitle>
+                                        <CardContent className="text-sm gap-2">
+                                            <div className="flex justify-between border-b">
+                                                <span>My Elo: {match.elo_rank_old}</span>
+                                                <span>{match.elo_change >= 0 ? `Elo Gained: +${match.elo_change}` : `Elo Lost: ${match.elo_change}`}</span>
+                                                <span>Opp Elo: {match.opponent_elo}</span>
+                                            </div>
+                                            {match.game_1_winner != -1 ?
+                                                <div className="pt-2 flex justify-between">
                                                     <span>Game 1</span>
                                                     <span>{match.game_1_stage_name}</span>
                                                     <Badge variant="outline " className={`${match.game_1_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} title={match.game_1_final_move_id != -1 ? match.game_1_final_move_name : ""}/>
+                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} title={match.game_1_final_move_id != -1 ? match.game_1_final_move_name : ""} />
                                                     </Badge>
                                                 </div>
                                                 : ""
@@ -203,7 +207,7 @@ export default function HeadToHeadPage() {
                                                     <span>Game 2</span>
                                                     <span>{match.game_2_stage_name}</span>
                                                     <Badge variant="outline" className={`${match.game_2_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`}  title={`${match.game_2_final_move_id != -1 ? match.game_2_final_move_name : ""}`}/>
+                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`} title={`${match.game_2_final_move_id != -1 ? match.game_2_final_move_name : ""}`} />
                                                     </Badge>
                                                 </div>
                                                 : ""
@@ -213,7 +217,7 @@ export default function HeadToHeadPage() {
                                                     <span>Game 3</span>
                                                     <span>{match.game_3_stage_name}</span>
                                                     <Badge variant="outline" className={`${match.game_3_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`}  title={match.game_3_final_move_id != -1 ? match.game_3_final_move_name : ""}/>
+                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`} title={match.game_3_final_move_id != -1 ? match.game_3_final_move_name : ""} />
                                                     </Badge>
 
                                                 </div>
