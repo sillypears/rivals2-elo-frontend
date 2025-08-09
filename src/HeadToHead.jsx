@@ -23,6 +23,26 @@ export default function HeadToHeadPage() {
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
     }, []);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const opp = params.get('opp');
+        if (opp) {
+            setSelectedIndex(opp);
+        }
+    }, []);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (selectedIndex && selectedIndex !== "N/A") {
+            params.set('opp', selectedIndex);
+        } else {
+            params.delete('opp');
+        }
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, '', newUrl);
+    }, [selectedIndex]);
+    
     useEffect(() => {
         fetchOpponentNames();
         connectWebSocket(`ws://${API_BASE_URL}/ws`);
