@@ -9,6 +9,10 @@ export function connectWebSocket(url) {
     socket = new WebSocket(url);
 
     socket.onmessage = (event) => {
+        if (event.data === "ping") {
+            socket.send("pong");
+            return;
+        }
         try {
             const data = JSON.parse(event.data);
             if (!event.data || event.data.trim().charAt(0) !== '{') return;
@@ -29,5 +33,5 @@ export function connectWebSocket(url) {
 
 export function subscribe(listener) {
     listeners.add(listener);
-    return () => listeners.delete(listener); 
+    return () => listeners.delete(listener);
 }
