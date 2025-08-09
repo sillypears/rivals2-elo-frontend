@@ -34,7 +34,7 @@ export default function TopPlayersCard({ className = '' }) {
 
 
     return (
-        <Card className={`${className}`}>
+        <Card className={`bg-gray-200 ${className}`}>
             <CardTitle className="text-2xl font-bold text-center">
                 Top {players.length} Opponent{players.length != 1 ? 's' : ''}
             </CardTitle>
