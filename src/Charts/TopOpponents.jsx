@@ -42,8 +42,8 @@ export default function TopPlayersCard({ className = '' }) {
                 {players.map((player, i) =>
                         <div key={i}>
                             <div className="text-xl font-semibold">{player.count}</div>
-                            <div className="text-sm">
-                                <a href={`/head-to-head?opp=${encodeURIComponent(player.opponent_name)}`} target="_blank">{player.opponent_name}</a>
+                            <div className="text-sm truncate">
+                                <a className="" href={`/head-to-head?opp=${encodeURIComponent(player.opponent_name)}`} target="_blank">{player.opponent_name}</a>
                             </div>
                         </div>
                 )}
