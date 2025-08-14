@@ -42,7 +42,7 @@ export default function HeadToHeadPage() {
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.replaceState({}, '', newUrl);
     }, [selectedIndex]);
-    
+
     useEffect(() => {
         fetchOpponentNames();
         connectWebSocket(`ws://${API_BASE_URL}/ws`);
@@ -139,7 +139,7 @@ export default function HeadToHeadPage() {
                                         <div className={`text-2xl font-bold `}>
                                             {stats.overall.avg_elo_change}
                                         </div>
-                                        <div className=" text-sm">Avg ELO Δ</div>
+                                        <div className=" text-sm">Avg Elo Δ</div>
                                     </div>
                                 </CardContent>
                             </Card>

@@ -54,11 +54,12 @@ export default function SeasonStatsCard({ className = '' }) {
                 <p className="text-red-600 text-center">Error loading data</p>
             ) : selected ? (
                 <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-                    <p>Matches: {selected.total_matches}</p>
-                    <p>ELO Δ: {selected.total_elo_change}</p>
-                    <p>Wins: {selected.match_wins}</p>
-                    <p>Win Rate: {selected.win_rate_percent}%</p>
-                    <p>Losses: {selected.match_losses}</p>
+                    <p><span className="font-semibold">Matches</span>: {selected.total_matches}</p>
+                    <p><span className="font-semibold">Min | Max Elo</span>: {selected.min_elo} | {selected.max_elo}</p>
+                    <p><span className="font-semibold">Wins</span>: {selected.match_wins}</p>
+                    <p><span className="font-semibold">Elo Δ</span>: {selected.total_elo_change}</p>
+                    <p><span className="font-semibold">Losses</span>: {selected.match_losses}</p>
+                    <p><span className="font-semibold">Win Rate</span>: {selected.win_rate_percent}%</p>
                 </div>
             ) : (
                 <p className="text-center">Loading...</p>

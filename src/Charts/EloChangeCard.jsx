@@ -35,7 +35,7 @@ export default function EloChangeCard({ className = '' }) {
 
     return (
         <div className={`w-full h-full bg-gray-200 text-black p-6 rounded-lg shadow-md text-center flex flex-col items-center justify-center ${className}`}>
-            <h2 className="text-xl font-semibold mb-2">ELO Change (Last {numMatches} Matches)</h2>
+            <h2 className="text-xl font-semibold mb-2">Elo Change (Last {numMatches} Matches)</h2>
 
             <div className="flex items-center gap-2 mb-4">
                 <label htmlFor="match-count" className="text-sm font-medium">Match Count:</label>
@@ -50,11 +50,11 @@ export default function EloChangeCard({ className = '' }) {
             </div>
 
             {error ? (
-                <p className="text-red-600">Failed to load ELO change data.</p>
+                <p className="text-red-600">Failed to load Elo change data.</p>
             ) : eloData ? (
                 <div className="space-y-1 text-md">
-                    <p><span className="font-semibold text-green-600">+{eloData.elo_change_plus}</span> ELO Gained</p>
-                    <p><span className="font-semibold text-red-600">{eloData.elo_change_minus}</span> ELO Lost</p>
+                    <p><span className="font-semibold text-green-600">+{eloData.elo_change_plus}</span> Elo Gained</p>
+                    <p><span className="font-semibold text-red-600">{eloData.elo_change_minus}</span> Elo Lost</p>
                     <p>
                         Net:{" "}
                         <span className={`font-bold ${eloData.difference >= 0 ? 'text-green-700' : 'text-red-700'}`}>

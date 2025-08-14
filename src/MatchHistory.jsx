@@ -40,14 +40,14 @@ function MatchCard({ match }) {
       <div className="text-sm text-gray-200">Date: {new Date(`${match.match_date}Z`).toLocaleString("en-US", { timeZone: "America/New_York" })}</div>
 
       <div className="mt-2">
-        <span className="font-semibold text-black">ELO:</span> {match.elo_rank_old}
+        <span className="font-semibold text-black">Elo:</span> {match.elo_rank_old}
         <span className={`superscript ${match.elo_change >= 0 ? 'positive' : 'negative'}`}>
           {match.elo_change >= 0 ? '+' : ''}{match.elo_change}
         </span> → {match.elo_rank_new}
       </div>
 
       <div>
-        <span className="font-semibold text-black">Opponent ELO:</span> {match.opponent_elo}
+        <span className="font-semibold text-black">Opponent Elo:</span> {match.opponent_elo}
         {match.opponent_estimated_elo > -1 && (
           <span className="superscript"> ({match.opponent_estimated_elo})</span>
         )}

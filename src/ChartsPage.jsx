@@ -52,8 +52,8 @@ const WinLoseElochartOptions = {
                     const point = context.raw;
                     return [
                         `Game #: ${point.gameNumber}`,
-                        `My ELO: ${point.myElo}`,
-                        `Opponent ELO: ${point.y}`
+                        `My Elo: ${point.myElo}`,
+                        `Opponent Elo: ${point.y}`
                     ];
                 }
             }
@@ -150,7 +150,7 @@ const candlestickOptions = {
         y: {
             title: {
                 display: true,
-                text: 'ELO',
+                text: 'Elo',
                 font: {
                     size: 14,
                     weight: 'bold'
@@ -208,7 +208,7 @@ export default function ChartsPage() {
     const CombinedEloData = {
         datasets: [
             {
-                label: "Opponent ELO for Loses",
+                label: "Opponent Elo for Loses",
                 data: stats
                     .filter(match => match.match_win === 0)
                     .map(match => ({
@@ -222,7 +222,7 @@ export default function ChartsPage() {
                 backgroundColor: "rgb(163, 92, 160)",
                 tension: 0.1
             }, {
-                label: "Opponent ELO for Wins",
+                label: "Opponent Elo for Wins",
                 data: stats
                     .filter(match => match.match_win === 1)
                     .map(match => ({
@@ -241,7 +241,7 @@ export default function ChartsPage() {
     const candlestickData = {
         datasets: [
             {
-                title: 'ELO Progression',
+                title: 'Elo Progression',
                 data: [...stats]
                     .sort((a, b) => a.id - b.id)
                     .map(match => ({
@@ -263,7 +263,7 @@ export default function ChartsPage() {
         <div className=" bg-gray-800 text-white p-2 mb-10">
             <div className="grid">
                 <div className="grid grid-cols-2 gap-2 mb-2 justify-center items-center">
-                    <h2 className="text-2xl font-bold mb-2">ELO Progression</h2>
+                    <h2 className="text-2xl font-bold mb-2">Elo Progression</h2>
                     <div className="flex justify-end">
                         <select className="w-fit p-1 bg-gray-700 text-white rounded"
                             onChange={(e) => { setWinLoseLimit(Number(e.target.value)) }}

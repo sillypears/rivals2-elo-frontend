@@ -160,7 +160,7 @@ export default function ManualMatchEntry() {
                     <input type="number" value={form.ranked_game_number} onChange={e => update('ranked_game_number', +e.target.value)} className="p-1 border rounded" />
                 </label>
                 <label className="flex flex-col">
-                    ELO Before
+                    Elo Before
                     <input type="number" value={form.elo_rank_old} onChange={e => {
                         const val = +e.target.value;
                         update('elo_rank_old', val);
@@ -168,7 +168,7 @@ export default function ManualMatchEntry() {
                     }} className="p-1 border rounded" />
                 </label>
                 <label className="flex flex-col">
-                    ELO Change
+                    Elo Change
                     <input
                         type="number"
                         value={form.elo_change}
@@ -181,7 +181,7 @@ export default function ManualMatchEntry() {
                             try {
                                 estimated = estimateOpponentElo(oldElo, delta, matchWin);
                             } catch (err) {
-                                console.warn("Could not estimate opponent ELO:", err.message);
+                                console.warn("Could not estimate opponent Elo:", err.message);
                             }
 
                             update('elo_change', delta);
@@ -193,7 +193,7 @@ export default function ManualMatchEntry() {
                 </label>
 
                 <label className="flex flex-col">
-                    ELO After
+                    Elo After
                     <input type="number" value={form.elo_rank_new} disabled className="p-1 border rounded bg-gray-100" />
                 </label>
                 <label className="flex flex-col">
@@ -216,11 +216,11 @@ export default function ManualMatchEntry() {
                 </label>
 
                 <label className="flex flex-col">
-                    Opponent ELO
+                    Opponent Elo
                     <input type="number" value={form.opponent_elo} onChange={e => update('opponent_elo', +e.target.value)} className="p-1 border rounded" />
                 </label>
                 <label className="flex flex-col">
-                    Est ELO
+                    Est Elo
                     <input type="number" value={form.opponent_estimated_elo} disabled onChange={e => update('opponent_estimated_elo', +e.target.value)} className="p-1 border rounded bg-gray-100" />
                 </label>
                 <label className="flex flex-col">

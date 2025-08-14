@@ -59,7 +59,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 cell: info => info.getValue() ? 'Win' : 'Loss',
             }),
             columnHelper.accessor('elo_rank_old', {
-                header: 'ELO Before',
+                header: 'Elo Before',
                 cell: ({ row }) => {
                     const oldElo = row.original.elo_rank_old;
                     const delta = row.original.elo_change;
@@ -79,9 +79,9 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     );
                 },
             }),
-            columnHelper.accessor('elo_rank_new', { header: 'ELO After' }),
+            columnHelper.accessor('elo_rank_new', { header: 'Elo After' }),
             columnHelper.accessor('opponent_elo', {
-                header: 'Opponent ELO',
+                header: 'Opponent Elo',
                 cell: ({ row, getValue }) => {
                     const rankedGameNumber = row.original.ranked_game_number;
                     const row_id = row.original.id;
@@ -142,7 +142,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                                 title={`${opp_name}`}
                             >
                                 {value === -2 ? 'UNRANKED' : value}
-                                <sup title="Estimated ELO" className="ml-2 text-gray-400">
+                                <sup title="Estimated Elo" className="ml-2 text-gray-400">
                                     {estimated_elo > -1 ? `${estimated_elo}` : ''}
                                 </sup>
 

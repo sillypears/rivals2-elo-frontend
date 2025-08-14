@@ -43,9 +43,9 @@ export default function MatchDetailPage() {
             <CardContent className="space-y-4">
                 {/* Summary Row */}
                 <div className="grid grid-cols-2 gap-4">
-                    <div>ELO Before: {match.elo_rank_old}</div>
-                    <div>ELO After: {match.elo_rank_new} ({match.elo_change >= 0 ? "+" : ""}{match.elo_change})</div>
-                    <div>Opponent ELO: {match.opponent_elo}</div>
+                    <div>Elo Before: {match.elo_rank_old}</div>
+                    <div>Elo After: {match.elo_rank_new} ({match.elo_change >= 0 ? "+" : ""}{match.elo_change})</div>
+                    <div>Opponent Elo: {match.opponent_elo}</div>
                     <div>Streak: {match.win_streak_value}</div>
                 </div>
 
