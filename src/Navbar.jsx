@@ -93,12 +93,6 @@ export default function Navbar() {
             </div>
             <div className="space-x-5">
                 <Link
-                    to="/history"
-                    className={location.pathname === "/history" ? "text-teal-400" : "hover:text-teal-400"}
-                >
-                    History
-                </Link>
-                <Link
                     to="/stats"
                     className={location.pathname === "/stats" ? "text-teal-400" : "hover:text-teal-400"}
                 >
@@ -111,16 +105,22 @@ export default function Navbar() {
                     Matches
                 </Link>
                 <Link
-                    to="/add-match"
-                    className={location.pathname === "/add-match" ? "text-teal-400" : "hover:text-teal-400"}
+                    to="/history"
+                    className={location.pathname === "/history" ? "text-teal-400" : "hover:text-teal-400"}
                 >
-                    Add
+                    History
                 </Link>
                 <Link
                     to="/head-to-head"
                     className={location.pathname === "/head-to-head" ? "text-teal-400" : "hover:text-teal-400"}
                 >
                     H2H
+                </Link>
+                <Link
+                    to="/add-match"
+                    className={location.pathname === "/add-match" ? "text-teal-400" : "hover:text-teal-400"}
+                >
+                    Add
                 </Link>
             </div>
         </nav>
