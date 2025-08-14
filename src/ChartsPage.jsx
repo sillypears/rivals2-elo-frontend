@@ -278,8 +278,8 @@ export default function ChartsPage() {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 p-1">
-                    <CombinedEloChart combinedEloData={CombinedEloData} />
                     <CandlestickEloChart candlestickData={candlestickData} />
+                    <CombinedEloChart combinedEloData={CombinedEloData} />
                 </div>
             </div>
             <div className="grid grid-cols-3 p-1 gap-2 items-start">
