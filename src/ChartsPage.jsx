@@ -29,6 +29,7 @@ import SeasonStatsCard from './Charts/SeasonStatsCard';
 import TopFinalMoveCard from './Charts/FinalMoveChart';
 import StageWinLossCard from './Charts/StageWinRate';
 import TopPlayersCard from './Charts/TopOpponents';
+import CharHeatmapCard from './Charts/CharHeatmap';
 
 ChartJS.register(
     ScatterController,
@@ -300,6 +301,7 @@ export default function ChartsPage() {
                     <ForfeitCard className="h-full" />
                     <SeasonStatsCard className="h-full" />
                     <EloChangeCard className="h-full" />
+                    <CharHeatmapCard className="h-full" />
                 </div>
             </div>
 
