@@ -97,8 +97,7 @@ const WinLoseElochartOptions = {
 };
 const candlestickOptions = {
     responsive: true,
-    aspectRatio: 2.2,
-    maintainAspectRatio: true,
+    aspectRatio: 3.5,
     plugins: {
         legend: {
             display: false,
@@ -143,7 +142,7 @@ const candlestickOptions = {
                 color: 'rgba(145, 145, 145, 0.1)',
             },
             ticks: {
-                autoSkip: true,
+                autoSkip: false,
                 maxRotation: 0,
                 minRotation: 0
             },
@@ -165,18 +164,18 @@ const candlestickOptions = {
     }
 };
 
-function CandlestickEloChart({ candlestickData }) {
+function CandlestickEloChart({ candlestickData, className }) {
     return (
-        <div className="bg-gray-200 text-black pb-10 pl-6 pt-1 rounded-lg h-96">
+        <div className={`bg-gray-200 text-black pb-10 pl-6 pt-1 rounded-lg ${className}`}>
             <h3 className="text-lg font-bold mb-2">Candles</h3>
 
             <Chart type="candlestick" data={candlestickData} options={candlestickOptions} />
         </div>
     )
 }
-function CombinedEloChart({ combinedEloData }) {
+function CombinedEloChart({ combinedEloData, className }) {
     return (
-        <div className="bg-gray-200 rounded-lg p-4 text-black h-96">
+        <div className={`bg-gray-200 rounded-lg p-4 text-black ${className}`}>
             <Scatter data={combinedEloData} options={WinLoseElochartOptions} />
         </div>
     );
@@ -278,15 +277,15 @@ export default function ChartsPage() {
                         </select>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 p-1">
-                    <CandlestickEloChart candlestickData={candlestickData} />
-                    <CombinedEloChart combinedEloData={CombinedEloData} />
+                <div className="grid grid-cols-2 gap-2 p-1 ">
+                    <CandlestickEloChart candlestickData={candlestickData} className="h-64 " />
+                    <CombinedEloChart combinedEloData={CombinedEloData} className="h-64" />
                 </div>
             </div>
             <div className="grid grid-cols-3 p-1 gap-2 items-start">
                 {/* Column 1 */}
-                <div className="flex flex-col gap-2">
-                    <EloHistogram matches={stats} />
+                <div className="flex flex-col gap-2 w-full">
+                    <EloHistogram className="" matches={stats} />
                     <StageWinLossCard className="h-full" />
                 </div>
 
