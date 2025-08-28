@@ -62,19 +62,20 @@ export default function StagePickCard({ className = '' }) {
     const filteredData = stageData.filter(
         (d) => d.season_display_name === activeSeason
     );
-
-    const dataset = {
-        label: activeSeason,
-        data: stages.map((stage) => {
-            const entry = filteredData.find((d) => d.stage_name === stage);
-            return entry ? entry.pick_count : 0;
-        }),
-        backgroundColor: "hsl(200, 70%, 50%)",
-    };
+    const randomColor = () =>
+        `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
+    const datasets = [
+        {
+            label: activeSeason,
+            data: filteredData.map(d => d.pick_count),
+            backgroundColor: filteredData.map(() => randomColor()), // random color per bar
+            barThickness: 30, // makes bars wider
+        }
+    ];
 
     const chartData = {
-        labels: stages,
-        datasets: [dataset],
+        labels: filteredData.map(d => d.stage_name),
+        datasets
     };
 
     const options = {
@@ -101,6 +102,11 @@ export default function StagePickCard({ className = '' }) {
             },
         },
         scales: {
+            x: {
+                beginAtZero: true,
+                barPercentage: 2,      // default is 0.9
+                categoryPercentage: 0.8, // default is 0.8
+            },
             y: {
                 beginAtZero: true,
                 title: { display: true, text: "Pick Count" },
