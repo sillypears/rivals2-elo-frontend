@@ -30,6 +30,7 @@ import TopFinalMoveCard from './Charts/FinalMoveChart';
 import StageWinLossCard from './Charts/StageWinRate';
 import TopPlayersCard from './Charts/TopOpponents';
 import CharHeatmapCard from './Charts/CharHeatmap';
+import StagePickCard from './Charts/StagePicks';
 
 ChartJS.register(
     ScatterController,
@@ -293,6 +294,7 @@ export default function ChartsPage() {
                 <div className="flex flex-col gap-2">
                     <TopFinalMoveCard className="h-full" />
                     <TopPlayersCard className="p-2" />
+                    <StagePickCard className="p-2 h-full" />
                 </div>
 
                 {/* Column 3 */}
