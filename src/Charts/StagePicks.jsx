@@ -88,6 +88,17 @@ export default function StagePickCard({ className = '' }) {
             legend: {
                 display: false,
             },
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        const value = context.raw;
+                        const dataset = context.dataset.data;
+                        const total = dataset.reduce((a, b) => a + b, 0);
+                        const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return `${context.dataset.label}: ${value} (${percent}%)`;
+                    },
+                },
+            },
         },
         scales: {
             y: {
@@ -102,7 +113,7 @@ export default function StagePickCard({ className = '' }) {
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Stage Pick Counts</CardTitle>
                 <Select
-                    
+
                     value={activeSeason}
                     onValueChange={(val) => setSelectedSeason(val)}
                 >
