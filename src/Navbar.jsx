@@ -72,14 +72,16 @@ export default function Navbar() {
 
         return () => unsubscribe();
     }, []);
-    
+
     useEffect(() => {
         fetchCurrentElo();
     }, [location]);
 
     return (
         <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 py-2 shadow-md flex justify-between items-center">
-            <div className="text-xl font-bold">Tracker</div>
+            <div className="text-xl font-bold cursor-pointer" onClick={() => window.location.reload()}>
+                Tracker
+            </div>
             <div
                 className="flex text-white items-center relative"
                 onMouseEnter={() => setShowTooltip(true)}
