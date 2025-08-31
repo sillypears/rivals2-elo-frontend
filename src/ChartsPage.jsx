@@ -293,8 +293,9 @@ export default function ChartsPage() {
                 {/* Column 2 */}
                 <div className="flex flex-col gap-2">
                     <TopFinalMoveCard className="h-full" />
-                    <TopPlayersCard className="p-2" />
                     <StagePickCard className="p-2 h-full" />
+                    <TopPlayersCard className="p-2" />
+
                 </div>
 
                 {/* Column 3 */}
