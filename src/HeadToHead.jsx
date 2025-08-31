@@ -202,8 +202,9 @@ export default function HeadToHeadPage() {
                                         key={match.id}
                                         className={`p-2 ${match.match_win ? 'bg-green-300' : 'bg-red-300'}`}
                                     >
-                                        <CardTitle className="flex justify-center">
-                                            <span><a href={`/match/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></span>
+                                        <CardTitle className="flex justify-between gap-2 px-2 pb-2">
+                                            <div><a href="#">{`${new Date(match.match_date).toLocaleString(undefined,{})}`}</a></div>
+                                            <div><a href={`/match/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></div>
                                         </CardTitle>
                                         <CardContent className="text-sm gap-2">
                                             <div className="flex justify-between border-b">
