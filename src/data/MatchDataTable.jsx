@@ -151,7 +151,16 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     );
                 }
             }),
-            columnHelper.accessor('win_streak_value', { header: 'Win Streak' }),
+            columnHelper.accessor('win_streak_value', { 
+                header: 'Win Streak',
+                cell: ({ row }) => {
+                    return (
+                        <a href={`/head-to-head?opp=${row.original.opponent_name}`} target="_blank">
+                            {row.original.win_streak_value}
+                        </a>
+                    )
+                } 
+            }),
         ];
 
         const gameColumns = [];
