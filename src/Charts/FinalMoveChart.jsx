@@ -18,6 +18,18 @@ const chartOptions = {
                 boxWidth: 10,
                 padding: 8,
             },
+            onHover: (e, legendItem, legend) => {
+                const chart = legend.chart;
+                chart.setActiveElements([
+                    { datasetIndex: 0, index: legendItem.index },
+                ]);
+                chart.update();
+            },
+            onLeave: (e, legendItem, legend) => {
+                const chart = legend.chart;
+                chart.setActiveElements([]);
+                chart.update();
+            },
             position: 'bottom'
         },
         tooltip: {
@@ -99,6 +111,7 @@ export default function TopFinalMoveCard({ className = '' }) {
                 backgroundColor: [
                     "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF",
                 ],
+                hoverOffset: 30
             },
         ],
     };
@@ -108,17 +121,17 @@ export default function TopFinalMoveCard({ className = '' }) {
             <CardHeader className={``}>
                 <div className="flex justify-between">
                     <CardTitle className="">Finish Moves</CardTitle>
-                <Select className="" value={selectedSeason} onValueChange={(e) => setSelectedSeason(e)} >
-                    <SelectTrigger className=" bg-white">
-                        <SelectValue placeholder="Select a timezone" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {seasons.map(season => (
-                            <SelectItem key={season.id} value={season.display_name}>{season.display_name}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+                    <Select className="" value={selectedSeason} onValueChange={(e) => setSelectedSeason(e)} >
+                        <SelectTrigger className=" bg-white">
+                            <SelectValue placeholder="Select a timezone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {seasons.map(season => (
+                                <SelectItem key={season.id} value={season.display_name}>{season.display_name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
             </CardHeader>
             <CardContent className="justify-center items-center flex min-h-[300px]">
                 {topMoves.length > 0 ? (
