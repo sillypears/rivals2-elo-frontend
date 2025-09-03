@@ -31,7 +31,7 @@ import StageWinLossCard from './Charts/StageWinRate';
 import TopPlayersCard from './Charts/TopOpponents';
 import CharHeatmapCard from './Charts/CharHeatmap';
 import StagePickCard from './Charts/StagePicks';
-
+import WinLossByCharacterCard from './Charts/CharWinLoseMatchup';
 ChartJS.register(
     ScatterController,
     CategoryScale,
@@ -300,10 +300,13 @@ export default function ChartsPage() {
 
                 {/* Column 3 */}
                 <div className="flex flex-col gap-2 w-full">
-                    <ForfeitCard className="h-full" />
                     <SeasonStatsCard className="h-full" />
-                    <EloChangeCard className="h-full" />
+                    <div className="flex flex-row gap-2 w-full">
+                        <EloChangeCard className="h-full" />
+                        <ForfeitCard className="h-full" />
+                    </div>
                     <CharHeatmapCard className="h-full" />
+                    <WinLossByCharacterCard className="h-full" />
                 </div>
             </div>
 
