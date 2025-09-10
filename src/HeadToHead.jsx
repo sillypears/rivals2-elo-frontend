@@ -212,7 +212,7 @@ export default function HeadToHeadPage() {
                                                 <span>{match.elo_change >= 0 ? `Elo Gained: +${match.elo_change}` : `Elo Lost: ${match.elo_change}`}</span>
                                                 <span>Opp Elo: {match.opponent_elo}</span>
                                             </div>
-                                            {match.game_1_winner != -1 ?
+                                            {match.game_1_winner >= 0 ?
                                                 <div className="pt-2 flex justify-between">
                                                     <span>Game 1</span>
                                                     <span>{match.game_1_stage_name}</span>
@@ -222,7 +222,7 @@ export default function HeadToHeadPage() {
                                                 </div>
                                                 : ""
                                             }
-                                            {match.game_2_winner != -1 ?
+                                            {match.game_2_winner >= 0 ?
 
                                                 <div className="flex justify-between">
                                                     <span>Game 2</span>
@@ -233,7 +233,7 @@ export default function HeadToHeadPage() {
                                                 </div>
                                                 : ""
                                             }
-                                            {match.game_3_winner != -1 ?
+                                            {match.game_3_winner >= 0 ?
                                                 <div className="flex justify-between">
                                                     <span>Game 3</span>
                                                     <span>{match.game_3_stage_name}</span>
