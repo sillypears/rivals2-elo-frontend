@@ -34,6 +34,7 @@ export default function Navbar() {
     const [error, setError] = useState(false);
     const [tiers, setTiers] = useState([]);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const fetchCurrentElo = () => {
         fetch(`http://${API_BASE_URL}/current_tier`)
@@ -78,12 +79,12 @@ export default function Navbar() {
     }, [location]);
 
     return (
-        <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 py-2 shadow-md flex justify-between items-center">
+        <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 lg:py-2 shadow-md flex justify-between items-center">
             <div className="text-xl font-bold cursor-pointer" onClick={() => window.location.reload()}>
                 Tracker
             </div>
             <div
-                className="flex text-white items-center relative"
+                className="hidden md:flex text-white items-center relative"
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
             >
@@ -97,7 +98,7 @@ export default function Navbar() {
                 )}
                 <TierList tiers={tiers} showTooltip={showTooltip} />
             </div>
-            <div className="space-x-5">
+            <div className="hidden md:flex space-x-5">
                 <Link
                     to="/stats"
                     className={location.pathname === "/stats" ? "text-teal-400" : "hover:text-teal-400"}
@@ -129,6 +130,41 @@ export default function Navbar() {
                     Add
                 </Link>
             </div>
-        </nav>
+            <button
+                className="md:hidden inline-flex items-center justify-center p-2 rounded hover:bg-gray-800"
+                onClick={() => setMenuOpen(!menuOpen)}
+            >
+                <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 6h16M4 12h16M4 18h16"
+                    />
+                </svg>
+            </button>
+
+            {/* Collapsed menu */}
+            {menuOpen && (
+                <div className="absolute top-full left-0 w-full bg-gray-900 flex flex-col items-start space-y-2 p-4 md:hidden">
+                    <Link
+                        to="/stats"
+                        onClick={() => setMenuOpen(false)}
+                        className={location.pathname === "/stats" ? "text-teal-400" : "hover:text-teal-400"}
+                    >
+                        Charts
+                    </Link>
+                    <Link to="/matches" onClick={() => setMenuOpen(false)}>Matches</Link>
+                    <Link to="/history" onClick={() => setMenuOpen(false)}>History</Link>
+                    <Link to="/head-to-head" onClick={() => setMenuOpen(false)}>H2H</Link>
+                    <Link to="/add-match" onClick={() => setMenuOpen(false)}>Add</Link>
+                </div>
+            )}
+        </nav >
     );
 }
