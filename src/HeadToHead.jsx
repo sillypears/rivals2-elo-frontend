@@ -84,10 +84,10 @@ export default function HeadToHeadPage() {
         return "bg-red-500";
     };
     return (
-        <div className="bg-gray-800 text-white p-2">
+        <div className="bg-gray-800 text-white p-2 ">
             <h2 className="justify-between text-3xl font-bold flex">
                 <span className="">
-                    Head to Head {stats ? `against: ${selectedIndex}` : ""}
+                    {stats ? `Against: ${selectedIndex}` : ""}
                 </span>
                 <span className="">
                     {oppNameData.names.length > 1 && (
@@ -111,8 +111,8 @@ export default function HeadToHeadPage() {
                 </span>
             </h2>
             {stats ? (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 pt-1">
+                    <div className="grid grid-cols-1 gap-2 pb-2 md:grid-cols-2 lg:grid-cols-3">
                         {stats.overall ?
                             <Card className="bg-gray-400">
                                 <CardHeader>
@@ -196,14 +196,14 @@ export default function HeadToHeadPage() {
                     {stats.matches ?
                         <Card className="bg-gray-400 p-2">
                             <CardTitle className="font-bold text-center p-2 ">Last {stats.matches.length} Match{stats.matches.length != 1 ? "es" : ""}</CardTitle>
-                            <CardContent className="pt-2 grid grid-cols-4">
+                            <CardContent className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1">
                                 {stats.matches.map((match) => (
                                     <Card
                                         key={match.id}
                                         className={`p-2 ${match.match_win ? 'bg-green-300' : 'bg-red-300'}`}
                                     >
                                         <CardTitle className="flex justify-between gap-2 px-2 pb-2">
-                                            <div><a href="#">{`${new Date(match.match_date).toLocaleString(undefined,{})}`}</a></div>
+                                            <div><a href="#">{new Date(`${match.match_date}Z`).toLocaleString()}</a></div>
                                             <div><a href={`/match/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></div>
                                         </CardTitle>
                                         <CardContent className="text-sm gap-2">
