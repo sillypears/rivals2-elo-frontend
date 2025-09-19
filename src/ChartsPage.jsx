@@ -98,7 +98,7 @@ const WinLoseElochartOptions = {
 };
 const candlestickOptions = {
     responsive: true,
-    aspectRatio: 3.5,
+    // aspectRatio: 3.5,
     plugins: {
         legend: {
             display: false,
@@ -150,7 +150,7 @@ const candlestickOptions = {
         },
         y: {
             title: {
-                display: true,
+                display: false,
                 text: 'Elo',
                 font: {
                     size: 14,
@@ -167,7 +167,7 @@ const candlestickOptions = {
 
 function CandlestickEloChart({ candlestickData, className }) {
     return (
-        <div className={`bg-gray-200 text-black pb-10 pl-6 pt-1 rounded-lg ${className}`}>
+        <div className={`bg-gray-200 text-black p-4 rounded-lg ${className}`}>
             <h3 className="text-lg font-bold mb-2">Candles</h3>
 
             <Chart type="candlestick" data={candlestickData} options={candlestickOptions} />
@@ -278,16 +278,18 @@ export default function ChartsPage() {
                         </select>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 p-1 ">
-                    <CandlestickEloChart candlestickData={candlestickData} className="h-64 " />
-                    <CombinedEloChart combinedEloData={CombinedEloData} className="h-64" />
+                <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 p-1 ">
+                    <CandlestickEloChart candlestickData={candlestickData} className="col-2/5 h-72" />
+                    <CombinedEloChart combinedEloData={CombinedEloData} className="col-2/5 h-72" />
+                    <EloHistogram matches={stats} className="col-1/5 h-72" />
+
                 </div>
             </div>
             <div className="grid grid-cols-3 p-1 gap-2 items-start">
                 {/* Column 1 */}
                 <div className="flex flex-col gap-2 w-full">
-                    <EloHistogram className="" matches={stats} />
                     <StageWinLossCard className="h-full" />
+                    <WinLossByCharacterCard className="h-full" />
                 </div>
 
                 {/* Column 2 */}
@@ -306,7 +308,6 @@ export default function ChartsPage() {
                         <ForfeitCard className="h-full" />
                     </div>
                     <CharHeatmapCard className="h-full" />
-                    <WinLossByCharacterCard className="h-full" />
                 </div>
             </div>
 

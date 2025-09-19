@@ -56,26 +56,27 @@ export default function EloHistogram({ matches, className = '' }) {
     }, [matches, maxElo, minElo]);
 
     return (
-        <Card className={`bg-gray-200 text-black p-4 pt-1 rounded-lg h-full w-full ${className}`}>
-            <CardHeader className="text-lg font-bold  mb-2">Opponent Elo Distribution</CardHeader>
+        <Card className={`bg-gray-200 text-black px-4 pb-4 rounded-lg h-full w-full ${className}`}>
+            <CardHeader className="text-lg font-bold">Opponent Elo Distribution</CardHeader>
             <CardContent>
-            <Bar
-                data={histogramData}
-                options={{
-                    responsive: true,
-                    aspectRatio: 2.2,
-                    maintainAspectRatio: true,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            ticks: { stepSize: 1 }
+                <Bar
+                    data={histogramData}
+                    options={{
+                        responsive: true,
+                        aspectRatio: 2.2,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: { stepSize: 1 }
+                            },
+                        },
+
+                        plugins: {
+                            legend: { display: false }
                         }
-                    },
-                    plugins: {
-                        legend: { display: true }
-                    }
-                }}
-            />
+                    }}
+                />
             </CardContent>
         </Card>
     );
