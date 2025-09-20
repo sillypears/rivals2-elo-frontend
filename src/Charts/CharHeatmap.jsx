@@ -143,21 +143,18 @@ export default function CharHeatmapCard({ className = '' }) {
 
   return (
     <Card className={`bg-gray-200 text-black ${className}`}>
-      <CardHeader>
-        <CardTitle>Opponent Picks</CardTitle>
-        <div className="flex justify-between">
-          <Select value={activeSeasonId} onValueChange={setSelectedSeason}>
-            <SelectTrigger className="bg-white">
-              <SelectValue placeholder="Select season" />
-            </SelectTrigger>
-            <SelectContent>
-              {sortedSeasons.map(season => (
-                <SelectItem key={season.id} value={String(season.id)}>{season.display_name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-        </div>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="h-full">Opponent Picks</CardTitle>
+        <Select value={activeSeasonId} onValueChange={setSelectedSeason}>
+          <SelectTrigger className="bg-white h-[20px] w-[180px]">
+            <SelectValue placeholder="Select season" />
+          </SelectTrigger>
+          <SelectContent>
+            {sortedSeasons.map(season => (
+              <SelectItem key={season.id} value={String(season.id)}>{season.display_name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </CardHeader>
       <CardContent style={{ height: 320 }}>
         <Bar data={data} options={options} />
