@@ -100,22 +100,22 @@ export default function WinLossByCharacterCard({ className = '' }) {
 
     const [selectedTier, setSelectedTier] = useState("");
 
-const filtered = useMemo(() => {
-  return stats
-    .filter(
-      s =>
-        String(s.season_id) === selectedSeason &&
-        (selectedTier ? s.tier_short_name === selectedTier : true)
-    )
-    // sort by total games descending:
-    .sort(
-      (a, b) =>
-        (b.games_won + b.games_lost) - (a.games_won + a.games_lost)
-    );
+    const filtered = useMemo(() => {
+        return stats
+            .filter(
+                s =>
+                    String(s.season_id) === selectedSeason &&
+                    (selectedTier ? s.tier_short_name === selectedTier : true)
+            )
+            // sort by total games descending:
+            .sort(
+                (a, b) =>
+                    (b.games_won + b.games_lost) - (a.games_won + a.games_lost)
+            );
 
-  // or by win percentage:
-  // .sort((a, b) => b.win_percentage - a.win_percentage);
-}, [stats, selectedSeason, selectedTier]);
+        // or by win percentage:
+        // .sort((a, b) => b.win_percentage - a.win_percentage);
+    }, [stats, selectedSeason, selectedTier]);
 
     const labels = filtered.map(d => d.opponent_character);
     const wins = filtered.map(d => d.games_won);
