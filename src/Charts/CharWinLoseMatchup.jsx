@@ -139,34 +139,30 @@ export default function WinLossByCharacterCard({ className = '' }) {
 
     return (
         <Card className={`bg-gray-200 text-black flex flex-col ${className}`}>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>W/L By Char</CardTitle>
-
-                <div className="flex justify-between">
-
-                    <Select value={selectedSeason} onValueChange={setSelectedSeason}>
-                        <SelectTrigger className="bg-white">
-                            <SelectValue placeholder="Select season" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {seasons.map(season => (
-                                <SelectItem key={season.id} value={String(season.id)}>
-                                    {season.display_name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Select value={selectedTier} onValueChange={setSelectedTier}>
-                        <SelectTrigger className="bg-white">
-                            <SelectValue placeholder="All tiers" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {tiers.map(t => (
-                                <SelectItem key={t.short} value={t.short}>{t.display}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+                <Select value={selectedSeason} onValueChange={setSelectedSeason}>
+                    <SelectTrigger className="bg-white h-[20px] w-[180px]">
+                        <SelectValue placeholder="Select season" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {seasons.map(season => (
+                            <SelectItem key={season.id} value={String(season.id)}>
+                                {season.display_name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <Select value={selectedTier} onValueChange={setSelectedTier}>
+                    <SelectTrigger className="bg-white h-[20px] w-[180px]">
+                        <SelectValue placeholder="All tiers" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {tiers.map(t => (
+                            <SelectItem key={t.short} value={t.short}>{t.display}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </CardHeader>
             <CardContent className="justify-center items-center flex min-h-[400px]">
                 {filtered.length > 0 ? (
