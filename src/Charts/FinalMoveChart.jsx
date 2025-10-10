@@ -60,6 +60,11 @@ export default function TopFinalMoveCard({ className = '' }) {
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
                     setSeasons(json.data);
+                    const latestSeason = json.data.find(season => season.latest === true);
+                    if (latestSeason) {
+                        setSelectedSeason(latestSeason.display_name);
+                    }
+                    console.log(latestSeason)
                 } else {
                     setError(true);
                 }
@@ -72,7 +77,6 @@ export default function TopFinalMoveCard({ className = '' }) {
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
                     setFinalMoves(json.data);
-                    if (!selectedSeason) { setSelectedSeason(json.data[0].season_display_name) }
                 } else {
                     setError(true);
                 }
