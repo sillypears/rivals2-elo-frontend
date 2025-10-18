@@ -47,6 +47,8 @@ export default function WinLossByCharacterCard({ className = '' }) {
     const [error, setError] = useState(false);
     const [seasons, setSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState("");
+    const [currentTier, setCurrentTier] = useState("")
+    const [selectedTier, setSelectedTier] = useState("");
 
     const fetchSeasons = async () => {
         fetch(`http://${API_BASE_URL}/seasons`)
@@ -60,7 +62,19 @@ export default function WinLossByCharacterCard({ className = '' }) {
             })
             .catch(() => setError(true));
     };
-
+    const fetchTier = async () => {
+        fetch(`http://${API_BASE_URL}/current_tier`)
+            .then(res => res.json())
+            .then(json => {
+                if (json.status === "SUCCESS" && json.data) {
+                    setCurrentTier(json.data);
+                    setSelectedTier(json.data.tier_short) ;
+                } else {
+                    setError(true);
+                }
+            })
+            .catch(() => setError(true));
+    };
     const fetchStats = async () => {
         fetch(`http://${API_BASE_URL}/character-mu-data`)
             .then(res => res.json())
@@ -79,8 +93,8 @@ export default function WinLossByCharacterCard({ className = '' }) {
 
     useEffect(() => {
         fetchSeasons();
+        fetchTier();
         fetchStats();
-
         connectWebSocket(`ws://${API_BASE_URL}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
@@ -98,7 +112,6 @@ export default function WinLossByCharacterCard({ className = '' }) {
         return uniqueTiers;
     }, [stats, selectedSeason]);
 
-    const [selectedTier, setSelectedTier] = useState("");
 
     const filtered = useMemo(() => {
         return stats
@@ -136,6 +149,7 @@ export default function WinLossByCharacterCard({ className = '' }) {
             },
         ],
     };
+    console.log(`a ${currentTier.tier}, ${selectedTier}`);
 
     return (
         <Card className={`bg-gray-200 text-black flex flex-col ${className}`}>
