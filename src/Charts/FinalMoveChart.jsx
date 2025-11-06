@@ -6,9 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { connectWebSocket, subscribe } from "../utils/websocket";
 
 const chartOptions = {
-    cutout: '50%',
+    cutout: '40%',
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     plugins: {
         legend: {
             labels: {

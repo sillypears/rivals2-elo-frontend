@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { connectWebSocket, subscribe } from "@/utils/websocket";
 
-export default function StageWinLossCard({ className = ""}) {
+export default function StageWinLossCard({ className = "" }) {
     const [stageData, setStageData] = useState([]);
     const [error, setError] = useState(false);
 
@@ -57,12 +57,22 @@ export default function StageWinLossCard({ className = ""}) {
     ];
 
     const doughnutOptions = {
+        cutout: '40%',
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
-                position: "bottom",
-                labels: { font: { size: 10 } },
+                labels: {
+                    font: {
+                        size: 10
+                    },
+                    boxWidth: 10,
+                    padding: 8,
+
+                },
+                position: 'bottom',
+                maxHeight: 60, // Limit legend height to prevent overflow
+
             },
             tooltip: {
                 callbacks: {
@@ -102,18 +112,23 @@ export default function StageWinLossCard({ className = ""}) {
     };
 
     return (
-        <Card className={`bg-gray-200 text-black flex flex-col ${className}`}>
+        <Card className="bg-gray-200 text-black flex flex-col">
             <CardHeader>
                 <CardTitle>Stage Performance (Wins vs Losses)</CardTitle>
             </CardHeader>
-            <CardContent className="flex justify-center items-center">
-                <div className=" ">
-                    <h3 className="text-center font-semibold ">Wins</h3>
-                    <Doughnut data={winData} options={doughnutOptions} />
+            <CardContent className="flex flex-col sm:flex-row gap-4 p-4 min-h-[300px] justify-center items-stretch">
+                <div className="flex-1 min-w-0 flex flex-col">
+                    <h3 className="text-center font-semibold mb-2">Wins</h3>
+                    <div className="flex-1 relative" style={{ minHeight: '200px' }}>
+                        <Doughnut data={winData} options={doughnutOptions} />
+                    </div>
                 </div>
-                <div className=" ">
-                    <h3 className="text-center font-semibold ">Losses</h3>
-                    <Doughnut data={lossData} options={doughnutOptions} />
+
+                <div className="flex-1 min-w-0 flex flex-col">
+                    <h3 className="text-center font-semibold mb-2">Losses</h3>
+                    <div className="flex-1 relative" style={{ minHeight: '200px' }}>
+                        <Doughnut data={lossData} options={doughnutOptions} />
+                    </div>
                 </div>
             </CardContent>
         </Card>
