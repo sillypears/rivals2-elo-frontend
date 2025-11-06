@@ -54,14 +54,17 @@ export default function ManualMatchEntry() {
         game_1_opponent_pick: -1,
         game_1_stage: -1,
         game_1_winner: -1,
+        game_1_duration: -1,
         game_2_char_pick: -1,
         game_2_opponent_pick: -1,
         game_2_stage: -1,
         game_2_winner: -1,
+        game_2_duration: -1,
         game_3_char_pick: -1,
         game_3_opponent_pick: -1,
         game_3_stage: -1,
         game_3_winner: -1,
+        game_3_duration: -1,
         final_move_id: -1,
     });
     const handlePasteJson = (e) => {
@@ -137,6 +140,9 @@ export default function ManualMatchEntry() {
                 <option value={1}>Me</option>
                 <option value={2}>Opponent</option>
             </select>
+            <label className="flex flex-row gap-x-1 text-xs text-gray-600">
+                Duration <input type="number" value={form[`game_${num}_duration`]} onChange={e => update('game_${num}_duration', +e.target.value)} className="w-full bg-gray-200"/>
+            </label>
         </div>
     );
 
