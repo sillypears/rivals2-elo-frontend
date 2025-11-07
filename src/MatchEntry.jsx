@@ -141,7 +141,7 @@ export default function ManualMatchEntry() {
                 <option value={2}>Opponent</option>
             </select>
             <label className="flex flex-row gap-x-1 text-xs text-gray-600">
-                Duration <input type="number" value={form[`game_${num}_duration`]} onChange={e => update('game_${num}_duration', +e.target.value)} className="w-full bg-gray-200"/>
+                Duration <input type="number" value={form[`game_${num}_duration`]} onChange={e => update(`game_${num}_duration`, +e.target.value)} className="w-full bg-gray-200"/>
             </label>
         </div>
     );
