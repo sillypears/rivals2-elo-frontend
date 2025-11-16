@@ -1,7 +1,8 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState } from 'react';
-import { fetchCharacters, fetchStages } from './utils/api';
-import { data } from 'autoprefixer';
+import { fetchCharacters, fetchStages, fetchMoves } from './utils/api';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 
 Math.log10 = Math.log10 || function (x) {
@@ -37,6 +38,9 @@ function estimateOpponentElo(myElo, eloChange, result, k = 25) {
 export default function ManualMatchEntry() {
     const [characters, setCharacters] = useState([]);
     const [stages, setStages] = useState([]);
+    const [moves, setMoves] = useState([]);
+    const [submitModal, setSubmitModal] = useState({ open: false, success: false, message: '' });
+    const [jsonModal, setJsonModal] = useState({ open: false, success: false, message: '' });
     const [form, setForm] = useState({
         match_date: new Date().toISOString().slice(0, 16),
         elo_rank_old: -1,
@@ -55,16 +59,19 @@ export default function ManualMatchEntry() {
         game_1_stage: -1,
         game_1_winner: -1,
         game_1_duration: -1,
+        game_1_final_move_id: -1,
         game_2_char_pick: -1,
         game_2_opponent_pick: -1,
         game_2_stage: -1,
         game_2_winner: -1,
         game_2_duration: -1,
+        game_2_final_move_id: -1,
         game_3_char_pick: -1,
         game_3_opponent_pick: -1,
         game_3_stage: -1,
         game_3_winner: -1,
         game_3_duration: -1,
+        game_3_final_move_id: -1,
         final_move_id: -1,
     });
     const handlePasteJson = (e) => {
@@ -72,11 +79,24 @@ export default function ManualMatchEntry() {
             const json = JSON.parse(e.target.value);
             if (typeof json === 'object' && json !== null) {
                 setForm(prev => ({ ...prev, ...json }));
+                setJsonModal({
+                    open: true,
+                    success: true,
+                    message: 'JSON data applied successfully!'
+                });
             } else {
-                alert("Invalid JSON object.");
+                setJsonModal({
+                    open: true,
+                    success: false,
+                    message: 'Invalid JSON object. Please provide a valid JSON object.'
+                });
             }
         } catch (err) {
-            alert("Failed to parse JSON.");
+            setJsonModal({
+                open: true,
+                success: false,
+                message: 'Failed to parse JSON. Please check your JSON syntax.'
+            });
             console.error(err);
         }
     };
@@ -103,6 +123,7 @@ export default function ManualMatchEntry() {
     useEffect(() => {
         fetchCharacters().then((data) => setCharacters(data.data));
         fetchStages().then((data) => setStages(data.data));
+        fetchMoves().then((data) => setMoves(data.data));
     }, []);
 
     const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
@@ -112,12 +133,67 @@ export default function ManualMatchEntry() {
     };
 
     const handleSubmit = async () => {
-        const response = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/insert-match`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form),
-        });
-        alert(response.ok ? 'Match submitted!' : 'Submission failed');
+        try {
+            const response = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/insert-match`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+
+            if (response.ok) {
+                setSubmitModal({
+                    open: true,
+                    success: true,
+                    message: 'Match submitted successfully!'
+                });
+                // Reset form after successful submission
+                setForm({
+                    match_date: new Date().toISOString().slice(0, 16),
+                    elo_rank_old: -1,
+                    elo_rank_new: -1,
+                    elo_change: -1,
+                    match_win: 1,
+                    match_forfeit: -1,
+                    ranked_game_number: -1,
+                    total_wins: -1,
+                    win_streak_value: -1,
+                    opponent_elo: -1,
+                    opponent_estimated_elo: -1,
+                    opponent_name: '',
+                    game_1_char_pick: -1,
+                    game_1_opponent_pick: -1,
+                    game_1_stage: -1,
+                    game_1_winner: -1,
+                    game_1_duration: -1,
+                    game_1_final_move_id: -1,
+                    game_2_char_pick: -1,
+                    game_2_opponent_pick: -1,
+                    game_2_stage: -1,
+                    game_2_winner: -1,
+                    game_2_duration: -1,
+                    game_2_final_move_id: -1,
+                    game_3_char_pick: -1,
+                    game_3_opponent_pick: -1,
+                    game_3_stage: -1,
+                    game_3_winner: -1,
+                    game_3_duration: -1,
+                    game_3_final_move_id: -1,
+                    final_move_id: -1,
+                });
+            } else {
+                setSubmitModal({
+                    open: true,
+                    success: false,
+                    message: 'Submission failed. Please try again.'
+                });
+            }
+        } catch (error) {
+            setSubmitModal({
+                open: true,
+                success: false,
+                message: `Submission failed: ${error.message}`
+            });
+        }
     };
 
     const gameBlock = (num) => (
@@ -139,6 +215,10 @@ export default function ManualMatchEntry() {
                 <option value={-1}>Winner</option>
                 <option value={1}>Me</option>
                 <option value={2}>Opponent</option>
+            </select>
+            <select value={form[`game_${num}_final_move_id`]} onChange={e => update(`game_${num}_final_move_id`, +e.target.value)} className="w-full">
+                <option value={-1}>Final Move</option>
+                {moves.map(m => <option key={m.id} value={m.id}>{m.display_name}</option>)}
             </select>
             <label className="flex flex-row gap-x-1 text-xs text-gray-600">
                 Duration <input type="number" value={form[`game_${num}_duration`]} onChange={e => update(`game_${num}_duration`, +e.target.value)} className="w-full bg-gray-200"/>
@@ -233,11 +313,18 @@ export default function ManualMatchEntry() {
                     Win Streak
                     <input type="number" value={form.win_streak_value} onChange={e => update('win_streak_value', +e.target.value)} className="p-1 border rounded" />
                 </label>
-                <label className="flex flex-col">
-                    Total Wins
-                    <input type="number" value={form.total_wins} onChange={e => update('total_wins', +e.target.value)} className="p-1 border rounded" />
-                </label>
-            </div>
+                 <label className="flex flex-col">
+                     Total Wins
+                     <input type="number" value={form.total_wins} onChange={e => update('total_wins', +e.target.value)} className="p-1 border rounded" />
+                 </label>
+                 <label className="flex flex-col">
+                     Final Move
+                     <select value={form.final_move_id} onChange={e => update('final_move_id', +e.target.value)} className="p-1 border rounded">
+                         <option value={-1}>Select Final Move</option>
+                         {moves.map(m => <option key={m.id} value={m.id}>{m.display_name}</option>)}
+                     </select>
+                 </label>
+             </div>
 
             {/* Game Entry */}
             <div className="grid grid-cols-3 gap-2">{[1, 2, 3].map(gameBlock)}</div>
@@ -255,6 +342,44 @@ export default function ManualMatchEntry() {
                 />
                 <p className="text-xs text-gray-600">Paste full JSON and click outside the box to apply it.</p>
             </div>
+
+            {/* Success/Error Modal */}
+            <Dialog open={submitModal.open} onOpenChange={(open) => setSubmitModal(prev => ({ ...prev, open }))}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className={submitModal.success ? 'text-green-600' : 'text-red-600'}>
+                            {submitModal.success ? 'Success!' : 'Error'}
+                        </DialogTitle>
+                        <DialogDescription>
+                            {submitModal.message}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button onClick={() => setSubmitModal({ open: false, success: false, message: '' })}>
+                            {submitModal.success ? 'Continue' : 'Try Again'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* JSON Parse Modal */}
+            <Dialog open={jsonModal.open} onOpenChange={(open) => setJsonModal(prev => ({ ...prev, open }))}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className={jsonModal.success ? 'text-green-600' : 'text-red-600'}>
+                            {jsonModal.success ? 'Success!' : 'JSON Error'}
+                        </DialogTitle>
+                        <DialogDescription>
+                            {jsonModal.message}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button onClick={() => setJsonModal({ open: false, success: false, message: '' })}>
+                            {jsonModal.success ? 'Continue' : 'Try Again'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
         </div>
 
