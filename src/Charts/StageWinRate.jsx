@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -9,7 +9,7 @@ export default function StageWinLossCard({ className = "" }) {
     const [error, setError] = useState(false);
 
     const fetchStageStats = () => {
-        fetch(`http://${API_BASE_URL}/stage-stats`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/stage-stats`)
 
             .then(res => res.json())
             .then(json => {
@@ -24,7 +24,7 @@ export default function StageWinLossCard({ className = "" }) {
 
     useEffect(() => {
         fetchStageStats();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchStageStats()

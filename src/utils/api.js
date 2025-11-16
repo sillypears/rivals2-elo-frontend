@@ -1,17 +1,17 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 
 export async function fetchCharacters() {
-  const res = await fetch(`http://${API_BASE_URL}/characters`);
+  const res = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/characters`);
   return await res.json();
 }
 
 export async function fetchStages() {
-  const res = await fetch(`http://${API_BASE_URL}/stages`);
+  const res = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/stages`);
   return await res.json();
 }
 
 export async function fetchMoves() {
-  const res = await fetch(`http://${API_BASE_URL}/movelist`);
+  const res = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/movelist`);
   return await res.json();
 }
 
@@ -20,12 +20,12 @@ export async function fetchMatchById(id) {
   if (id != null) {
     match_id = `/${parseInt(id)}`
   }
-  const res = await fetch(`http://${API_BASE_URL}/match${match_id}`);
+  const res = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/match${match_id}`);
   return await res.json();
 }
 
 export async function updateMatchField(id, key, value) {
-  const res = await fetch(`http://${API_BASE_URL}/update-match`, {
+  const res = await fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/update-match`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

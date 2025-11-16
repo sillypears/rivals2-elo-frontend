@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import {
     useReactTable,
     getCoreRowModel,
@@ -100,7 +100,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     const handleBlur = () => {
                         setEditing(false);
                         if (value === originalValue) return;
-                        fetch(`http://${API_BASE_URL}/update-match/`, {
+                        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/update-match/`, {
                             method: 'PATCH',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({

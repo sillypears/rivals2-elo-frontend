@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 
@@ -10,7 +10,7 @@ export default function SeasonStatsCard({ className = '' }) {
     const [error, setError] = useState(false);
 
     const fetchLatestMatch = () => {
-        fetch(`http://${API_BASE_URL}/matches/1`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/matches/1`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -24,7 +24,7 @@ export default function SeasonStatsCard({ className = '' }) {
 
     useEffect(() => {
         fetchLatestMatch();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchLatestMatch()

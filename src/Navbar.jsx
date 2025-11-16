@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
@@ -37,7 +37,7 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const fetchCurrentElo = () => {
-        fetch(`http://${API_BASE_URL}/current_tier`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -50,7 +50,7 @@ export default function Navbar() {
     };
 
     const fetchTiers = () => {
-        fetch(`http://${API_BASE_URL}/ranked_tiers`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/ranked_tiers`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
@@ -64,7 +64,7 @@ export default function Navbar() {
     useEffect(() => {
         fetchCurrentElo();
         fetchTiers();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchCurrentElo();

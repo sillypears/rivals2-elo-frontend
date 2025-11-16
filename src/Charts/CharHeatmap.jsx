@@ -1,5 +1,5 @@
 // src/Charts/CharPickBarCard.jsx
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState, useMemo } from 'react';
 import { connectWebSocket, subscribe } from '@/utils/websocket';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -16,7 +16,7 @@ export default function CharHeatmapCard({ className = '' }) {
   const [selectedSeason, setSelectedSeason] = useState("");
 
   const fetchSeasons = async () => {
-    fetch(`http://${API_BASE_URL}/seasons`)
+    fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/seasons`)
       .then(res => res.json())
       .then(json => {
         if (json.status === "SUCCESS" && json.data) {
@@ -33,7 +33,7 @@ export default function CharHeatmapCard({ className = '' }) {
   };
 
   const fetchCharPicks = () => {
-    fetch(`http://${API_BASE_URL}/heatmap-data`)
+    fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/heatmap-data`)
       .then(res => res.json())
       .then(json => {
         if (json.status === 'SUCCESS' && json.data) {
@@ -51,7 +51,7 @@ export default function CharHeatmapCard({ className = '' }) {
   useEffect(() => {
     fetchSeasons();
     fetchCharPicks();
-    connectWebSocket(`ws://${API_BASE_URL}/ws`);
+    connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
     const unsubscribe = subscribe((message) => {
       if (message.type === 'new_match') {
         fetchCharPicks();

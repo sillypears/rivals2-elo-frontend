@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState, useRef } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
@@ -72,7 +72,7 @@ export default function App() {
   const wsRef = useRef(null);
 
   const fetchMatches = () => {
-    fetch(`http://${API_BASE_URL}/matches`)
+    fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/matches`)
       .then((res) => res.json())
       .then((data) => setMatches(data.data))
       .catch((err) => console.error('Error fetching match data:', err));
@@ -80,7 +80,7 @@ export default function App() {
 
   useEffect(() => {
     fetchMatches();
-    connectWebSocket(`ws://${API_BASE_URL}/ws`);
+    connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
     const unsubscribe = subscribe((message) => {
       if (message.type === "new_match") {
         fetchMatches()

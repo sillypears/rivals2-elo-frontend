@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import {
@@ -39,7 +39,7 @@ export default function GameCountChart() {
     });
 
     useEffect(() => {
-        fetch(`http://${API_BASE_URL}/match-stats`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/match-stats`)
             .then(res => res.json())
             .then(data => {
                 const winCounts = {};

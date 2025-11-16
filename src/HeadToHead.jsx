@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { Card, CardTitle, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from './components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -11,14 +11,14 @@ export default function HeadToHeadPage() {
     const [selectedIndex, setSelectedIndex] = useState("N/A");
 
     const fetchOpponentNames = useCallback(() => {
-        fetch(`http://${API_BASE_URL}/opponent_names`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/opponent_names`)
             .then((res) => res.json())
             .then((data) => setOppNameData(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
     });
     const fetchOpponentData = useCallback((oppName) => {
         if (!oppName || oppName === "N/A") return;
-        fetch(`http://${API_BASE_URL}/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
             .then((res) => res.json())
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
@@ -45,7 +45,7 @@ export default function HeadToHeadPage() {
 
     useEffect(() => {
         fetchOpponentNames();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchOpponentNames()

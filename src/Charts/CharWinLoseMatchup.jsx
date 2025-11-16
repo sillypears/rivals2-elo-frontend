@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import React, { useState, useEffect, useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -51,7 +51,7 @@ export default function WinLossByCharacterCard({ className = '' }) {
     const [selectedTier, setSelectedTier] = useState("");
 
     const fetchSeasons = async () => {
-        fetch(`http://${API_BASE_URL}/seasons`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/seasons`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
@@ -63,7 +63,7 @@ export default function WinLossByCharacterCard({ className = '' }) {
             .catch(() => setError(true));
     };
     const fetchTier = async () => {
-        fetch(`http://${API_BASE_URL}/current_tier`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
@@ -76,7 +76,7 @@ export default function WinLossByCharacterCard({ className = '' }) {
             .catch(() => setError(true));
     };
     const fetchStats = async () => {
-        fetch(`http://${API_BASE_URL}/character-mu-data`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/character-mu-data`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
@@ -95,7 +95,7 @@ export default function WinLossByCharacterCard({ className = '' }) {
         fetchSeasons();
         fetchTier();
         fetchStats();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchStats();

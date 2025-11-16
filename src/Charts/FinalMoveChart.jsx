@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import React, { useState, useEffect, useMemo } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,7 +55,7 @@ export default function TopFinalMoveCard({ className = '' }) {
     const [selectedSeason, setSelectedSeason] = useState("");
 
     const fetchSeasons = async () => {
-        fetch(`http://${API_BASE_URL}/seasons`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/seasons`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
@@ -72,7 +72,7 @@ export default function TopFinalMoveCard({ className = '' }) {
             .catch(() => setError(true));
     };
     const fetchFinalMoves = async () => {
-        fetch(`http://${API_BASE_URL}/final-move-stats`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/final-move-stats`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
@@ -88,7 +88,7 @@ export default function TopFinalMoveCard({ className = '' }) {
         fetchSeasons();
         fetchFinalMoves();
 
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchFinalMoves()

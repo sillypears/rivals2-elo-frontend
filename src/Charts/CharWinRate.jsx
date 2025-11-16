@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import {
@@ -29,7 +29,7 @@ export default function CharWinLossChart() {
     const [lossData, setLossData] = useState(null);
 
     useEffect(() => {
-        fetch(`http://${API_BASE_URL}/char-stats`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/char-stats`)
             .then(res => res.json())
             .then(data => {
                 const winLabels = [];

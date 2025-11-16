@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL, API_BASE_PORT } from "./config";
 
 export default function BottomFooter() {
     return (
@@ -12,7 +12,7 @@ export default function BottomFooter() {
             <a href="https://dragdown.wiki/wiki/RoA2" title="Dragdown" target="_blank">
                 <img width="16px" src="/images/dragdown.png" />
             </a>
-            <a href={`http://${API_BASE_URL}/docs`} title="Swagger Docs" target="_blank">
+            <a href={`http://${API_BASE_URL}:${API_BASE_PORT}/docs`} title="Swagger Docs" target="_blank">
                 <img width="16px" src="/images/api.png" />
             </a>
         </div>

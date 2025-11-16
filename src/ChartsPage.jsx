@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Scatter, Chart } from 'react-chartjs-2';
@@ -189,7 +189,7 @@ export default function ChartsPage() {
     const [WinLoseLimit, setWinLoseLimit] = useState(20);
 
     const fetchEloStats = useCallback(() => {
-        fetch(`http://${API_BASE_URL}/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
             .then((res) => res.json())
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
@@ -198,7 +198,7 @@ export default function ChartsPage() {
 
     useEffect(() => {
         fetchEloStats();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === "new_match") {
                 fetchEloStats()

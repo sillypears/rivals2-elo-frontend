@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config';
+import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '@/utils/websocket';
 import { Bar } from "react-chartjs-2";
@@ -32,7 +32,7 @@ export default function StagePickCard({ className = '' }) {
     const [error, setError] = useState(false);
 
     const fetchStageData = () => {
-        fetch(`http://${API_BASE_URL}/stagepick-data`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/stagepick-data`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === 'SUCCESS' && json.data) {
@@ -47,7 +47,7 @@ export default function StagePickCard({ className = '' }) {
 
     useEffect(() => {
         fetchStageData();
-        connectWebSocket(`ws://${API_BASE_URL}/ws`);
+        connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
             if (message.type === 'new_match') {
                 fetchStageData();
