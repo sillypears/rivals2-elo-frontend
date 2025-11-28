@@ -61,7 +61,7 @@ export default function SeasonStatsCard({ className = '' }) {
                 ) : selected ? (
                     <div className="grid flex flex-grid grid-cols-2">
                         <p><span className="font-semibold">Matches</span>: {selected.total_matches}</p>
-                        <p><span className="font-semibold">Min | Max Elo</span>: {selected.min_elo} | {selected.max_elo}</p>
+                        <p><span className="font-semibold">Min|Max Elo</span>: {selected.min_elo} | {selected.max_elo}</p>
                         <p><span className="font-semibold">Wins</span>: {selected.match_wins}<sup className="text-green-600">{selected.match_wins - selected.match_losses > 0 ? `(+${selected.match_wins - selected.match_losses})` : ""}</sup></p>
                         <p><span className="font-semibold">Max Elo Δ</span>: {selected.total_elo_change}</p>
                         <p><span className="font-semibold">Losses</span>: {selected.match_losses}<sup className="text-red-600">{selected.match_wins - selected.match_losses < 0 ? `(${selected.match_wins - selected.match_losses})` : ""}</sup></p>
