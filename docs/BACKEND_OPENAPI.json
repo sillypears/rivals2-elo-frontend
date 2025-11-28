@@ -1,0 +1,1859 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health Check",
+                "operationId": "health_check_healthcheck_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Health Check Healthcheck Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/characters": {
+            "get": {
+                "tags": [
+                    "Characters",
+                    "Meta"
+                ],
+                "summary": "Get Characters",
+                "operationId": "get_characters_characters_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse_List_Character__"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stages": {
+            "get": {
+                "tags": [
+                    "Stages",
+                    "Meta"
+                ],
+                "summary": "Get Characters",
+                "operationId": "get_characters_stages_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Characters Stages Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/seasons": {
+            "get": {
+                "tags": [
+                    "Seasons",
+                    "Meta"
+                ],
+                "summary": "Get Seasons",
+                "operationId": "get_seasons_seasons_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse_List_Seasons__"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/season/latest": {
+            "get": {
+                "tags": [
+                    "Seasons",
+                    "Meta"
+                ],
+                "summary": "Get Latest Season",
+                "operationId": "get_latest_season_season_latest_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse_SeasonLatest_"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ranked_tiers": {
+            "get": {
+                "tags": [
+                    "Ranked",
+                    "Meta"
+                ],
+                "summary": "Get Ranked Tier List",
+                "operationId": "get_ranked_tier_list_ranked_tiers_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Ranked Tier List Ranked Tiers Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/opponent_names": {
+            "get": {
+                "tags": [
+                    "Ranked",
+                    "Meta"
+                ],
+                "summary": "Get Opponent Name List",
+                "operationId": "get_opponent_name_list_opponent_names_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/current_tier": {
+            "get": {
+                "tags": [
+                    "Performance"
+                ],
+                "summary": "Get Current Tier",
+                "operationId": "get_current_tier_current_tier_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Current Tier Current Tier Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/movelist": {
+            "get": {
+                "tags": [
+                    "Moves",
+                    "Meta"
+                ],
+                "summary": "Get Movelist",
+                "operationId": "get_movelist_movelist_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Movelist Movelist Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/movelist/top": {
+            "get": {
+                "tags": [
+                    "Moves",
+                    "Meta"
+                ],
+                "summary": "Get Movelist",
+                "operationId": "get_movelist_movelist_top_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Movelist Movelist Top Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches/{limit}": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Matches",
+                "operationId": "get_matches_matches__limit__get",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Matches Matches  Limit  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Matches",
+                "operationId": "get_matches_matches_get",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Matches Matches Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches/{offset}/{limit}": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Matches",
+                "operationId": "get_matches_matches__offset___limit__get",
+                "parameters": [
+                    {
+                        "name": "offset",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Matches Matches  Offset   Limit  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match/{id}": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Match",
+                "operationId": "get_match_match__id__get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Match Match  Id  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Matches",
+                    "Mutable"
+                ],
+                "summary": "Delete Match",
+                "operationId": "delete_match_match__id__delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Delete Match Match  Id  Delete"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Match",
+                "operationId": "get_match_match_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": -1,
+                            "title": "Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Match Match Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match-exists": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Match Exists",
+                "operationId": "get_match_exists_match_exists_get",
+                "parameters": [
+                    {
+                        "name": "match_number",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Match Number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match_forfeits": {
+            "get": {
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Get Match Forfeits",
+                "operationId": "get_match_forfeits_match_forfeits_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Match Forfeits Match Forfeits Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Stats",
+                "operationId": "get_stats_stats_get",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Skip"
+                        }
+                    },
+                    {
+                        "name": "match_win",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Match Win"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Stats Stats Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/char-stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Char Stats",
+                "operationId": "get_char_stats_char_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Char Stats Char Stats Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/char-stats-picked": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Chars By Times Picked",
+                "operationId": "get_chars_by_times_picked_char_stats_picked_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stage-stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Stage Stats",
+                "operationId": "get_stage_stats_stage_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Stage Stats Stage Stats Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match-stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Match Stats",
+                "operationId": "get_match_stats_match_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Match Stats Match Stats Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match-stage-stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Match Stage Stats",
+                "operationId": "get_match_stage_stats_match_stage_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Match Stage Stats Match Stage Stats Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/elo-change/{match_number}": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Elo Changes",
+                "operationId": "get_elo_changes_elo_change__match_number__get",
+                "parameters": [
+                    {
+                        "name": "match_number",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Match Number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Elo Changes Elo Change  Match Number  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/elo-change": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Elo Changes",
+                "operationId": "get_elo_changes_elo_change_get",
+                "parameters": [
+                    {
+                        "name": "match_number",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Match Number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Get Elo Changes Elo Change Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/final-move-stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Final Move Stats",
+                "operationId": "get_final_move_stats_final_move_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Final Move Stats Final Move Stats Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/all-seasons-stats": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get All Seasons Stats",
+                "operationId": "get_all_seasons_stats_all_seasons_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get All Seasons Stats All Seasons Stats Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/elo-by-season": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Elo By Season",
+                "operationId": "get_elo_by_season_elo_by_season_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Elo By Season Elo By Season Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/head-to-head": {
+            "get": {
+                "tags": [
+                    "Charts",
+                    "Matches"
+                ],
+                "summary": "Get Head To Head By User",
+                "operationId": "get_head_to_head_by_user_head_to_head_get",
+                "parameters": [
+                    {
+                        "name": "opp_name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Opp Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/head-to-head/top": {
+            "get": {
+                "tags": [
+                    "Charts",
+                    "Matches"
+                ],
+                "summary": "Get Top Matchups By Name",
+                "operationId": "get_top_matchups_by_name_head_to_head_top_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/heatmap-data": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Data For Heatmap",
+                "operationId": "get_data_for_heatmap_heatmap_data_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stagepick-data": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Data For Stageheatmap",
+                "operationId": "get_data_for_stageheatmap_stagepick_data_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/character-mu-data": {
+            "get": {
+                "tags": [
+                    "Charts"
+                ],
+                "summary": "Get Character Matchup Data",
+                "operationId": "get_character_matchup_data_character_mu_data_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game_duration": {
+            "get": {
+                "tags": [
+                    "Matches",
+                    "Time"
+                ],
+                "summary": "Get Game Duration",
+                "operationId": "get_game_duration_game_duration_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Game Duration Game Duration Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game_duration/season": {
+            "get": {
+                "tags": [
+                    "Matches",
+                    "Time"
+                ],
+                "summary": "Get Game Duration By Season",
+                "operationId": "get_game_duration_by_season_game_duration_season_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Game Duration By Season Game Duration Season Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/game_duration/opponent": {
+            "get": {
+                "tags": [
+                    "Matches",
+                    "Time"
+                ],
+                "summary": "Get Game Duration By Opponent",
+                "operationId": "get_game_duration_by_opponent_game_duration_opponent_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Game Duration By Opponent Game Duration Opponent Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/insert-match": {
+            "post": {
+                "tags": [
+                    "Matches",
+                    "Mutable"
+                ],
+                "summary": "Insert Match",
+                "operationId": "insert_match_insert_match_post",
+                "parameters": [
+                    {
+                        "name": "debug",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": 0,
+                            "title": "Debug"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Match"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "title": "Response Insert Match Insert Match Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/update-match/": {
+            "patch": {
+                "tags": [
+                    "Mutable"
+                ],
+                "summary": "Update Match",
+                "operationId": "update_match_update_match__patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "additionalProperties": true,
+                                "type": "object",
+                                "title": "Update Value"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Update Match Update Match  Patch"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ws-test": {
+            "get": {
+                "tags": [
+                    "WebSockets"
+                ],
+                "summary": "Test Websocket Broadcast",
+                "description": "Endpoint to send a test message to all connected WebSocket clients.",
+                "operationId": "test_websocket_broadcast_ws_test_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ws-count": {
+            "get": {
+                "tags": [
+                    "WebSockets"
+                ],
+                "summary": "Get Websocket Count",
+                "description": "Endpoint to get the count of connected WebSocket clients.",
+                "operationId": "get_websocket_count_ws_count_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
+                                    "type": "object",
+                                    "title": "Response Get Websocket Count Ws Count Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApiResponse_List_Character__": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "default": "SUCCESS"
+                    },
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/Character"
+                        },
+                        "type": "array",
+                        "title": "Data"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ApiResponse[List[Character]]"
+            },
+            "ApiResponse_List_Seasons__": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "default": "SUCCESS"
+                    },
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/Seasons"
+                        },
+                        "type": "array",
+                        "title": "Data"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ApiResponse[List[Seasons]]"
+            },
+            "ApiResponse_SeasonLatest_": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "default": "SUCCESS"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/SeasonLatest"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ApiResponse[SeasonLatest]"
+            },
+            "Character": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "character_name": {
+                        "type": "string",
+                        "title": "Character Name"
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "title": "Display Name"
+                    },
+                    "release_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Release Date"
+                    },
+                    "list_order": {
+                        "type": "integer",
+                        "title": "List Order"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "character_name",
+                    "display_name",
+                    "release_date",
+                    "list_order"
+                ],
+                "title": "Character"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Match": {
+                "properties": {
+                    "match_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Match Date"
+                    },
+                    "elo_rank_new": {
+                        "type": "integer",
+                        "title": "Elo Rank New",
+                        "default": -1
+                    },
+                    "elo_rank_old": {
+                        "type": "integer",
+                        "title": "Elo Rank Old",
+                        "default": -1
+                    },
+                    "elo_change": {
+                        "type": "integer",
+                        "title": "Elo Change",
+                        "default": -9999
+                    },
+                    "match_win": {
+                        "type": "integer",
+                        "title": "Match Win",
+                        "default": -1
+                    },
+                    "match_forfeit": {
+                        "type": "integer",
+                        "title": "Match Forfeit",
+                        "default": -1
+                    },
+                    "ranked_game_number": {
+                        "type": "integer",
+                        "title": "Ranked Game Number",
+                        "default": -1
+                    },
+                    "total_wins": {
+                        "type": "integer",
+                        "title": "Total Wins",
+                        "default": -1
+                    },
+                    "win_streak_value": {
+                        "type": "integer",
+                        "title": "Win Streak Value",
+                        "default": -1
+                    },
+                    "opponent_elo": {
+                        "type": "integer",
+                        "title": "Opponent Elo",
+                        "default": -1
+                    },
+                    "opponent_estimated_elo": {
+                        "type": "integer",
+                        "title": "Opponent Estimated Elo",
+                        "default": -1
+                    },
+                    "opponent_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Opponent Name",
+                        "default": ""
+                    },
+                    "game_1_char_pick": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Char Pick",
+                        "default": -1
+                    },
+                    "game_1_opponent_pick": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Opponent Pick",
+                        "default": -1
+                    },
+                    "game_1_stage": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Stage",
+                        "default": -1
+                    },
+                    "game_1_stage_name": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Stage Name",
+                        "default": -1
+                    },
+                    "game_1_winner": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Winner",
+                        "default": -1
+                    },
+                    "game_1_final_move_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Final Move Id",
+                        "default": -1
+                    },
+                    "game_1_duration": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 1 Duration",
+                        "default": -1
+                    },
+                    "game_2_char_pick": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Char Pick",
+                        "default": -1
+                    },
+                    "game_2_opponent_pick": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Opponent Pick",
+                        "default": -1
+                    },
+                    "game_2_stage": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Stage",
+                        "default": -1
+                    },
+                    "game_2_stage_name": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Stage Name",
+                        "default": -1
+                    },
+                    "game_2_winner": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Winner",
+                        "default": -1
+                    },
+                    "game_2_final_move_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Final Move Id",
+                        "default": -1
+                    },
+                    "game_2_duration": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 2 Duration",
+                        "default": -1
+                    },
+                    "game_3_char_pick": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Char Pick",
+                        "default": -1
+                    },
+                    "game_3_opponent_pick": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Opponent Pick",
+                        "default": -1
+                    },
+                    "game_3_stage": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Stage",
+                        "default": -1
+                    },
+                    "game_3_stage_name": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Stage Name",
+                        "default": -1
+                    },
+                    "game_3_winner": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Winner",
+                        "default": -1
+                    },
+                    "game_3_final_move_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Final Move Id",
+                        "default": -1
+                    },
+                    "game_3_duration": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Game 3 Duration",
+                        "default": -1
+                    },
+                    "season_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Season Id",
+                        "default": -1
+                    },
+                    "final_move_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Final Move Id",
+                        "default": -1
+                    },
+                    "notes": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Notes",
+                        "default": ""
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "match_date"
+                ],
+                "title": "Match"
+            },
+            "SeasonLatest": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "short_name": {
+                        "type": "string",
+                        "title": "Short Name"
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "title": "Display Name"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Start Date"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "End Date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "short_name",
+                    "display_name",
+                    "start_date",
+                    "end_date"
+                ],
+                "title": "SeasonLatest"
+            },
+            "Seasons": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Start Date"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "End Date"
+                    },
+                    "short_name": {
+                        "type": "string",
+                        "title": "Short Name"
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "title": "Display Name"
+                    },
+                    "latest": {
+                        "type": "boolean",
+                        "title": "Latest"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "start_date",
+                    "end_date",
+                    "short_name",
+                    "display_name",
+                    "latest"
+                ],
+                "title": "Seasons"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
