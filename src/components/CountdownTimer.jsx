@@ -34,7 +34,7 @@ export default function CountdownTimer({ endDate }) {
 
   return (
     <span className="ml-4 text-sm text-gray-300">
-      Event ends: {days}d {hours}h {minutes}m {seconds}s
+      Season Ends in {days}d {hours}h {minutes}m {seconds}s
     </span>
   );
 }
