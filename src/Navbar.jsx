@@ -2,6 +2,8 @@ import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
+import { useLatestSeason } from './hooks/useApi';
+import CountdownTimer from './components/CountdownTimer';
 
 function TierList({ tiers, showTooltip }) {
     return (
@@ -35,6 +37,7 @@ export default function Navbar() {
     const [tiers, setTiers] = useState([]);
     const [showTooltip, setShowTooltip] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const { data: latestSeason } = useLatestSeason();
 
     const fetchCurrentElo = () => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
@@ -96,6 +99,7 @@ export default function Navbar() {
                         alt={currentTier.tier_short}
                     />
                 )}
+                {latestSeason && <CountdownTimer endDate={latestSeason.end_date} />}
                 <TierList tiers={tiers} showTooltip={showTooltip} />
             </div>
             <div className="hidden md:flex space-x-5">
@@ -163,6 +167,11 @@ export default function Navbar() {
                     <Link to="/history" onClick={() => setMenuOpen(false)}>History</Link>
                     <Link to="/head-to-head" onClick={() => setMenuOpen(false)}>H2H</Link>
                     <Link to="/add-match" onClick={() => setMenuOpen(false)}>Add</Link>
+                </div>
+            )}
+            {error && (
+                <div>
+                    Something broke :)
                 </div>
             )}
         </nav >

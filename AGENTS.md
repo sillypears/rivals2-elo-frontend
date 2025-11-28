@@ -60,6 +60,7 @@ const { deleteMatch, deleting } = useDeleteMatch();
 - **Loading States**: Loading spinners and skeleton components
 - **Error Boundaries**: Graceful error handling and recovery
 - **Form Components**: Comprehensive match entry with validation
+- **CountdownTimer**: Live countdown to season end dates
 
 ### Page Components
 - **MatchEntry**: Manual match creation with JSON import and final moves
@@ -82,6 +83,7 @@ const { deleteMatch, deleting } = useDeleteMatch();
 - **Keyboard Accessibility**: ESC key support for all modals
 - **Error Recovery**: Comprehensive error handling with user guidance
 - **Form Reset**: Automatic form clearing after successful submissions
+- **Season Countdown**: Live countdown timer showing time until current season ends
 
 ### Data Flow
 - **Optimistic Updates**: Immediate UI updates with server synchronization
@@ -108,6 +110,7 @@ const { deleteMatch, deleting } = useDeleteMatch();
 - **Delete Functionality**: Match deletion with confirmation dialogs
 - **Keyboard Accessibility**: ESC key support for modal dismissal
 - **JSON Import**: Enhanced with modal feedback for parsing errors
+- **Season Countdown Timer**: Live countdown to season end in navbar
 
 ### ✅ Component Improvements
 - **Error Boundaries**: Graceful error handling throughout the app
@@ -141,6 +144,7 @@ src/
 ├── components/
 │   ├── ui/           # Reusable UI components (buttons, dialogs, etc.)
 │   ├── Match/        # Match-specific components
+│   ├── CountdownTimer.jsx  # Live season countdown timer
 │   └── ErrorBoundary.jsx
 ├── hooks/
 │   └── useApi.js     # Custom API hooks for all endpoints

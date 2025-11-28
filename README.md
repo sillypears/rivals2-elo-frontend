@@ -17,6 +17,7 @@ A modern React frontend application for tracking Rivals 2 ELO matches with compr
 - **Keyboard Accessibility**: ESC key support for all modals
 - **Error Recovery**: Comprehensive error handling with user guidance
 - **Form Reset**: Automatic form clearing after successful submissions
+- **Season Countdown**: Live countdown timer showing time until current season ends
 
 ### Statistics & Analytics
 - **Character Statistics**: Win rates, pick frequencies, matchup data
@@ -78,6 +79,7 @@ src/
 ├── components/
 │   ├── ui/           # Reusable UI components (buttons, dialogs, etc.)
 │   ├── Match/        # Match-specific components
+│   ├── CountdownTimer.jsx  # Live season countdown timer
 │   └── ErrorBoundary.jsx
 ├── hooks/
 │   └── useApi.js     # Custom API hooks for all endpoints
