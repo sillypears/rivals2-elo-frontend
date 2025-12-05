@@ -1,6 +1,6 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState, /*useRef,*/ useCallback } from 'react';
+//import { useSearchParams } from 'react-router-dom';
 import { Scatter, Chart } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import {
@@ -293,26 +293,24 @@ export default function ChartsPage() {
                         <WinLossByCharacterCard className="h-full" />
                     </div>
 
-                    {/* Column 2 */}
-                    <div className="flex flex-col gap-2">
-                        <TopFinalMoveCard className="h-full" />
-                        <StagePickCard className="p-2 h-full" />
-                        <TopPlayersCard className="p-2" />
+                     {/* Column 2 */}
+                     <div className="flex flex-col gap-2">
+                         <TopFinalMoveCard className="h-full" />
+                         <StagePickCard className="p-2 h-full" />
+                         <TopPlayersCard className="p-2" />
 
-                    </div>
+                     </div>
 
-                    {/* Column 3 */}
-                    <div className="flex flex-col gap-2">
-                        <div className="flex flex-row gap-2 ">
-                            <SeasonStatsCard className="col-9/10" />
-                            <LastWinCard className="col-1/10 " />
-                        </div>
-                        <div className="flex flex-row gap-2 w-full">
-                            <EloChangeCard className="h-full" />
-                            <ForfeitCard className="h-full" />
-                        </div>
-                        <CharHeatmapCard className="h-full" />
-                    </div>
+                     {/* Column 3 */}
+                     <div className="flex flex-col gap-2">
+                         <SeasonStatsCard className="w-full" />
+                         <div className="grid grid-cols-2 gap-2 h-full">
+                             <EloChangeCard className="row-span-2" />
+                             <LastWinCard className="h-full" />
+                             <ForfeitCard className="h-full" />
+                         </div>
+                         <CharHeatmapCard className="h-full" />
+                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 p-1 gap-2" >

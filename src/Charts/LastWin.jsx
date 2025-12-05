@@ -35,24 +35,21 @@ export default function SeasonStatsCard({ className = '' }) {
     }, []);
     return (
         <Card className={`bg-gray-200 text-black ${className}`}>
-            <CardHeader>
+            <CardHeader className="text-center">
                 <CardTitle className="font-semibold text-sm">Last Match</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-center">
                 {error ? (
                     <p className="text-red-600">No Last Game</p>
                 ) : (
                     <div>
                         <div>
                             {lastMatch.match_win ? "Win" : "Loss"}
-                        </div>
-                        <div>
+			    &nbsp;
                             {lastMatch.elo_change > 0 ? `+${lastMatch.elo_change}` : lastMatch.elo_change}
-                        </div>
-                        <span>
                             <a href={`/match/${lastMatch.id}`} target="_blank"> ID</a>
                             <a href={`/head-to-head?opp=${lastMatch.opponent_name}`} target="_blank"> H2H </a>
-                        </span>
+                        </div>
                     </div>
                 )}
             </CardContent>

@@ -111,6 +111,7 @@ const { deleteMatch, deleting } = useDeleteMatch();
 - **Keyboard Accessibility**: ESC key support for modal dismissal
 - **JSON Import**: Enhanced with modal feedback for parsing errors
 - **Season Countdown Timer**: Live countdown to season end in navbar
+- **Charts Page Layout**: Elo change card spans last match and forfeits rows, with centered last match content
 
 ### ✅ Component Improvements
 - **Error Boundaries**: Graceful error handling throughout the app
