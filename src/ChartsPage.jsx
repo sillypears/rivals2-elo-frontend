@@ -290,8 +290,6 @@ export default function ChartsPage() {
                 <div className="grid grid-cols-3 py-1 gap-2 items-start">
                     {/* Column 1 */}
                     <div className="flex flex-col gap-2 w-full">
-
-                        <EloSwingCard className="h-full" />
                         <WinLossByCharacterCard className="h-full" />
                         <StageWinLossCard className="h-full" />
                     </div>
@@ -313,6 +311,8 @@ export default function ChartsPage() {
                             <ForfeitCard className="h-full" />
                         </div>
                         <CharHeatmapCard className="h-full" />
+                        <EloSwingCard className="h-full" />
+
                     </div>
                 </div>
 
