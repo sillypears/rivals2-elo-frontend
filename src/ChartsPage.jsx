@@ -33,6 +33,7 @@ import CharHeatmapCard from './Charts/CharHeatmap';
 import StagePickCard from './Charts/StagePicks';
 import WinLossByCharacterCard from './Charts/CharWinLoseMatchup';
 import LastWinCard from './Charts/LastWin';
+import EloSwingCard from './Charts/EloSwings';
 
 ChartJS.register(
     ScatterController,
@@ -289,28 +290,30 @@ export default function ChartsPage() {
                 <div className="grid grid-cols-3 py-1 gap-2 items-start">
                     {/* Column 1 */}
                     <div className="flex flex-col gap-2 w-full">
-                        <StageWinLossCard className="h-full" />
+
+                        <EloSwingCard className="h-full" />
                         <WinLossByCharacterCard className="h-full" />
+                        <StageWinLossCard className="h-full" />
                     </div>
 
-                     {/* Column 2 */}
-                     <div className="flex flex-col gap-2">
-                         <TopFinalMoveCard className="h-full" />
-                         <StagePickCard className="p-2 h-full" />
-                         <TopPlayersCard className="p-2" />
+                    {/* Column 2 */}
+                    <div className="flex flex-col gap-2">
+                        <TopFinalMoveCard className="h-full" />
+                        <StagePickCard className="p-2 h-full" />
+                        <TopPlayersCard className="p-2" />
 
-                     </div>
+                    </div>
 
-                     {/* Column 3 */}
-                     <div className="flex flex-col gap-2">
-                         <SeasonStatsCard className="w-full" />
-                         <div className="grid grid-cols-2 gap-2 h-full">
-                             <EloChangeCard className="row-span-2" />
-                             <LastWinCard className="h-full" />
-                             <ForfeitCard className="h-full" />
-                         </div>
-                         <CharHeatmapCard className="h-full" />
-                     </div>
+                    {/* Column 3 */}
+                    <div className="flex flex-col gap-2">
+                        <SeasonStatsCard className="w-full" />
+                        <div className="grid grid-cols-2 gap-2 h-full">
+                            <EloChangeCard className="row-span-2" />
+                            <LastWinCard className="h-full" />
+                            <ForfeitCard className="h-full" />
+                        </div>
+                        <CharHeatmapCard className="h-full" />
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 p-1 gap-2" >
