@@ -128,6 +128,13 @@ export default function Navbar() {
                     H2H
                 </Link>
                 <Link
+                    to="/seasons"
+                    className={location.pathname === "/seasons" ? "text-teal-400" : "hover:text-teal-400"}
+                >
+                    Seasons
+                </Link>                
+
+                <Link
                     to="/add-match"
                     className={location.pathname === "/add-match" ? "text-teal-400" : "hover:text-teal-400"}
                 >
@@ -166,6 +173,7 @@ export default function Navbar() {
                     <Link to="/matches" onClick={() => setMenuOpen(false)}>Matches</Link>
                     <Link to="/history" onClick={() => setMenuOpen(false)}>History</Link>
                     <Link to="/head-to-head" onClick={() => setMenuOpen(false)}>H2H</Link>
+                    <Link to="/seasons" onClick={() => setMenuOpen(false)}>Seasons</Link>
                     <Link to="/add-match" onClick={() => setMenuOpen(false)}>Add</Link>
                 </div>
             )}

@@ -214,3 +214,24 @@ export function useDeleteMatch() {
 
   return { deleteMatch: deleteMatchById, deleting, error };
 }
+
+export function useDeleteSeason() {
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const deleteSeasonById = useCallback(async (id) => {
+    setDeleting(true);
+    setError(null);
+    try {
+      const result = await deleteSeasonById(id);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setDeleting(false);
+    }
+  }, []);
+
+  return { deleteSeason: deleteSeasonById, deleting, error };
+}

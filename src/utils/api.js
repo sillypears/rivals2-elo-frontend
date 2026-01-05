@@ -271,6 +271,14 @@ export async function updateMatchField(id, key, value) {
   });
 }
 
+export async function updateSeason(id, updateData) {
+  const response = await apiRequest(`/season/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updateData),
+  });
+  return await response.json();
+}
+
 export async function deleteMatch(id) {
   const response = await apiRequest(`/match/${id}`, {
     method: 'DELETE',
