@@ -1,5 +1,5 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
-import { Card, CardTitle, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
+import { Card, CardTitle, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from './components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState, useCallback } from 'react';
@@ -15,7 +15,7 @@ export default function HeadToHeadPage() {
             .then((res) => res.json())
             .then((data) => setOppNameData(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
-    });
+    }, []);
     const fetchOpponentData = useCallback((oppName) => {
         if (!oppName || oppName === "N/A") return;
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
@@ -58,7 +58,7 @@ export default function HeadToHeadPage() {
 
         return () => unsubscribe();
 
-    }, [fetchOpponentData, selectedIndex]);
+    }, [fetchOpponentNames, fetchOpponentData, selectedIndex]);
 
     useEffect(() => {
         if (selectedIndex !== "N/A") {
@@ -204,7 +204,7 @@ export default function HeadToHeadPage() {
                                     >
                                         <CardTitle className="flex justify-between gap-2 px-2 pb-2">
                                             <div><a href="#">{new Date(`${match.match_date}Z`).toLocaleString()}</a></div>
-                                            <div><a href={`/match/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></div>
+                                            <div><a href={`/match/id/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></div>
                                         </CardTitle>
                                         <CardContent className="text-sm gap-2">
                                             <div className="flex justify-between border-b">

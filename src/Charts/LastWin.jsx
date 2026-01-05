@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from '../utils/websocket';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table';
+// import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table';
 
 export default function SeasonStatsCard({ className = '' }) {
     const [lastMatch, setLastMatch] = useState([]);
@@ -47,7 +47,7 @@ export default function SeasonStatsCard({ className = '' }) {
                             {lastMatch.match_win ? "Win" : "Loss"}
 			    &nbsp;
                             {lastMatch.elo_change > 0 ? `+${lastMatch.elo_change}` : lastMatch.elo_change}
-                            <a href={`/match/${lastMatch.id}`} target="_blank"> ID</a>
+                            <a href={`/match/id/${lastMatch.id}`} target="_blank"> ID</a>
                             <a href={`/head-to-head?opp=${lastMatch.opponent_name}`} target="_blank"> H2H </a>
                         </div>
                     </div>

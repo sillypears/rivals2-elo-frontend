@@ -21,7 +21,8 @@ export default function App() {
             <Route path="/stats" element={<ChartsPage />} />
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/add-match" element={<ManualMatchEntry />} />
-            <Route path="/match/:id" element={<MatchDetailPage />} />
+            <Route path="/match/id/:id" element={<MatchDetailPage />} />
+            <Route path="/match/date/:date" element={<MatchDetailPage />} />
             <Route path="/head-to-head/" element={<HeadToHeadPage />} />
             <Route path="/seasons" element={<SeasonsPage />} />
             <Route path="/season/:id" element={<SeasonDetailPage />} />

@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchCharacters, fetchStages, fetchMoves } from '../utils/api';
-import { data } from 'react-router-dom';
 
 
 const columnHelper = createColumnHelper();
@@ -47,7 +46,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 header: 'Game #',
                 cell: ({ row }) => {
                     return (
-                        <a href={`/match/${row.original.id}`} target="_blank">
+                        <a href={`/match/id/${row.original.id}`} target="_blank">
                             {row.original.ranked_game_number}
                         </a>
                     )
@@ -86,12 +85,16 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                     const rankedGameNumber = row.original.ranked_game_number;
                     const row_id = row.original.id;
                     const externalValue = getValue();
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
                     const [editing, setEditing] = useState(false);
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
                     const [value, setValue] = useState(externalValue);
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
                     const [originalValue, setOriginalValue] = useState(externalValue);
                     const estimated_elo = row.original.opponent_estimated_elo;
                     const opp_name = row.original.opponent_name;
-
+                    
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
                     useEffect(() => {
                         setValue(externalValue);
                         setOriginalValue(externalValue);
@@ -334,7 +337,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
 
         return [...baseColumns, ...gameColumns, ...endColumns];
 
-    }, [characters, stages, moves, maxGames, onCellUpdate]);
+    }, [characters, stages, moves, maxGames, characterMap, onCellUpdate]);
 
     const table = useReactTable({
         data: matches,

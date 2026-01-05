@@ -1,5 +1,5 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
 function MatchCard({ match }) {
@@ -36,7 +36,7 @@ function MatchCard({ match }) {
         </div>
       </div>
 
-      <div className="text-lg font-bold text-black">Game #<a href={`/match/${match.id}`}>{match.ranked_game_number}</a></div>
+      <div className="text-lg font-bold text-black">Game #<a href={`/match/id/${match.id}`}>{match.ranked_game_number}</a></div>
       <div className="text-sm text-gray-200">Date: {new Date(`${match.match_date}Z`).toLocaleString("en-US", { timeZone: "America/New_York" })}</div>
 
       <div className="mt-2">
@@ -69,7 +69,6 @@ function MatchCard({ match }) {
 
 export default function App() {
   const [matches, setMatches] = useState([]);
-  const wsRef = useRef(null);
 
   const fetchMatches = () => {
     fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/matches`)
