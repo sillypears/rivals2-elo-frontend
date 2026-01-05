@@ -162,8 +162,8 @@ export default function SeasonsPage() {
                                 if (ref) {
                                     ref.scrollIntoView({
                                         behavior: 'smooth',
-                                        block: 'nearest',
-                                        inline: 'center'
+                                        block: 'center',
+                                        inline: 'start'
                                     });
                                 }
                             }, 300);
