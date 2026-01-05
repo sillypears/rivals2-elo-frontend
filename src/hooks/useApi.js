@@ -1,6 +1,6 @@
 // src/hooks/useApi.js
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, updateMatch, deleteMatch } from '../utils/api';
+import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchSeasonById, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, updateMatch, deleteMatch } from '../utils/api';
 
 export function useApi(apiFunction, dependencies = []) {
   const [data, setData] = useState(null);
@@ -62,6 +62,13 @@ export function useLatestSeason() {
     const response = await fetchLatestSeason();
     return response.data;
   });
+}
+
+export function useSeason(id) {
+  return useApi(async () => {
+    const response = await fetchSeasonById(id);
+    return response.data;
+  }, [id]);
 }
 
 export function useRankedTiers() {

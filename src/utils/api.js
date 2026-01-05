@@ -74,6 +74,11 @@ export async function fetchLatestSeason() {
   return await response.json();
 }
 
+export async function fetchSeasonById(id) {
+  const response = await apiRequest(`/season/id/${id}`);
+  return await response.json();
+}
+
 export async function fetchRankedTiers() {
   const response = await apiRequest('/ranked_tiers');
   return await response.json();
