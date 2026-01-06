@@ -18,8 +18,8 @@ export default function SeasonDetailPage() {
 
     // Calculate season duration
     const calculateSeasonDuration = (startDate, endDate) => {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        const start = new Date(startDate + "Z");
+        const end = new Date(endDate + "Z");
         const diffTime = Math.abs(end - start);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
@@ -27,7 +27,7 @@ export default function SeasonDetailPage() {
 
     // Format dates for display
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString + "Z").toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
@@ -41,15 +41,15 @@ export default function SeasonDetailPage() {
     // Check if season is currently active
     const isSeasonActive = (startDate, endDate) => {
         const now = new Date();
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        const start = new Date(startDate + "Z");
+        const end = new Date(endDate + "Z");
         return now >= start && now <= end;
     };
 
     // Generate calendar days for a season (reusing from SeasonsPage)
     const generateSeasonCalendar = (startDate, endDate) => {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        const start = new Date(startDate + "Z");
+        const end = new Date(endDate + "Z");
         const calendar = [];
 
         const firstDay = new Date(start.getFullYear(), start.getMonth(), 1);
@@ -138,8 +138,8 @@ export default function SeasonDetailPage() {
         );
     };
     const calculateProgressPercentage = (startDate, endDate) => {
-        const start = new Date(startDate).getTime();
-        const end = new Date(endDate).getTime();
+        const start = new Date(startDate + "Z").getTime();
+        const end = new Date(endDate + "Z").getTime();
         const now = new Date().getTime();
 
         if (now <= start) return 0;
