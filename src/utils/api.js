@@ -124,7 +124,7 @@ export async function fetchMatchesWithOffset(offset, limit) {
 }
 
 export async function fetchMatchById(id) {
-  const response = await apiRequest(`/match/${id}`);
+  const response = await apiRequest(`/match/id/${id}`);
   return await response.json();
 }
 

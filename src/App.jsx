@@ -26,7 +26,6 @@ export default function App() {
             <Route path="/head-to-head/" element={<HeadToHeadPage />} />
             <Route path="/seasons" element={<SeasonsPage />} />
             <Route path="/season/:id" element={<SeasonDetailPage />} />
-
           </Routes>
         </main>
         <BottomFooter />
