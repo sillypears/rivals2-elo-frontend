@@ -28,9 +28,27 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function StagePickCard({ className = '' }) {
     const [stageData, setStageData] = useState([]);
+    const [seasons, setSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState(null);
     const [error, setError] = useState(false);
 
+    const fetchSeasons = async () => {
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/seasons`)
+            .then(res => res.json())
+            .then(json => {
+                if (json.status === "SUCCESS" && json.data) {
+                    setSeasons(json.data);
+                    const latestSeason = json.data.find(season => season.latest === true);
+                    if (latestSeason) {
+                        setSelectedSeason(latestSeason.display_name);
+                    }
+                    console.log(`Season: ${latestSeason}`)
+                } else {
+                    setError(true);
+                }
+            })
+            .catch(() => setError(true));
+    };
     const fetchStageData = () => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/stagepick-data`)
             .then(res => res.json())
@@ -46,6 +64,7 @@ export default function StagePickCard({ className = '' }) {
     };  // Group data by season
 
     useEffect(() => {
+        fetchSeasons();
         fetchStageData();
         connectWebSocket(`ws://${API_BASE_URL}:${API_BASE_PORT}/ws`);
         const unsubscribe = subscribe((message) => {
@@ -55,8 +74,8 @@ export default function StagePickCard({ className = '' }) {
         });
         return () => unsubscribe();
     }, []);
-    const seasons = [...new Set(stageData.map((d) => d.season_display_name))];
-    const stages = [...new Set(stageData.map((d) => d.stage_name))];
+    // const seasons = [...new Set(stageData.map((d) => d.season_display_name))];
+    // const stages = [...new Set(stageData.map((d) => d.stage_name))];
 
     const activeSeason = selectedSeason || seasons[0];
     const filteredData = stageData.filter(
@@ -118,19 +137,13 @@ export default function StagePickCard({ className = '' }) {
         <Card className={`bg-gray-200 ${className}`} >
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Stage Pick Counts</CardTitle>
-                <Select
-
-                    value={activeSeason}
-                    onValueChange={(val) => setSelectedSeason(val)}
-                >
-                    <SelectTrigger className="bg-white h-[20px] w-[180px]">
-                        <SelectValue placeholder="Select season" />
+                <Select className="" value={selectedSeason} onValueChange={(e) => setSelectedSeason(e)} >
+                    <SelectTrigger className=" bg-white">
+                        <SelectValue placeholder="Select a timezone" />
                     </SelectTrigger>
                     <SelectContent>
-                        {seasons.map((s) => (
-                            <SelectItem key={s} value={s}>
-                                {s}
-                            </SelectItem>
+                        {seasons.map(season => (
+                            <SelectItem key={season.id} value={season.display_name}>{season.display_name}</SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
