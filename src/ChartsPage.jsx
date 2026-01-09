@@ -188,9 +188,9 @@ function CombinedEloChart({ combinedEloData, className }) {
 export default function ChartsPage() {
     const [stats, setStats] = useState([]);
     const [WinLoseLimit, setWinLoseLimit] = useState(20);
-
+    
     const fetchEloStats = useCallback(() => {
-        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/matches${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/matches-by-season${WinLoseLimit ? `/${WinLoseLimit}` : ''}`)
             .then((res) => res.json())
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
