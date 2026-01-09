@@ -47,7 +47,6 @@ export default function WinLossByCharacterCard({ className = '' }) {
     const [error, setError] = useState(false);
     const [seasons, setSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState("");
-    const [currentTier, setCurrentTier] = useState("")
     const [selectedTier, setSelectedTier] = useState("");
 
     const fetchSeasons = async () => {
@@ -62,12 +61,15 @@ export default function WinLossByCharacterCard({ className = '' }) {
             })
             .catch(() => setError(true));
     };
+    if (error) { 
+        console.log(error)
+    }
     const fetchTier = async () => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
             .then(res => res.json())
             .then(json => {
                 if (json.status === "SUCCESS" && json.data) {
-                    setCurrentTier(json.data);
+                    // setCurrentTier(json.data);
                     setSelectedTier(json.data.tier_short) ;
                 } else {
                     setError(true);
@@ -103,7 +105,7 @@ export default function WinLossByCharacterCard({ className = '' }) {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [fetchStats]);
     const tiers = useMemo(() => {
         const seasonRows = stats.filter(s => String(s.season_id) === selectedSeason);
         const uniqueTiers = Array.from(
@@ -149,7 +151,6 @@ export default function WinLossByCharacterCard({ className = '' }) {
             },
         ],
     };
-    console.log(`a ${currentTier.tier}, ${selectedTier}`);
 
     return (
         <Card className={`bg-gray-200 text-black flex flex-col ${className}`}>

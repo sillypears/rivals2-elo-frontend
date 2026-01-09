@@ -42,7 +42,6 @@ export default function StagePickCard({ className = '' }) {
                     if (latestSeason) {
                         setSelectedSeason(latestSeason.display_name);
                     }
-                    console.log(`Season: ${latestSeason}`)
                 } else {
                     setError(true);
                 }

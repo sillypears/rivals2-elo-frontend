@@ -64,7 +64,6 @@ export default function TopFinalMoveCard({ className = '' }) {
                     if (latestSeason) {
                         setSelectedSeason(latestSeason.display_name);
                     }
-                    console.log(latestSeason)
                 } else {
                     setError(true);
                 }
@@ -98,6 +97,7 @@ export default function TopFinalMoveCard({ className = '' }) {
         return () => unsubscribe();
     }, []);
 
+    if (error) { console.log(error)};
 
     const topMoves = useMemo(() => {
         const filtered = finalMoves.filter(m => m.season_display_name === selectedSeason);
@@ -121,7 +121,7 @@ export default function TopFinalMoveCard({ className = '' }) {
     };
 
     return (
-        <Card className="bg-gray-200 text-black flex flex-col">
+        <Card className={`bg-gray-200 text-black flex flex-col ${className}`}>
             <CardHeader className={``}>
                 <div className="flex justify-between">
                     <CardTitle className="">Finish Moves</CardTitle>
