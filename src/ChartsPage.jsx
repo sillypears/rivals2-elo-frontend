@@ -290,7 +290,7 @@ export default function ChartsPage() {
                 <div className="grid grid-cols-3 py-1 gap-2 items-start">
                     {/* Column 1 */}
                     <div className="flex flex-col gap-2 w-full">
-                        <WinLossByCharacterCard className="h-full" />
+                        {/* <WinLossByCharacterCard className="h-full" /> */}
                         <StageWinLossCard className="h-full" />
                     </div>
 
