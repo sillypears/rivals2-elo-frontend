@@ -38,7 +38,7 @@ export default function BestWins({ className = '' }) {
     return (
         <Card className={`bg-gray-200 text-black ${className}`}>
             <CardHeader className="text-center pb-2">
-                <CardTitle className="font-semibold text-lg">Best Wins (Upsets)</CardTitle>
+                <CardTitle className="font-semibold text-lg">High Elo Opponents</CardTitle>
             </CardHeader>
             <CardContent>
                 {loading ? (
@@ -50,15 +50,16 @@ export default function BestWins({ className = '' }) {
                 ) : (
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 text-xs">
                         {bestWins.map((win, index) => (
-                            <div key={index} className="flex flex-col p-1 bg-white rounded">
-                                <div className="flex justify-between font-semibold">
-                                    <span>#{win.ranked_game_number}</span>
+                            <div key={index} className="flex flex-col p-1 bg-white rounded" title={win.match_date}>
+                                <div className="flex justify-between font-semibold" >
+                                    <span>#<a href={`/match/id/${win.id}`}>{win.ranked_game_number}</a></span>
                                     <span className="text-green-600">+{win.elo_change}</span>
                                 </div>
                                 <div className="text-gray-500">{win.season_display_name}</div>
                                 <div className="flex justify-between text-gray-500">
                                     <span>Me: {win.elo_rank_old}</span>
-                                    <span>vs: {win.opponent_elo}</span>
+                                    <span class="text-red-400 text-[9px]">-{win.opponent_elo - win.elo_rank_old}-</span>
+                                    <span>vs: <span class="font-bold">{win.opponent_elo}</span></span>
                                 </div>
                             </div>
                         ))}
