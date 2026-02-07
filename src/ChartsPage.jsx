@@ -34,6 +34,7 @@ import StagePickCard from './Charts/StagePicks';
 import WinLossByCharacterCard from './Charts/CharWinLoseMatchup';
 import LastWinCard from './Charts/LastWin';
 import EloSwingCard from './Charts/EloSwings';
+import BestWins from './Charts/BestWins';
 
 ChartJS.register(
     ScatterController,
@@ -292,6 +293,8 @@ export default function ChartsPage() {
                     <div className="flex flex-col gap-2 w-full">
                         {/* <WinLossByCharacterCard className="h-full" /> */}
                         <StageWinLossCard className="h-full" />
+                        <BestWins className="h-full" />
+
                     </div>
 
                     {/* Column 2 */}

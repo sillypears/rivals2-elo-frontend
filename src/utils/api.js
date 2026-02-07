@@ -233,6 +233,11 @@ export async function fetchCharacterMatchupData() {
   return await response.json();
 }
 
+export async function fetchBestWins() {
+  const response = await apiRequest('/best-wins');
+  return await response.json();
+}
+
 // ========== TIME/GAME DURATION ENDPOINTS ==========
 export async function fetchGameDuration() {
   const response = await apiRequest('/game_duration');

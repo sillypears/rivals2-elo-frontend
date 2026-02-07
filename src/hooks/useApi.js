@@ -1,6 +1,6 @@
 // src/hooks/useApi.js
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchSeasonById, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, updateMatch, deleteMatch } from '../utils/api';
+import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchSeasonById, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, fetchBestWins, updateMatch, deleteMatch } from '../utils/api';
 
 export function useApi(apiFunction, dependencies = []) {
   const [data, setData] = useState(null);
@@ -175,6 +175,13 @@ export function useHeatmapData() {
 export function useGameDuration() {
   return useApi(async () => {
     const response = await fetchGameDuration();
+    return response.data;
+  });
+}
+
+export function useBestWins() {
+  return useApi(async () => {
+    const response = await fetchBestWins();
     return response.data;
   });
 }
