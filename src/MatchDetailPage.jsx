@@ -51,7 +51,40 @@ export default function MatchDetailPage() {
     return (
         <ErrorBoundary>
             <Card className="p-6">
-                <CardHeader className="mb-4">
+                {/* Important Info Header */}
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-4 mb-4 text-white">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <div className="text-2xl font-bold">
+                                {match.is_forfeit ? (
+                                    <span className="text-yellow-400">Forfeit</span>
+                                ) : match.is_win ? (
+                                    <span className="text-green-400">Win</span>
+                                ) : (
+                                    <span className="text-red-400">Loss</span>
+                                )}
+                            </div>
+                            <div className="text-lg">
+                                vs <span className="font-semibold">{match.opponent_name || match.opponent || 'Unknown'}</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-6 text-sm">
+                            {match.match_date && (
+                                <div className="opacity-80">
+                                    {new Date(match.match_date).toLocaleDateString()}
+                                </div>
+                            )}
+                            <div className="font-mono text-lg">
+                                {match.elo_change >= 0 ? "+" : ""}{match.elo_change} ELO
+                            </div>
+                            <div className="opacity-60">
+                                {match.elo_rank_old} → {match.elo_rank_new}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <CardHeader className="mb-4 pb-4 border-b">
                     <div className="flex justify-between items-center">
                         <CardTitle>Match #{match.ranked_game_number}</CardTitle>
                         <Button
@@ -65,12 +98,24 @@ export default function MatchDetailPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {/* Summary Row */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>Elo Before: {match.elo_rank_old}</div>
-                        <div>Elo After: {match.elo_rank_new} ({match.elo_change >= 0 ? "+" : ""}{match.elo_change})</div>
-                        <div>Opponent Elo: {match.opponent_elo}</div>
-                        <div>Streak: {match.win_streak_value}</div>
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 rounded-lg p-3">
+                        <div>
+                            <div className="text-xs text-gray-500 uppercase">Opponent Elo</div>
+                            <div className="font-medium">{match.opponent_elo}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-gray-500 uppercase">Streak</div>
+                            <div className="font-medium">{match.win_streak_value}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-gray-500 uppercase">Season</div>
+                            <div className="font-medium">{match.season_name || match.season || '-'}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-gray-500 uppercase">Character</div>
+                            <div className="font-medium">{match.character_name || match.character || '-'}</div>
+                        </div>
                     </div>
 
                     {/* Show loading for reference data */}
