@@ -117,4 +117,4 @@ docker run -p 8006:80 rivals2-elo-fend
 
 ## License
 
-[Add license information here]
+[The Unlicense](https://unlicense.org/)
