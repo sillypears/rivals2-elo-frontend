@@ -1,7 +1,15 @@
 let socket;
 const listeners = new Set();
+let connectingInProgress = null;
 
 export function connectWebSocket(url) {
+    if (!connectingInProgress) {
+        connectingInProgress = true;
+        console.log("We aren't connected... Connecting now");
+    } else {
+        console.log("Already connected")
+        return socket;
+    }
     if (socket) {
         console.log(`Already connected to: ${socket.url}`)
         return socket;
@@ -24,8 +32,14 @@ export function connectWebSocket(url) {
         }
     };
 
-    socket.onopen = () => console.log("WebSocket connected");
-    socket.onclose = () => console.log("WebSocket closed");
+    socket.onopen = () => {
+        console.log("WebSocket connected");
+        connectingInProgress = false;
+    }
+    socket.onclose = () => {
+        console.log("WebSocket closed");
+        socket = null;
+    }
     socket.onerror = (err) => console.error("WebSocket error", err);
 
     return socket;
