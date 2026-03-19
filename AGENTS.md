@@ -119,6 +119,11 @@ const { deleteMatch, deleting } = useDeleteMatch();
 - **Form Validation**: Better user feedback and error states
 - **Navigation**: Automatic redirects after operations
 
+### ✅ Infrastructure Improvements
+- **Flexible Nginx Configuration**: Updated nginx.conf to use environment variables (NGINX_PORT, NGINX_HOST) with defaults provided via Docker environment
+- **Dockerfile Enhancements**: Modified to use envsubst for variable substitution at container startup with default values handled in the CMD command
+- **Docker Compose Updates**: Added environment variable support for easy configuration overrides
+
 ## Best Practices
 
 ### API Usage
