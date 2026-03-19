@@ -6,6 +6,9 @@ services:
     build: ./
     container_name: rivals2-elo-fend
     ports:
-      - "8006:8006"
+      - "${NGINX_PORT:-8006}:${NGINX_PORT:-8006}"
+    environment:
+      - NGINX_PORT=${NGINX_PORT:-8006}
+      - NGINX_HOST=${NGINX_HOST:-192.168.1.30}
 
 
