@@ -94,10 +94,22 @@ src/
 
 ## Docker
 
+### Environment Variables
+
+1. NGINX_HOST
+   1. Set `NGINX_HOST` to override the default host/ip of `192.168.1.30`
+1. NGINX_PORT
+   1. Set `NGINX_PORT` to override the default port of `8006`
+
+### Build
+
+ 
 ```bash
 # Build Docker image
 npm run docker:build
+```
 
+```bash
 # Run with Docker
 docker run -p 8006:80 rivals2-elo-fend
 ```
