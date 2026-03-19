@@ -119,13 +119,7 @@ docker run -p 8006:80 rivals2-elo-fend
 1. [GUI for Logging](https://github.com/sillypears/rivals2-log-parser)
 2. [Backend API](https://github.com/sillypears/rivals2-elo-backend)
 3. [Frontend](https://github.com/sillypears/rivals2-elo-frontend)
-
-## Contributing
-
-1. Follow the established code style and patterns
-2. Use the provided pre-commit hooks
-3. Update documentation for new features
-4. Test thoroughly before submitting PRs
+4. [Database](https://github.com/sillypears/rivals2-elo-database)
 
 ## License
 
