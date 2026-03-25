@@ -113,6 +113,11 @@ export async function fetchMatches(params = {}) {
   return await response.json();
 }
 
+export async function fetchMatchesBySeason(seasonId) {
+  const response = await apiRequest(`/matches-by-season?season_id=${seasonId}`);
+  return await response.json();
+}
+
 export async function fetchMatchesWithLimit(limit) {
   const response = await apiRequest(`/matches/${limit}`);
   return await response.json();
@@ -169,8 +174,10 @@ export async function fetchStageStats() {
   return await response.json();
 }
 
-export async function fetchMatchStats() {
-  const response = await apiRequest('/match-stats');
+export async function fetchMatchStats(params = {}) {
+  const queryString = new URLSearchParams(params).toString();
+  const endpoint = queryString ? `/match-stats?${queryString}` : '/match-stats';
+  const response = await apiRequest(endpoint);
   return await response.json();
 }
 

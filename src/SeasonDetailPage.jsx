@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Loading, LoadingCard } from "@/components/ui/loading";
 import { Progress } from "@/components/ui/progress";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { useSeasons } from "@/hooks/useApi";
+import { useSeasons, useMatches } from "@/hooks/useApi";
 
 export default function SeasonDetailPage() {
     const { id } = useParams();
@@ -15,6 +15,10 @@ export default function SeasonDetailPage() {
 
     // Find the specific season by ID
     const season = seasons?.find(s => s.id === parseInt(id));
+
+    // Fetch all matches and filter by season
+    const { data: allMatches, loading: matchesLoading } = useMatches();
+    const seasonMatches = allMatches?.filter(m => String(m.season_id) === String(id));
 
     // Calculate season duration
     const calculateSeasonDuration = (startDate, endDate) => {
@@ -290,6 +294,145 @@ export default function SeasonDetailPage() {
                                             : "100%"}
                                     </div>
                                 </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Matches Data */}
+                        <Card className="bg-gray-700 text-white col-span-5">
+                            <CardHeader>
+                                <CardTitle className="text-lg">Sets This Season</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {matchesLoading ? (
+                                    <Loading className="py-4" />
+                                ) : seasonMatches && seasonMatches.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {/* Filter out forfeits for main stats */}
+                                        {(() => {
+                                            const regularMatches = seasonMatches.filter(m => m.match_forfeit !== 1);
+                                            const forfeitMatches = seasonMatches.filter(m => m.match_forfeit === 1);
+
+                                            const totalSets = regularMatches.length;
+                                            const wins = regularMatches.filter(m => m.match_win === 1).length;
+                                            const losses = totalSets - wins;
+                                            const winRate = totalSets > 0 ? ((wins / totalSets) * 100).toFixed(1) : '0.0';
+
+                                            const forfeitWins = forfeitMatches.filter(m => m.match_win === 1).length;
+                                            const forfeitLosses = forfeitMatches.filter(m => m.match_win === 0).length;
+
+                                            return (
+                                                <>
+                                                    {/* Summary Stats */}
+                                                    <div className="grid grid-cols-4 gap-4 text-center">
+                                                        <div className="bg-gray-600 rounded-lg p-3">
+                                                            <div className="text-2xl font-bold text-teal-400">{totalSets}</div>
+                                                            <div className="text-sm text-gray-400">Total Sets</div>
+                                                        </div>
+                                                        <div className="bg-gray-600 rounded-lg p-3">
+                                                            <div className="text-2xl font-bold text-green-400">{wins}</div>
+                                                            <div className="text-sm text-gray-400">Wins</div>
+                                                        </div>
+                                                        <div className="bg-gray-600 rounded-lg p-3">
+                                                            <div className="text-2xl font-bold text-red-400">{losses}</div>
+                                                            <div className="text-sm text-gray-400">Losses</div>
+                                                        </div>
+                                                        <div className="bg-gray-600 rounded-lg p-3">
+                                                            <div className="text-2xl font-bold">{winRate}%</div>
+                                                            <div className="text-sm text-gray-400">Win Rate</div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Set Length Breakdown */}
+                                                    <div className="border-t border-gray-600 pt-4">
+                                                        <div className="text-sm text-gray-400 mb-2">Sets by Length</div>
+                                                        <div className="grid grid-cols-4 gap-2 text-center text-sm">
+                                                            {/* Wins */}
+                                                            {[
+                                                                { score: '2-0', check: m => m.match_win === 1 && m.game_3_winner === -1 },
+                                                                { score: '2-1', check: m => m.match_win === 1 && m.game_3_winner !== -1 },
+                                                            ].map(({ score, check }) => {
+                                                                const count = regularMatches.filter(check).length;
+                                                                return (
+                                                                    <div key={`win-${score}`} className="bg-green-900/50 rounded p-2">
+                                                                        <div className="text-green-400 font-bold">{count}</div>
+                                                                        <div className="text-gray-400 text-xs">{score}</div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                            {/* Losses */}
+                                                            {[
+                                                                { score: '0-2', check: m => m.match_win === 0 && m.game_3_winner === -1 },
+                                                                { score: '1-2', check: m => m.match_win === 0 && m.game_3_winner !== -1 },
+                                                            ].map(({ score, check }) => {
+                                                                const count = regularMatches.filter(check).length;
+                                                                return (
+                                                                    <div key={`lose-${score}`} className="bg-red-900/50 rounded p-2">
+                                                                        <div className="text-red-400 font-bold">{count}</div>
+                                                                        <div className="text-gray-400 text-xs">{score}</div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                        <div className="flex justify-center gap-4 mt-2 text-xs text-gray-500">
+                                                            <span>Wins</span>
+                                                            <span className="mx-8"></span>
+                                                            <span>Losses</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Sweep Stats */}
+                                                    {(() => {
+                                                        const sweepsWon = regularMatches.filter(m => m.match_win === 1 && m.game_3_winner === -1).length;
+                                                        const sweepsLost = regularMatches.filter(m => m.match_win === 0 && m.game_3_winner === -1).length;
+                                                        const totalSweeps = sweepsWon + sweepsLost;
+                                                        const sweepRate = totalSweeps > 0 ? ((sweepsWon / totalSweeps) * 100).toFixed(0) : 0;
+
+                                                        return (
+                                                            <div className="border-t border-gray-600 pt-4">
+                                                                <div className="text-sm text-gray-400 mb-1">Sweep Rate</div>
+                                                                <div className="flex items-center gap-4">
+                                                                    <div className="text-lg font-bold text-teal-400">
+                                                                        {sweepsWon} 2-0 wins / {sweepsLost} 0-2 losses
+                                                                    </div>
+                                                                    <div className="flex-1 h-2 bg-gray-600 rounded overflow-hidden">
+                                                                        <div 
+                                                                            className="h-full bg-green-500" 
+                                                                            style={{ width: `${sweepRate}%` }}
+                                                                        ></div>
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-400">
+                                                                        {sweepRate}% of sweeps were yours
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })()}
+
+                                                    {/* Forfeits Section */}
+                                                    {forfeitMatches.length > 0 && (
+                                                        <div className="border-t border-gray-600 pt-4">
+                                                            <div className="text-sm text-gray-400 mb-2">Forfeits</div>
+                                                            <div className="grid grid-cols-2 gap-4 text-center">
+                                                                <div className="bg-yellow-900/50 rounded-lg p-3">
+                                                                    <div className="text-2xl font-bold text-green-400">{forfeitWins}</div>
+                                                                    <div className="text-sm text-gray-400">Forfeit Wins</div>
+                                                                </div>
+                                                                <div className="bg-yellow-900/50 rounded-lg p-3">
+                                                                    <div className="text-2xl font-bold text-red-400">{forfeitLosses}</div>
+                                                                    <div className="text-sm text-gray-400">Forfeit Losses</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            );
+                                        })()}
+                                    </div>
+                                ) : (
+                                    <div className="text-center text-gray-400 py-4">
+                                        No match data for this season
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 

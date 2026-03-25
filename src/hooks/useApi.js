@@ -1,6 +1,6 @@
 // src/hooks/useApi.js
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchSeasonById, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, fetchBestWins, updateMatch, deleteMatch } from '../utils/api';
+import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchSeasonById, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchesBySeason, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, fetchBestWins, updateMatch, deleteMatch, fetchMatchStats } from '../utils/api';
 
 export function useApi(apiFunction, dependencies = []) {
   const [data, setData] = useState(null);
@@ -115,6 +115,13 @@ export function useMatches(params = {}) {
   }, [JSON.stringify(params)]);
 }
 
+export function useMatchesBySeason(seasonId) {
+  return useApi(async () => {
+    const response = await fetchMatchesBySeason(seasonId);
+    return response.data;
+  }, [seasonId]);
+}
+
 export function useMatch(id) {
   return useApi(async () => {
     const response = await fetchMatchById(id);
@@ -184,6 +191,20 @@ export function useBestWins() {
     const response = await fetchBestWins();
     return response.data;
   });
+}
+
+export function useMatchStats(params = {}) {
+  return useApi(async () => {
+    const response = await fetchMatchStats(params);
+    return response.data;
+  }, [JSON.stringify(params)]);
+}
+
+export function useMatchStatsBySeason(seasonId) {
+  return useApi(async () => {
+    const response = await fetchMatchStats({ season_id: seasonId });
+    return response.data;
+  }, [seasonId]);
 }
 
 // ========== MUTATION HOOKS ==========
