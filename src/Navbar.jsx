@@ -2,7 +2,7 @@ import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
-import { useLatestSeason } from './hooks/useApi';
+import { useLatestSeason, useGetPlayersPlaying } from './hooks/useApi';
 import CountdownTimer from './components/CountdownTimer';
 
 function TierList({ tiers, showTooltip }) {
@@ -38,7 +38,8 @@ export default function Navbar() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const { data: latestSeason } = useLatestSeason();
-
+    const { data: playersData } = useGetPlayersPlaying();
+    console.log(playersData)
     const fetchCurrentElo = () => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
             .then(res => res.json())
@@ -85,6 +86,12 @@ export default function Navbar() {
         <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 lg:py-2 shadow-md flex justify-between items-center">
             <div className="text-xl font-bold cursor-pointer" onClick={() => window.location.reload()}>
                 Tracker
+            </div>
+            
+            <div className="text-xs">
+                {playersData && (
+                `🥊${playersData.player_count}`
+                )}
             </div>
             <div
                 className="hidden md:flex text-white items-center relative"

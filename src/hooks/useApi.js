@@ -1,6 +1,6 @@
 // src/hooks/useApi.js
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { fetchCharacters, fetchStages, fetchSeasons, fetchLatestSeason, fetchSeasonById, fetchRankedTiers, fetchOpponentNames, fetchMoves, fetchTopMoves, fetchCurrentTier, fetchMatches, fetchMatchesBySeason, fetchMatchById, fetchMatch, fetchStats, fetchCharacterStats, fetchStageStats, fetchEloChanges, fetchHeadToHead, fetchHeatmapData, fetchGameDuration, fetchBestWins, updateMatch, deleteMatch, fetchMatchStats } from '../utils/api';
+import * as api from '../utils/api';
 
 export function useApi(apiFunction, dependencies = []) {
   const [data, setData] = useState(null);
@@ -38,63 +38,63 @@ export function useApi(apiFunction, dependencies = []) {
 // ========== META DATA HOOKS ==========
 export function useCharacters() {
   return useApi(async () => {
-    const response = await fetchCharacters();
+    const response = await api.fetchCharacters();
     return response.data;
   });
 }
 
 export function useStages() {
   return useApi(async () => {
-    const response = await fetchStages();
+    const response = await api.fetchStages();
     return response.data;
   });
 }
 
 export function useSeasons() {
   return useApi(async () => {
-    const response = await fetchSeasons();
+    const response = await api.fetchSeasons();
     return response.data;
   });
 }
 
 export function useLatestSeason() {
   return useApi(async () => {
-    const response = await fetchLatestSeason();
+    const response = await api.fetchLatestSeason();
     return response.data;
   });
 }
 
 export function useSeason(id) {
   return useApi(async () => {
-    const response = await fetchSeasonById(id);
+    const response = await api.fetchSeasonById(id);
     return response.data;
   }, [id]);
 }
 
 export function useRankedTiers() {
   return useApi(async () => {
-    const response = await fetchRankedTiers();
+    const response = await api.fetchRankedTiers();
     return response.data;
   });
 }
 
 export function useOpponentNames() {
   return useApi(async () => {
-    const response = await fetchOpponentNames();
+    const response = await api.fetchOpponentNames();
     return response.data;
   });
 }
 
 export function useMoves() {
   return useApi(async () => {
-    const response = await fetchMoves();
+    const response = await api.fetchMoves();
     return response.data;
   });
 }
 
 export function useTopMoves() {
   return useApi(async () => {
-    const response = await fetchTopMoves();
+    const response = await api.fetchTopMoves();
     return response.data;
   });
 }
@@ -102,7 +102,7 @@ export function useTopMoves() {
 // ========== PERFORMANCE HOOKS ==========
 export function useCurrentTier() {
   return useApi(async () => {
-    const response = await fetchCurrentTier();
+    const response = await api.fetchCurrentTier();
     return response.data;
   });
 }
@@ -110,28 +110,28 @@ export function useCurrentTier() {
 // ========== MATCH HOOKS ==========
 export function useMatches(params = {}) {
   return useApi(async () => {
-    const response = await fetchMatches(params);
+    const response = await api.fetchMatches(params);
     return response.data;
   }, [JSON.stringify(params)]);
 }
 
 export function useMatchesBySeason(seasonId) {
   return useApi(async () => {
-    const response = await fetchMatchesBySeason(seasonId);
+    const response = await api.fetchMatchesBySeason(seasonId);
     return response.data;
   }, [seasonId]);
 }
 
 export function useMatch(id) {
   return useApi(async () => {
-    const response = await fetchMatchById(id);
+    const response = await api.fetchMatchById(id);
     return response.data;
   }, [id]);
 }
 
 export function useMatchByQuery(params = {}) {
   return useApi(async () => {
-    const response = await fetchMatch(params);
+    const response = await api.fetchMatch(params);
     return response.data;
   }, [JSON.stringify(params)]);
 }
@@ -139,72 +139,79 @@ export function useMatchByQuery(params = {}) {
 // ========== STATISTICS/CHART HOOKS ==========
 export function useStats(params = {}) {
   return useApi(async () => {
-    const response = await fetchStats(params);
+    const response = await api.fetchStats(params);
     return response.data;
   }, [JSON.stringify(params)]);
 }
 
 export function useCharacterStats() {
   return useApi(async () => {
-    const response = await fetchCharacterStats();
+    const response = await api.fetchCharacterStats();
     return response.data;
   });
 }
 
 export function useStageStats() {
   return useApi(async () => {
-    const response = await fetchStageStats();
+    const response = await api.fetchStageStats();
     return response.data;
   });
 }
 
 export function useEloChanges(matchNumber) {
   return useApi(async () => {
-    const response = await fetchEloChanges(matchNumber);
+    const response = await api.fetchEloChanges(matchNumber);
     return response.data;
   }, [matchNumber]);
 }
 
 export function useHeadToHead(params = {}) {
   return useApi(async () => {
-    const response = await fetchHeadToHead(params);
+    const response = await api.fetchHeadToHead(params);
     return response.data;
   }, [JSON.stringify(params)]);
 }
 
 export function useHeatmapData() {
   return useApi(async () => {
-    const response = await fetchHeatmapData();
+    const response = await api.fetchHeatmapData();
     return response.data;
   });
 }
 
 export function useGameDuration() {
   return useApi(async () => {
-    const response = await fetchGameDuration();
+    const response = await api.fetchGameDuration();
     return response.data;
   });
 }
 
 export function useBestWins() {
   return useApi(async () => {
-    const response = await fetchBestWins();
+    const response = await api.fetchBestWins();
     return response.data;
   });
 }
 
 export function useMatchStats(params = {}) {
   return useApi(async () => {
-    const response = await fetchMatchStats(params);
+    const response = await api.fetchMatchStats(params);
     return response.data;
   }, [JSON.stringify(params)]);
 }
 
 export function useMatchStatsBySeason(seasonId) {
   return useApi(async () => {
-    const response = await fetchMatchStats({ season_id: seasonId });
+    const response = await api.fetchMatchStats({ season_id: seasonId });
     return response.data;
   }, [seasonId]);
+}
+
+export function useGetPlayersPlaying() {
+  return useApi(async () => {
+    const response = await api.getPlayersPlaying();
+    return response.data;
+  })
 }
 
 // ========== MUTATION HOOKS ==========
@@ -216,7 +223,7 @@ export function useUpdateMatch() {
     setUpdating(true);
     setError(null);
     try {
-      const result = await updateMatch(updateData);
+      const result = await api.updateMatch(updateData);
       return result;
     } catch (err) {
       setError(err.message);
@@ -237,7 +244,7 @@ export function useDeleteMatch() {
     setDeleting(true);
     setError(null);
     try {
-      const result = await deleteMatch(id);
+      const result = await api.deleteMatch(id);
       return result;
     } catch (err) {
       setError(err.message);

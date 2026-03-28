@@ -303,6 +303,14 @@ export async function deleteMatch(id) {
   return await response.json();
 }
 
+export async function getPlayersPlaying() {
+  const response = await apiRequest(`/players-playing`, {
+    METHOD: 'GET',
+  })
+  console.log(response)
+  return await response.json();
+}
+
 // ========== WEBSOCKET ENDPOINTS ==========
 export async function testWebSocketBroadcast() {
   const response = await apiRequest('/ws-test');
