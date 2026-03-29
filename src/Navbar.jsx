@@ -38,8 +38,9 @@ export default function Navbar() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const { data: latestSeason } = useLatestSeason();
-    const { data: playersData } = useGetPlayersPlaying();
-    console.log(playersData)
+    const { data: playersData, refetch: refetchPlayers } = useGetPlayersPlaying();
+    const playerRefreshInterval = 5 * 60 * 1000
+
     const fetchCurrentElo = () => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
             .then(res => res.json())
@@ -81,6 +82,14 @@ export default function Navbar() {
     useEffect(() => {
         fetchCurrentElo();
     }, [location]);
+
+
+    useEffect(() => {
+    const interval = setInterval(() => {
+            refetchPlayers();
+        }, playerRefreshInterval);
+        return () => clearInterval(interval);
+    }, [refetchPlayers]);
 
     return (
         <nav className="fixed top-0 w-full z-50 bg-gray-900 text-white px-4 lg:py-2 shadow-md flex justify-between items-center">
