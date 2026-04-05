@@ -9,7 +9,7 @@ function TierList({ tiers, showTooltip }) {
     return (
         <div className="relative inline-block">
             {showTooltip && (
-                <div className="absolute left-0 mt-2 w-60 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-50">
+                <div className="absolute left-0 mt-2 w-80 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-50">
                     <h4 className="font-bold mb-2">Tiers</h4>
                     <ul className="space-y-1">
                         {tiers.map((tier) => (
@@ -19,7 +19,7 @@ function TierList({ tiers, showTooltip }) {
                                     <span>{tier.tier_display_name}</span>
                                 </span>
                                 <span className="text-gray-400">
-                                    {tier.min_threshold} - {tier.max_threshold}
+                                    {tier.min_threshold} - {tier.max_threshold === 99999 ? '∞' : tier.max_threshold}
                                 </span>
                             </li>
                         ))}
