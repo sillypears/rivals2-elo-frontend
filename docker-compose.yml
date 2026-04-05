@@ -33,7 +33,7 @@ services:
       interval: 60s
       timeout: 3s
       retries: 3
-      start_period: 5s       # give nginx + static files some time to be ready
+      start_period: 5s
 
 
 networks:
