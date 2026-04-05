@@ -15,7 +15,7 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-gray-800 text-gray-900">
         <Navbar />
-        <main className="pt-10">
+        <main className="pt-10 pb-20">
           <Routes>
             <Route path="/history" element={<MatchHistory />} />
             <Route path="/stats" element={<ChartsPage />} />
