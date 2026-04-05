@@ -1,14 +1,41 @@
 version: '3.9'
 
 services:
+  rivals-elo-bend:
+    image: rivals2-elo-bend
+    container_name: r2bend
+    ports:
+      - "8005:8005"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/healthcheck"]
+      interval: 60s
+      timeout: 3s  
+      retries: 2    
+      start_period: 5s  
+    networks:
+      - proxy-net
 
   rivals-elo-fend:
-    build: ./
-    container_name: rivals2-elo-fend
+    image: rivals2-elo-fend
+    container_name: r2fend
     ports:
-      - "${NGINX_PORT:-8006}:${NGINX_PORT:-8006}"
-    environment:
-      - NGINX_PORT=${NGINX_PORT:-8006}
-      - NGINX_HOST=${NGINX_HOST:-192.168.1.30}
+      - "8006:8006"
+    networks:
+      - proxy-net
+    depends_on:
+      - rivals-elo-bend
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8006/"]
+      interval: 60s
+      timeout: 3s
+      retries: 3
+      start_period: 5s       # give nginx + static files some time to be ready
 
 
+networks:
+  proxy-net:
+    external: true
