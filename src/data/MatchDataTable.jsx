@@ -158,7 +158,7 @@ export default function MatchDataTable({ matches, onCellUpdate }) {
                 header: 'Streak|Wins',
                 cell: ({ row }) => {
                     return (
-                        <a href={`/head-to-head?opp=${row.original.opponent_name}`} target="_blank">
+                        <a href={`/head-to-head?opp=${encodeURIComponent(row.original.opponent_name)}`} target="_blank">
                             {row.original.win_streak_value}|{row.original.total_wins}
                         </a>
                     )

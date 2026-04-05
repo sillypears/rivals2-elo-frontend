@@ -18,7 +18,8 @@ export default function HeadToHeadPage() {
     }, []);
     const fetchOpponentData = useCallback((oppName) => {
         if (!oppName || oppName === "N/A") return;
-        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/head-to-head?opp_name=${encodeURIComponent(oppName)}`)
+        const escapedName = oppName.replace(/'/g, "\\'");
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/head-to-head?opp_name=${encodeURIComponent(escapedName)}`)
             .then((res) => res.json())
             .then((data) => setStats(data.data))
             .catch((err) => console.error('Error fetching win data:', err));
@@ -28,9 +29,11 @@ export default function HeadToHeadPage() {
         const params = new URLSearchParams(window.location.search);
         const opp = params.get('opp');
         if (opp) {
-            setSelectedIndex(opp);
+            const decoded = decodeURIComponent(opp);
+            setSelectedIndex(decoded);
+            fetchOpponentData(decoded);
         }
-    }, []);
+    }, [fetchOpponentData]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);

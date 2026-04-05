@@ -48,7 +48,7 @@ export default function SeasonStatsCard({ className = '' }) {
 			    &nbsp;
                             {lastMatch.elo_change > 0 ? `+${lastMatch.elo_change}` : lastMatch.elo_change}
                             <a href={`/match/id/${lastMatch.id}`} target="_blank"> ID</a>
-                            <a href={`/head-to-head?opp=${lastMatch.opponent_name}`} target="_blank"> H2H </a>
+                            <a href={`/head-to-head?opp=${encodeURIComponent(lastMatch.opponent_name)}`} target="_blank"> H2H </a>
                         </div>
                     </div>
                 )}
