@@ -50,11 +50,33 @@ export default function SeasonDetailPage() {
         return now >= start && now <= end;
     };
 
-    // Generate calendar days for a season (reusing from SeasonsPage)
-    const generateSeasonCalendar = (startDate, endDate) => {
+    // Generate calendar days for a season with match data
+    const generateSeasonCalendar = (startDate, endDate, matches) => {
         const start = new Date(startDate + "Z");
         const end = new Date(endDate + "Z");
         const calendar = [];
+
+        // Group matches by date
+        const matchesByDate = {};
+        matches?.forEach(match => {
+            const matchDate = new Date(match.match_date + "Z").toDateString();
+            if (!matchesByDate[matchDate]) {
+                matchesByDate[matchDate] = { wins: 0, losses: 0 };
+            }
+            if (match.match_forfeit === 1) {
+                if (match.match_win === 1) {
+                    matchesByDate[matchDate].wins++;
+                } else {
+                    matchesByDate[matchDate].losses++;
+                }
+            } else {
+                if (match.match_win === 1) {
+                    matchesByDate[matchDate].wins++;
+                } else {
+                    matchesByDate[matchDate].losses++;
+                }
+            }
+        });
 
         const firstDay = new Date(start.getFullYear(), start.getMonth(), 1);
         const lastDay = new Date(end.getFullYear(), end.getMonth(), 1);
@@ -80,13 +102,18 @@ export default function SeasonDetailPage() {
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const currentDate = new Date(year, month, day);
+                const dateString = currentDate.toDateString();
                 const isSeasonDay = currentDate >= start && currentDate <= end;
                 const isToday = currentDate.toDateString() === new Date().toDateString();
+                const dayMatches = matchesByDate[dateString];
 
                 monthData.days.push({
                     day,
                     isSeasonDay,
-                    isToday
+                    isToday,
+                    wins: dayMatches?.wins || 0,
+                    losses: dayMatches?.losses || 0,
+                    totalSets: (dayMatches?.wins || 0) + (dayMatches?.losses || 0)
                 });
             }
 
@@ -98,40 +125,48 @@ export default function SeasonDetailPage() {
     };
 
     // Calendar component for displaying season days
-    const SeasonCalendar = ({ startDate, endDate }) => {
-        const calendar = generateSeasonCalendar(startDate, endDate);
-        const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    const SeasonCalendar = ({ startDate, endDate, matches }) => {
+        const calendar = generateSeasonCalendar(startDate, endDate, matches);
 
         return (
             <div className="text-sm">
-                <div className="grid grid-cols-7 gap-2 mb-2">
-                    {weekDays.map((day, i) => (
-                        <div key={i} className="text-center text-gray-400 font-medium">
-                            &nbsp;
-                        </div>
-                    ))}
-                </div>
-                <div className="flex gap-6 overflow-x-auto pb-2">
+                <div className="flex gap-4 w-full">
                     {calendar.map((month, monthIndex) => (
-                        <div key={monthIndex} className="flex-shrink-0 min-w-[280px]">
-                            <div className="text-center text-gray-300 font-medium mb-2">
+                        <div key={monthIndex} className="flex-1 min-w-0">
+                            <div className="text-center text-gray-300 font-medium mb-2 text-sm">
                                 {month.name}
                             </div>
-                            <div className="grid grid-cols-7 gap-2">
+                            <div className="grid grid-cols-7 gap-1">
                                 {month.days.map((day, dayIndex) => (
                                     <div
                                         key={dayIndex}
                                         className={`
-                                            aspect-square flex items-center justify-center rounded text-sm w-8 h-8
+                                            relative aspect-square flex items-center justify-center rounded text-sm
                                             ${day.empty ? '' :
+                                                day.totalSets > 0 ? (
+                                                    day.wins > day.losses ? 'bg-green-600/50 border border-green-500' :
+                                                    day.losses > day.wins ? 'bg-red-600/50 border border-red-500' :
+                                                    'bg-cyan-600/50 border border-cyan-500'
+                                                ) :
                                                 day.isSeasonDay ?
-                                                    day.isToday ? 'bg-teal-400 text-gray-800 font-bold' :
-                                                        'bg-blue-600 text-white' :
-                                                    'text-gray-500'
+                                                    day.isToday ? 'bg-teal-400 text-gray-800' :
+                                                        'bg-blue-600/30 border border-blue-500/50 text-white' :
+                                                    'bg-gray-600/30 border border-gray-500/30 text-gray-500'
                                             }
                                         `}
                                     >
-                                        {!day.empty && day.day}
+                                        {!day.empty && (
+                                            <>
+                                                <span className={`absolute top-0.5 left-1 text-xs ${day.isToday ? 'text-gray-800' : day.isSeasonDay ? 'text-blue-300' : 'text-gray-500'}`}>
+                                                    {day.day}
+                                                </span>
+                                                {day.totalSets > 0 && (
+                                                    <div className="text-xs font-bold text-green-400">
+                                                        {day.wins}-{day.losses}
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -447,11 +482,12 @@ export default function SeasonDetailPage() {
                             <SeasonCalendar
                                 startDate={season.start_date}
                                 endDate={season.end_date}
+                                matches={seasonMatches}
                             />
                             {/* Calendar legend */}
-                            <div className="flex justify-center gap-6 mt-4 text-sm border-t border-gray-600 pt-4">
+                            <div className="flex justify-center gap-6 mt-6 text-sm border-t border-gray-600 pt-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 bg-blue-600 rounded"></div>
+                                    <div className="w-4 h-4 bg-blue-600/30 border border-blue-500/50 rounded"></div>
                                     <span className="text-gray-300">Season Days</span>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -459,8 +495,11 @@ export default function SeasonDetailPage() {
                                     <span className="text-gray-300">Today</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 border border-gray-500 rounded"></div>
+                                    <div className="w-4 h-4 bg-gray-600/30 border border-gray-500/30 rounded"></div>
                                     <span className="text-gray-300">Other Days</span>
+                                </div>
+                                <div className="flex items-center gap-2 ml-4">
+                                    <span className="text-gray-400 text-xs">W-L shown for days with matches</span>
                                 </div>
                             </div>
                         </CardContent>
