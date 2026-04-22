@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
-export default function CountdownTimer({ endDate }) {
+export default function CountdownTimer({ endDate, seasonName, seasonId }) {
   const [timeLeft, setTimeLeft] = useState(null);
 
   const calculateTimeLeft = useCallback(() => {
@@ -34,7 +35,14 @@ export default function CountdownTimer({ endDate }) {
 
   return (
     <span className="ml-4 text-sm text-gray-300">
-      Season Ends in {days}d {hours}h {minutes}m {seconds}s
+      {seasonId && seasonName ? (
+        <Link to={`/season/${seasonId}`} className="hover:text-teal-400">
+          {seasonName}
+        </Link>
+      ) : (
+        "Season Ends"
+      )}
+      {timeLeft && ` in ${days}d ${hours}h ${minutes}m ${seconds}s`}
     </span>
   );
 }

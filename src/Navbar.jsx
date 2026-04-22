@@ -115,7 +115,7 @@ export default function Navbar() {
                         alt={currentTier.tier_short}
                     />
                 )}
-                {latestSeason && <CountdownTimer endDate={latestSeason.end_date} />}
+                {latestSeason && <CountdownTimer endDate={latestSeason.end_date} seasonName={latestSeason.display_name} seasonId={latestSeason.id} />}
                 <TierList tiers={tiers} showTooltip={showTooltip} />
             </div>
             <div className="hidden md:flex space-x-5">
