@@ -1,14 +1,72 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { Card, CardTitle, CardContent, CardHeader } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from './components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 
 export default function HeadToHeadPage() {
     const [oppNameData, setOppNameData] = useState({ names: [], counts: [] });
     const [stats, setStats] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState("N/A");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+    const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+    const filteredNames = searchQuery.trim() === "" 
+        ? oppNameData.names 
+        : oppNameData.names.filter(name => 
+            name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+    const handleSelect = (name) => {
+        setSelectedIndex(name);
+        setSearchQuery(name);
+        setIsOpen(false);
+        setHighlightedIndex(-1);
+    };
+
+    const handleKeyDown = (e) => {
+        if (!isOpen || filteredNames.length === 0) return;
+        
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setHighlightedIndex(prev => 
+                prev < filteredNames.length - 1 ? prev + 1 : 0
+            );
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setHighlightedIndex(prev => 
+                prev > 0 ? prev - 1 : filteredNames.length - 1
+            );
+        } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (highlightedIndex >= 0) {
+                handleSelect(filteredNames[highlightedIndex]);
+            }
+        } else if (e.key === "Escape") {
+            setIsOpen(false);
+            setHighlightedIndex(-1);
+        }
+    };
+
+    const containerRef = useRef(null);
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        if (oppNameData.names.length > 1 && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [oppNameData.names]);
 
     const fetchOpponentNames = useCallback(() => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/opponent_names`)
@@ -94,22 +152,40 @@ export default function HeadToHeadPage() {
                 </span>
                 <span className="">
                     {oppNameData.names.length > 1 && (
-                        <Select
-                            value={selectedIndex}
-                            onValueChange={(e) => setSelectedIndex(e)}
-                        >
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder="Select someone" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="N/A" defaultValue="N/A" disabled>N/A</SelectItem>
-                                {oppNameData.names.map((opp, i) => (
-                                    <SelectItem key={i} value={opp} >
-                                        {opp} ({oppNameData.counts[opp]})
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <div ref={containerRef} className="relative w-[200px]">
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                placeholder="Search..."
+                                value={isOpen ? searchQuery : (selectedIndex === "N/A" ? "" : selectedIndex)}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setIsOpen(true);
+                                    setHighlightedIndex(-1);
+                                }}
+                                onFocus={() => setIsOpen(true)}
+                                onKeyDown={handleKeyDown}
+                                className="w-full h-9 px-3 py-1 border rounded bg-gray-700 text-white placeholder-gray-400 text-sm"
+                            />
+                            {isOpen && filteredNames.length > 0 && (
+                                <div className="absolute z-50 w-full mt-1 bg-gray-700 border rounded-md shadow-lg max-h-[200px] overflow-y-auto">
+                                    {filteredNames.map((opp, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => handleSelect(opp)}
+                                            className={`px-3 py-1.5 cursor-pointer text-sm ${i === highlightedIndex ? 'bg-blue-600' : 'hover:bg-gray-600'} text-white`}
+                                        >
+                                            {opp} ({oppNameData.counts[opp]})
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {isOpen && filteredNames.length === 0 && (
+                                <div className="absolute z-50 w-full mt-1 bg-gray-700 border rounded-md shadow-lg p-2 text-gray-400">
+                                    No matches found
+                                </div>
+                            )}
+                        </div>
                     )}
                 </span>
             </h2>
