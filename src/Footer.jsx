@@ -15,6 +15,11 @@ export default function BottomFooter() {
             <a href={`http://${API_BASE_URL}:${API_BASE_PORT}/docs`} title="Swagger Docs" target="_blank">
                 <img width="16px" src="/images/api.png" />
             </a>
+            <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                <a href="http://192.168.1.30:8010/r2lb/" target="_blank">
+                    <text x="0" y="12" fill="white">R2LB</text>
+                </a>
+            </svg>
         </div>
     )
 }
