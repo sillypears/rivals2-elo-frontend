@@ -183,6 +183,14 @@ export default function SeasonsPage() {
             <div className="min-h-screen bg-gray-800 text-white p-6">
                 <h1 className="text-3xl font-bold mb-6">Seasons</h1>
                 
+                <div className="mb-6">
+                    <Link to="/seasons-highlights">
+                        <Button className="bg-teal-600 hover:bg-teal-500">
+                            View Seasons Highlights
+                        </Button>
+                    </Link>
+                </div>
+                
                 <div className="grid grid-cols-1 gap-6">
                     {seasons?.map(season => (
                         <Card key={season.id} className={`bg-gray-700 border-2 ${season.latest ? 'border-teal-400' : 'border-gray-600'}`}>

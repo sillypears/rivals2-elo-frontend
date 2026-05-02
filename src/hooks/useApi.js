@@ -207,11 +207,18 @@ export function useMatchStatsBySeason(seasonId) {
   }, [seasonId]);
 }
 
+export function useAllSeasonsStats() {
+  return useApi(async () => {
+    const response = await api.fetchAllSeasonsStats();
+    return response.data;
+  });
+}
+
 export function useGetPlayersPlaying() {
   return useApi(async () => {
     const response = await api.getPlayersPlaying();
     return response.data;
-  })
+  });
 }
 
 // ========== MUTATION HOOKS ==========

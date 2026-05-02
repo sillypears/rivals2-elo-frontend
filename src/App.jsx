@@ -9,6 +9,7 @@ import MatchDetailPage from './MatchDetailPage';
 import HeadToHeadPage from './HeadToHead';
 import SeasonsPage from './SeasonsPage';
 import SeasonDetailPage from './SeasonDetailPage';
+import SeasonsHighlightPage from './SeasonsHighlightPage';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/match/date/:date" element={<MatchDetailPage />} />
             <Route path="/head-to-head/" element={<HeadToHeadPage />} />
             <Route path="/seasons" element={<SeasonsPage />} />
+            <Route path="/seasons-highlights" element={<SeasonsHighlightPage />} />
             <Route path="/season/:id" element={<SeasonDetailPage />} />
           </Routes>
         </main>
