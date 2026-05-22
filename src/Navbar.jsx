@@ -1,9 +1,10 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
 import { useLatestSeason, useGetPlayersPlaying } from './hooks/useApi';
 import CountdownTimer from './components/CountdownTimer';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 function TierList({ tiers, showTooltip }) {
     return (
@@ -40,6 +41,8 @@ export default function Navbar() {
     const { data: latestSeason } = useLatestSeason();
     const { data: playersData, refetch: refetchPlayers } = useGetPlayersPlaying();
     const playerRefreshInterval = 5 * 60 * 1000
+    const [opponentLookup, setOpponentLookup] = useState({ open: false, name: '', data: null });
+    const lookupTimerRef = useRef(null);
 
     const fetchCurrentElo = () => {
         fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/current_tier`)
@@ -66,6 +69,38 @@ export default function Navbar() {
             });
     };
 
+    const fetchOpponentLookup = useCallback((opponentName) => {
+        fetch(`http://${API_BASE_URL}:${API_BASE_PORT}/head-to-head?opp_name=${encodeURIComponent(opponentName)}`)
+            .then((res) => res.json())
+            .then((data) => {
+                const d = data.data;
+                let lastElo = null;
+                const charCount = {};
+                if (d.matches && d.matches.length > 0) {
+                    const sorted = [...d.matches].sort((a, b) => new Date(b.match_date) - new Date(a.match_date));
+                    lastElo = sorted[0].opponent_elo;
+                    for (const m of d.matches) {
+                        for (const key of ['game_1_opponent_pick_image', 'game_2_opponent_pick_image', 'game_3_opponent_pick_image']) {
+                            if (m[key] && m[key] !== -1) {
+                                const name = m[key].replace(/\.png$/i, '');
+                                charCount[name] = (charCount[name] || 0) + 1;
+                            }
+                        }
+                    }
+                }
+                const topChars = Object.entries(charCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(([name]) => name);
+                setOpponentLookup({ open: true, name: opponentName, data: { ...d, lastElo, topChars } });
+                if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
+                lookupTimerRef.current = setTimeout(() => {
+                    setOpponentLookup({ open: false, name: '', data: null });
+                }, 10000);
+            })
+            .catch((err) => console.error('Error fetching opponent lookup:', err));
+    }, []);
+
     useEffect(() => {
         fetchCurrentElo();
         fetchTiers();
@@ -74,10 +109,16 @@ export default function Navbar() {
             if (message.type === "new_match") {
                 fetchCurrentElo();
             }
+            if (message.type === "ui_user_lookup" && message.opponent_name) {
+                fetchOpponentLookup(message.opponent_name);
+            }
         });
 
-        return () => unsubscribe();
-    }, []);
+        return () => {
+            unsubscribe();
+            if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
+        };
+    }, [fetchOpponentLookup]);
 
     useEffect(() => {
         fetchCurrentElo();
@@ -197,6 +238,68 @@ export default function Navbar() {
                 <div>
                     Something broke :)
                 </div>
+            )}
+            {opponentLookup.open && opponentLookup.data && (
+                <Dialog open={opponentLookup.open} onOpenChange={(open) => {
+                    setOpponentLookup(prev => ({ ...prev, open }));
+                    if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
+                }}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="text-gray-900 text-center p-2">
+                                {opponentLookup.name}
+                            </DialogTitle>
+                        </DialogHeader>
+                        <div className="text-gray-700 space-y-3">
+                            {opponentLookup.data.overall ? (
+                                <>
+                                    <div className="grid grid-cols-5 gap-2 text-center text-sm">
+                                        <div>
+                                            <div className="text-xl font-bold">{opponentLookup.data.overall.total_matches}</div>
+                                            <div className="text-xs">Matches</div>
+                                        </div>
+                                        <div className="text-green-600">
+                                            <div className="text-xl font-bold">{opponentLookup.data.overall.matches_won}</div>
+                                            <div className="text-xs">Wins</div>
+                                        </div>
+                                        <div className="text-red-600">
+                                            <div className="text-xl font-bold">{opponentLookup.data.overall.matches_lost}</div>
+                                            <div className="text-xs">Losses</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xl font-bold">{opponentLookup.data.overall.win_percentage}%</div>
+                                            <div className="text-xs">Win Rate</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xl font-bold">{opponentLookup.data.overall.avg_elo_change}</div>
+                                            <div className="text-xs">Avg Elo Δ</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center gap-6 text-sm border-t pt-2">
+                                        {opponentLookup.data.lastElo != null && (
+                                            <div className="text-center">
+                                                <div className="text-lg font-bold">{opponentLookup.data.lastElo}</div>
+                                                <div className="text-xs">Last ELO</div>
+                                            </div>
+                                        )}
+                                        {opponentLookup.data.topChars && opponentLookup.data.topChars.length > 0 && (
+                                            <div className="text-center">
+                                                <div className="flex gap-1 justify-center">
+                                                    {opponentLookup.data.topChars.map((ch) => (
+                                                        <img key={ch} className="size-6" src={`/images/chars/${ch}.png`} title={ch} />
+                                                    ))}
+                                                </div>
+                                                <div className="text-xs">Plays</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <p className="text-center text-gray-500">No stats available</p>
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
             )}
         </nav >
     );
