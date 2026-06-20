@@ -1,4 +1,4 @@
-// src/pages/MatchDetailPage.jsx
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,14 +19,42 @@ export default function MatchDetailPage() {
     const { data: moves, loading: movesLoading } = useMoves();
     const { deleteMatch, deleting } = useDeleteMatch();
 
+    const [formValues, setFormValues] = useState({});
+
+    useEffect(() => {
+        if (match) {
+            const values = {};
+            Object.entries(match).forEach(([key, value]) => {
+                values[key] = value ?? "";
+            });
+            setFormValues(prev => {
+                const merged = { ...prev };
+                Object.keys(values).forEach(key => {
+                    if (prev[key] === undefined) {
+                        merged[key] = values[key];
+                    }
+                });
+                return merged;
+            });
+        }
+    }, [match]);
+
     const handleUpdate = async (key, value) => {
         try {
             await updateMatchField(id, key, value);
-            // Optimistically update local state
             refetchMatch();
         } catch (error) {
             alert(`Update failed: ${error.message}`);
         }
+    };
+
+    const handleFieldChange = (key, value) => {
+        setFormValues(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleFieldBlur = (key) => {
+        if (formValues[key] === (match[key] ?? "")) return;
+        handleUpdate(key, formValues[key]);
     };
 
     const handleDelete = async () => {
@@ -149,16 +177,17 @@ export default function MatchDetailPage() {
                            <label className="font-medium text-xs text-gray-600 uppercase tracking-wide" htmlFor={key}>
                              {key.replace(/_/g, ' ')}
                            </label>
-                           <input
-                             id={key}
-                             type={typeof value === 'number' ? 'number' : 'text'}
-                             className="border rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                             value={value ?? ""}
-                             onChange={(e) => {
-                               const inputValue = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
-                               handleUpdate(key, inputValue);
-                             }}
-                           />
+                            <input
+                              id={key}
+                              type={typeof value === 'number' ? 'number' : 'text'}
+                              className="border rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              value={formValues[key] ?? ""}
+                              onChange={(e) => {
+                                const inputValue = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
+                                handleFieldChange(key, inputValue);
+                              }}
+                              onBlur={() => handleFieldBlur(key)}
+                            />
                          </div>
                        ))}
                    </div>
