@@ -81,7 +81,7 @@ export default function Navbar() {
                     lastElo = sorted[0].opponent_elo;
                     for (const m of d.matches) {
                         for (const key of ['game_1_opponent_pick_image', 'game_2_opponent_pick_image', 'game_3_opponent_pick_image']) {
-                            if (m[key] && m[key] !== -1) {
+                            if (m[key] != 'na' && m[key] && m[key] !== -1) {
                                 const name = m[key].replace(/\.png$/i, '');
                                 charCount[name] = (charCount[name] || 0) + 1;
                             }
