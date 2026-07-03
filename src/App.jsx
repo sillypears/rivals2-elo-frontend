@@ -10,6 +10,7 @@ import HeadToHeadPage from './HeadToHead';
 import SeasonsPage from './SeasonsPage';
 import SeasonDetailPage from './SeasonDetailPage';
 import SeasonsHighlightPage from './SeasonsHighlightPage';
+import PlayerSearch from './PlayerSearch';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/seasons" element={<SeasonsPage />} />
             <Route path="/seasons-highlights" element={<SeasonsHighlightPage />} />
             <Route path="/season/:id" element={<SeasonDetailPage />} />
+            <Route path="/player-search" element={<PlayerSearch />} />
           </Routes>
         </main>
         <BottomFooter />
