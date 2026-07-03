@@ -42,6 +42,7 @@ export default function PlayerSearch() {
         <input
           type="text"
           value={searchTerm}
+          autoFocus
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search by name..."
           className="flex-1 px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-teal-400"
