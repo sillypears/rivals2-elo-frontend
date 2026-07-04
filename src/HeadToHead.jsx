@@ -3,6 +3,7 @@ import { Card, CardTitle, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { connectWebSocket, subscribe } from './utils/websocket';
+import MatchTimeline from './components/Match/MatchTimeline';
 
 export default function HeadToHeadPage() {
     const [oppNameData, setOppNameData] = useState({ names: [], counts: [] });
@@ -190,8 +191,8 @@ export default function HeadToHeadPage() {
                 </span>
             </h2>
             {stats ? (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 pt-1">
-                    <div className="grid grid-cols-1 gap-2 pb-2 md:grid-cols-2 lg:grid-cols-3">
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 pt-1 space-y-4">
+                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                         {stats.overall ?
                             <Card className="bg-gray-400">
                                 <CardHeader>
@@ -273,61 +274,69 @@ export default function HeadToHeadPage() {
                         }
                     </div>
                     {stats.matches ?
-                        <Card className="bg-gray-400 p-2">
-                            <CardTitle className="font-bold text-center p-2 ">Last {stats.matches.length} Match{stats.matches.length != 1 ? "es" : ""}</CardTitle>
-                            <CardContent className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1">
-                                {stats.matches.map((match) => (
-                                    <Card
-                                        key={match.id}
-                                        className={`p-2 ${match.match_win ? 'bg-green-300' : 'bg-red-300'}`}
-                                    >
-                                        <CardTitle className="flex justify-between gap-2 px-2 pb-2">
-                                            <div><a href="#">{new Date(`${match.match_date}Z`).toLocaleString()}</a></div>
-                                            <div><a href={`/match/id/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></div>
-                                        </CardTitle>
-                                        <CardContent className="text-sm gap-2">
-                                            <div className="flex justify-between border-b">
-                                                <span>My Elo: {match.elo_rank_old}</span>
-                                                <span>{match.elo_change >= 0 ? `Elo Gained: +${match.elo_change}` : `Elo Lost: ${match.elo_change}`}</span>
-                                                <span>Opp Elo: {match.opponent_elo}</span>
-                                            </div>
-                                            {match.game_1_winner >= 0 ?
-                                                <div className="pt-2 flex justify-between">
-                                                    <span>Game 1</span>
-                                                    <span>{match.game_1_stage_name}</span>
-                                                    <Badge variant="outline " className={`${match.game_1_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} title={match.game_1_final_move_id != -1 ? match.game_1_final_move_name : ""} />
-                                                    </Badge>
+                        <div className="space-y-4">
+                            <Card className="bg-gray-400 p-2">
+                                <CardTitle className="font-bold text-center p-2 ">Last {stats.matches.length} Match{stats.matches.length != 1 ? "es" : ""}</CardTitle>
+                                <CardContent className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-1">
+                                    {stats.matches.map((match) => (
+                                        <Card
+                                            key={match.id}
+                                            className={`p-2 ${match.match_win ? 'bg-green-300' : 'bg-red-300'}`}
+                                        >
+                                            <CardTitle className="flex justify-between gap-2 px-2 pb-2">
+                                                <div><a href="#">{new Date(`${match.match_date}Z`).toLocaleString()}</a></div>
+                                                <div><a href={`/match/id/${match.id}`} target="_blank" >#{match.ranked_game_number}</a></div>
+                                            </CardTitle>
+                                            <CardContent className="text-sm gap-2">
+                                                <div className="flex justify-between border-b">
+                                                    <span>My Elo: {match.elo_rank_old}</span>
+                                                    <span>{match.elo_change >= 0 ? `Elo Gained: +${match.elo_change}` : `Elo Lost: ${match.elo_change}`}</span>
+                                                    <span>Opp Elo: {match.opponent_elo}</span>
                                                 </div>
-                                                : ""
-                                            }
-                                            {match.game_2_winner >= 0 ?
+                                                {match.game_1_winner >= 0 ?
+                                                    <div className="pt-2 flex justify-between">
+                                                        <span>Game 1</span>
+                                                        <span>{match.game_1_stage_name}</span>
+                                                        <Badge variant="outline " className={`${match.game_1_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
+                                                            <img height="16px" width="24px" src={`/images/chars/${match.game_1_opponent_pick_image}.png`} title={match.game_1_final_move_id != -1 ? match.game_1_final_move_name : ""} />
+                                                        </Badge>
+                                                    </div>
+                                                    : ""
+                                                }
+                                                {match.game_2_winner >= 0 ?
 
-                                                <div className="flex justify-between">
-                                                    <span>Game 2</span>
-                                                    <span>{match.game_2_stage_name}</span>
-                                                    <Badge variant="outline" className={`${match.game_2_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`} title={`${match.game_2_final_move_id != -1 ? match.game_2_final_move_name : ""}`} />
-                                                    </Badge>
-                                                </div>
-                                                : ""
-                                            }
-                                            {match.game_3_winner >= 0 ?
-                                                <div className="flex justify-between">
-                                                    <span>Game 3</span>
-                                                    <span>{match.game_3_stage_name}</span>
-                                                    <Badge variant="outline" className={`${match.game_3_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`} title={match.game_3_final_move_id != -1 ? match.game_3_final_move_name : ""} />
-                                                    </Badge>
+                                                    <div className="flex justify-between">
+                                                        <span>Game 2</span>
+                                                        <span>{match.game_2_stage_name}</span>
+                                                        <Badge variant="outline" className={`${match.game_2_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
+                                                            <img height="16px" width="24px" src={`/images/chars/${match.game_2_opponent_pick_image}.png`} title={`${match.game_2_final_move_id != -1 ? match.game_2_final_move_name : ""}`} />
+                                                        </Badge>
+                                                    </div>
+                                                    : ""
+                                                }
+                                                {match.game_3_winner >= 0 ?
+                                                    <div className="flex justify-between">
+                                                        <span>Game 3</span>
+                                                        <span>{match.game_3_stage_name}</span>
+                                                        <Badge variant="outline" className={`${match.game_3_winner == 1 ? "bg-green-400" : "bg-red-400"}`}>
+                                                            <img height="16px" width="24px" src={`/images/chars/${match.game_3_opponent_pick_image}.png`} title={match.game_3_final_move_id != -1 ? match.game_3_final_move_name : ""} />
+                                                        </Badge>
 
-                                                </div>
-                                                : ""
-                                            }
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </CardContent>
-                        </Card>
+                                                    </div>
+                                                    : ""
+                                                }
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </CardContent>
+                            </Card>
+                            <Card className="bg-gray-400 p-2">
+                                <CardTitle className="font-bold text-center p-2">Timeline</CardTitle>
+                                <CardContent className="p-2 pt-0">
+                                    <MatchTimeline matches={stats.matches} opponentName={selectedIndex} />
+                                </CardContent>
+                            </Card>
+                        </div>
                         :
                         <p>No Match Data</p>
                     }
