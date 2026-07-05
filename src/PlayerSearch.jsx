@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const SEARCH_URL = '/r2lb-proxy/r2lb.json';
-const SQL_QUERY = `select playfab_id, display_name, steam_name, position, elo, most_played_char, country_code, city, latitude, longitude, snapshot_date, email from latest_entries_by_position where "display_name" like :p0 and "steam_name" like :p1 order by position limit 101`;
+const SQL_QUERY = `select playfab_id, display_name, steam_name, position, elo, most_played_char, country_code, city, latitude, longitude, snapshot_date, email from latest_entries_by_position where "display_name" like :p0 or "steam_name" like :p1 order by position limit 101`;
 
 export default function PlayerSearch() {
   const [searchTerm, setSearchTerm] = useState('');
