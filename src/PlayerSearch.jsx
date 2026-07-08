@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const SEARCH_URL = '/r2lb-proxy/r2lb.json';
-const SQL_QUERY = `select playfab_id, display_name, steam_name, position, elo, most_played_char, country_code, city, latitude, longitude, snapshot_date, email from latest_entries_by_position where "display_name" like :p0 or "steam_name" like :p1 order by position limit 101`;
+const SQL_QUERY = `select playfab_id, display_name, steam_name, position, elo, most_played_char, country_code, city, latitude, longitude, snapshot_date, email, steam_id from latest_entries_by_position where "display_name" like :p0 or "steam_name" like :p1 order by position limit 101`;
 
 export default function PlayerSearch() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -84,11 +84,16 @@ export default function PlayerSearch() {
               ) : (
                 rows.map((row, i) => (
                   <tr key={i} className="border-b border-gray-700 hover:bg-gray-700/50">
-                    {row.map((cell, j) => (
-                      <td key={j} className="px-3 py-2">
-                        {cell ?? '-'}
-                      </td>
-                    ))}
+                    {row.map((cell, j) => {
+                      const colName = results.columns[j];
+                      return (
+                        <td key={j} className="px-3 py-2">
+                          {colName === 'steam_id' && cell
+                            ? <a href={`https://steamcommunity.com/profiles/${cell}`} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 underline">{cell}</a>
+                            : (cell ?? '-')}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))
               )}
