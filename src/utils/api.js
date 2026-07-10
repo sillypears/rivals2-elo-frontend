@@ -297,7 +297,7 @@ export async function updateSeason(id, updateData) {
 }
 
 export async function deleteMatch(id) {
-  const response = await apiRequest(`/match/${id}`, {
+  const response = await apiRequest(`/match/id/${id}`, {
     method: 'DELETE',
   });
   return await response.json();
