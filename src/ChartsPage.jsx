@@ -107,6 +107,16 @@ const candlestickOptions = {
         legend: {
             display: false,
         },
+        tooltip: {
+            callbacks: {
+                label(ctx) {
+                    const { o, h, c } = ctx.parsed;
+                    const delta = c - o;
+                    const sign = delta >= 0 ? '+' : '';
+                    return `B: ${o}  A: ${c}  O: ${h}  D: ${sign}${delta}`;
+                }
+            }
+        },
         zoom: {
             pan: {
                 modifierKey: 'ctrl',
@@ -249,13 +259,20 @@ export default function ChartsPage() {
                 title: 'Elo Progression',
                 data: [...stats]
                     .sort((a, b) => a.id - b.id)
-                    .map(match => ({
-                        x: match.ranked_game_number,
-                        o: match.elo_rank_old,
-                        h: Math.max(match.elo_rank_old, (match.opponent_elo == -2) ? match.opponent_estimated_elo : match.opponent_elo),
-                        l: Math.min(match.elo_rank_old, (match.opponent_elo == -2) ? match.opponent_estimated_elo : match.opponent_elo),
-                        c: match.elo_rank_new
-                    })),
+                    .map(match => {
+                        const myOldElo = match.elo_rank_old;
+                        const myNewElo = match.elo_rank_new;
+                        const opponentElo = match.opponent_elo === -2
+                            ? match.opponent_estimated_elo
+                            : match.opponent_elo;
+                        return {
+                            x: match.ranked_game_number,  // game number
+                            o: myOldElo,                  // my elo before match
+                            c: myNewElo,                  // my elo after match
+                            h: opponentElo,               // opponent elo
+                            l: opponentElo,               // opponent elo
+                        };
+                    }),
                 color: {
                     up: '#00ff00',
                     down: '#ff0000',
