@@ -12,6 +12,9 @@ export default function BottomFooter() {
             <a href="https://dragdown.wiki/wiki/RoA2" title="Dragdown" target="_blank">
                 <img width="16px" src="/images/dragdown.png" />
             </a>
+            <a href="https://matchupbuddy.gg/" title="MatchupBuddy" target="_blank">
+                <img width="16px" src="/images/matchupbuddy.jpg" />
+            </a>
             <a href={`http://${API_BASE_URL}:${API_BASE_PORT}/docs`} title="Swagger Docs" target="_blank">
                 <img width="16px" src="/images/api.png" />
             </a>
