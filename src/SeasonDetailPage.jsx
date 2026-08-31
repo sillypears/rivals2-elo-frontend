@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loading, LoadingCard } from "@/components/ui/loading";
@@ -198,8 +198,8 @@ export default function SeasonDetailPage() {
         <ErrorBoundary>
             <div className="min-h-screen bg-gray-800 text-white p-6">
                 <div className="">
-                    {/* Back button */}
-                    <div className="mb-6">
+                    {/* Back button + Edit */}
+                    <div className="mb-6 flex gap-2">
                         <Button
                             variant="outline"
                             onClick={() => navigate('/seasons')}
@@ -207,6 +207,9 @@ export default function SeasonDetailPage() {
                         >
                             ← Back to Seasons
                         </Button>
+                        <Link to={`/season/${id}/edit`}>
+                            <Button className="bg-teal-600 hover:bg-teal-500 text-white">Edit Season</Button>
+                        </Link>
                     </div>
 
                     <div className="grid grid-cols-7 gap-6 mb-6">

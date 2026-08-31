@@ -264,6 +264,27 @@ export function useDeleteMatch() {
   return { deleteMatch: deleteMatchById, deleting, error };
 }
 
+export function useUpdateSeason() {
+  const [updating, setUpdating] = useState(false);
+  const [error, setError] = useState(null);
+
+  const update = useCallback(async (id, updateData) => {
+    setUpdating(true);
+    setError(null);
+    try {
+      const result = await api.updateSeason(id, updateData);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setUpdating(false);
+    }
+  }, []);
+
+  return { updateSeason: update, updating, error };
+}
+
 export function useDeleteSeason() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
@@ -272,7 +293,7 @@ export function useDeleteSeason() {
     setDeleting(true);
     setError(null);
     try {
-      const result = await deleteSeasonById(id);
+      const result = await api.deleteSeason(id);
       return result;
     } catch (err) {
       setError(err.message);
