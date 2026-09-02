@@ -193,6 +193,20 @@ export function useBestWins() {
   });
 }
 
+export function useOpponentCountBySeason(seasonId = null) {
+  return useApi(async () => {
+    const response = await api.fetchOpponentCountBySeason(seasonId);
+    return response.data;
+  }, [seasonId ?? 'all']);
+}
+
+export function useOpponentCountsBySeason() {
+  return useApi(async () => {
+    const response = await api.fetchOpponentCountBySeason();
+    return response.data;
+  });
+}
+
 export function useMatchStats(params = {}) {
   return useApi(async () => {
     const response = await api.fetchMatchStats(params);

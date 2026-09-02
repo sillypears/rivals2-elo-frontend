@@ -245,6 +245,12 @@ export async function fetchBestWins() {
   return await response.json();
 }
 
+export async function fetchOpponentCountBySeason(seasonId = null) {
+  const endpoint = seasonId != null ? `/opponent-count-by-season/${seasonId}` : '/opponent-count-by-season';
+  const response = await apiRequest(endpoint);
+  return await response.json();
+}
+
 // ========== TIME/GAME DURATION ENDPOINTS ==========
 export async function fetchGameDuration() {
   const response = await apiRequest('/game_duration');

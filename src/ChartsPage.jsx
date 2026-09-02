@@ -35,6 +35,7 @@ import WinLossByCharacterCard from './Charts/CharWinLoseMatchup';
 import LastWinCard from './Charts/LastWin';
 import EloSwingCard from './Charts/EloSwings';
 import BestWins from './Charts/BestWins';
+import OpponentCountBySeasonCard from './Charts/OpponentCountBySeasonCard';
 
 ChartJS.register(
     ScatterController,
@@ -311,6 +312,7 @@ export default function ChartsPage() {
                         {/* <WinLossByCharacterCard className="h-full" /> */}
                         <StageWinLossCard className="h-full" />
                         <BestWins className="h-full" />
+                        <OpponentCountBySeasonCard className="w-full" />
 
                     </div>
 
