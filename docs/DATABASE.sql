@@ -12,6 +12,80 @@ CREATE TABLE `characters` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+
+CREATE TABLE `matches` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `match_date` datetime NOT NULL,
+  `elo_rank_new` int(11) NOT NULL DEFAULT -1,
+  `elo_rank_old` int(11) NOT NULL DEFAULT -1,
+  `elo_change` int(11) NOT NULL DEFAULT 0,
+  `match_win` tinyint(4) NOT NULL DEFAULT 0,
+  `match_forfeit` int(2) NOT NULL DEFAULT 0,
+  `ranked_game_number` int(11) NOT NULL DEFAULT -1,
+  `total_wins` int(11) NOT NULL DEFAULT -1,
+  `win_streak_value` int(11) NOT NULL DEFAULT -1,
+  `opponent_elo` int(11) NOT NULL DEFAULT -1,
+  `opponent_estimated_elo` int(11) NOT NULL DEFAULT -1,
+  `opponent_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  `game_1_char_pick` int(5) NOT NULL DEFAULT -1,
+  `game_1_opponent_pick` int(5) NOT NULL DEFAULT -1,
+  `game_1_stage` int(5) NOT NULL DEFAULT -1,
+  `game_1_winner` int(11) NOT NULL DEFAULT -1,
+  `game_1_final_move_id` int(3) DEFAULT -1,
+  `game_1_duration` int(11) DEFAULT -1,
+  `game_2_char_pick` int(5) NOT NULL DEFAULT -1,
+  `game_2_opponent_pick` int(5) NOT NULL DEFAULT -1,
+  `game_2_stage` int(5) NOT NULL DEFAULT -1,
+  `game_2_winner` int(11) NOT NULL DEFAULT -1,
+  `game_2_final_move_id` int(3) DEFAULT -1,
+  `game_2_duration` int(5) DEFAULT -1,
+  `game_3_char_pick` int(5) NOT NULL DEFAULT -1,
+  `game_3_opponent_pick` int(5) NOT NULL DEFAULT -1,
+  `game_3_stage` int(5) NOT NULL DEFAULT -1,
+  `game_3_winner` int(11) NOT NULL DEFAULT -1,
+  `game_3_final_move_id` int(3) DEFAULT -1,
+  `game_3_duration` int(5) DEFAULT -1,
+  `season_id` int(5) NOT NULL DEFAULT -1,
+  `final_move_id` int(3) DEFAULT -1,
+  `notes` varchar(450) DEFAULT NULL,
+  `ranked_placement_match` tinyint(4) DEFAULT 0,
+  `ranked_postplacement_match` tinyint(4) DEFAULT 0,
+  `server_id` int(11) DEFAULT -1,
+  `server_issue` tinyint(4) DEFAULT 0,
+  PRIMARY KEY (`id`,`season_id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `unique_game_per_season` (`season_id`,`ranked_game_number`),
+  KEY `game_1_stage_fk_idx` (`game_1_stage`),
+  KEY `game_2_stage_fk_idx` (`game_2_stage`),
+  KEY `game_3_stage_fk_idx` (`game_3_stage`),
+  KEY `game_1_char_pick_fk_idx` (`game_1_char_pick`),
+  KEY `game_1_opponent_pick_fk_idx` (`game_1_opponent_pick`),
+  KEY `game_2_char_pick_fk_idx` (`game_2_char_pick`),
+  KEY `game_2_opponent_pick_fk_idx` (`game_2_opponent_pick`),
+  KEY `game_3_char_pick_fk_idx` (`game_3_char_pick`),
+  KEY `game_3_opponent_pick_fk_idx` (`game_3_opponent_pick`),
+  KEY `season_id_fk_idx` (`season_id`),
+  KEY `final_move_fk_idx` (`final_move_id`),
+  KEY `game_2_final_move_id_fk_idx` (`game_2_final_move_id`),
+  KEY `game_1_final_move_id_fk_idx` (`game_1_final_move_id`),
+  KEY `game_3_final_move_id_fk_idx` (`game_3_final_move_id`),
+  KEY `match_server_fk_idx` (`server_id`),
+  CONSTRAINT `game_1_char_pick_fk` FOREIGN KEY (`game_1_char_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_1_final_move_id_fk` FOREIGN KEY (`game_1_final_move_id`) REFERENCES `moves` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `game_1_opponent_pick_fk` FOREIGN KEY (`game_1_opponent_pick`) REFERENCES `characters` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `game_1_stage_fk` FOREIGN KEY (`game_1_stage`) REFERENCES `stages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_2_char_pick_fk` FOREIGN KEY (`game_2_char_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_2_final_move_id_fk` FOREIGN KEY (`game_2_final_move_id`) REFERENCES `moves` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `game_2_opponent_pick_fk` FOREIGN KEY (`game_2_opponent_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_2_stage_fk` FOREIGN KEY (`game_2_stage`) REFERENCES `stages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_3_char_pick_fk` FOREIGN KEY (`game_3_char_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_3_final_move_id_fk` FOREIGN KEY (`game_3_final_move_id`) REFERENCES `moves` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `game_3_opponent_pick_fk` FOREIGN KEY (`game_3_opponent_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `game_3_stage_fk` FOREIGN KEY (`game_3_stage`) REFERENCES `stages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `server_id_fk` FOREIGN KEY (`server_id`) REFERENCES `servers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3454 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+
+
 CREATE TABLE `matches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `match_date` datetime NOT NULL,
@@ -45,6 +119,7 @@ CREATE TABLE `matches` (
   `game_3_final_move_id` int(3) DEFAULT -1,
   `game_3_duration` int(5) DEFAULT -1,
   `season_id` int(5) NOT NULL DEFAULT -1,
+  `server_id` int(2) NOT NULL DEFAULT -1,
   `final_move_id` int(3) DEFAULT -1,
   `notes` varchar(450) DEFAULT NULL,
   PRIMARY KEY (`id`,`season_id`),
@@ -64,6 +139,7 @@ CREATE TABLE `matches` (
   KEY `game_2_final_move_id_fk_idx` (`game_2_final_move_id`),
   KEY `game_1_final_move_id_fk_idx` (`game_1_final_move_id`),
   KEY `game_3_final_move_id_fk_idx` (`game_3_final_move_id`),
+  KEY `match_server_fk_idx` (`server_id`),
   CONSTRAINT `game_1_char_pick_fk` FOREIGN KEY (`game_1_char_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `game_1_final_move_id_fk` FOREIGN KEY (`game_1_final_move_id`) REFERENCES `moves` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `game_1_opponent_pick_fk` FOREIGN KEY (`game_1_opponent_pick`) REFERENCES `characters` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -75,7 +151,8 @@ CREATE TABLE `matches` (
   CONSTRAINT `game_3_char_pick_fk` FOREIGN KEY (`game_3_char_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `game_3_final_move_id_fk` FOREIGN KEY (`game_3_final_move_id`) REFERENCES `moves` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `game_3_opponent_pick_fk` FOREIGN KEY (`game_3_opponent_pick`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `game_3_stage_fk` FOREIGN KEY (`game_3_stage`) REFERENCES `stages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `game_3_stage_fk` FOREIGN KEY (`game_3_stage`) REFERENCES `stages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `server_id_fk` FOREIGN KEY (`server_id`) REFERENCES `servers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2335 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -203,6 +280,19 @@ CREATE TABLE `seasons` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+
+CREATE TABLE `servers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `short_name` varchar(45) NOT NULL,
+  `display_name` varchar(45) NOT NULL,
+  `list_order` int(2) NOT NULL,
+  `country` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `short_name_UNIQUE` (`short_name`),
+  UNIQUE KEY `display_name_UNIQUE` (`display_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 CREATE TABLE `stages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stage_name` varchar(45) NOT NULL,

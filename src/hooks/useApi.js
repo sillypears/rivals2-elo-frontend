@@ -92,6 +92,13 @@ export function useMoves() {
   });
 }
 
+export function useServers() {
+  return useApi(async () => {
+    const response = await api.fetchServers();
+    return response.data;
+  });
+}
+
 export function useTopMoves() {
   return useApi(async () => {
     const response = await api.fetchTopMoves();

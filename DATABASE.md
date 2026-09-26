@@ -27,6 +27,14 @@ Stores information about all move types in the game.
 | list_order | int(3) | DEFAULT NULL | Order for displaying moves in lists |
 | category | varchar(45) | DEFAULT NULL | Category or type of the move |
 
+### Servers
+Stores information about servers that are played on.
+| Column | Type | Constraints | Description |
+| id | int(11) | PK, Auto Increment | Unique identifier for the move |
+| short_name | varchar(45) | NOT NULL, UNIQUE | Short name of the server |
+| display_name | varchar(45) | NOT NULL, UNIQUE | Display name of the server |
+| country | varchar(3) | NOT NULL | Country location of the server |
+
 ### Stages
 Stores information about game stages/maps.
 

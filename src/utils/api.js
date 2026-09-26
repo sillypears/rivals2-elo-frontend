@@ -94,6 +94,11 @@ export async function fetchMoves() {
   return await response.json();
 }
 
+export async function fetchServers() {
+  const response = await apiRequest('/servers');
+  return await response.json();
+}
+
 export async function fetchTopMoves() {
   const response = await apiRequest('/movelist/top');
   return await response.json();

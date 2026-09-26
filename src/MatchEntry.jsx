@@ -1,6 +1,6 @@
 import { API_BASE_URL, API_BASE_PORT } from '@/config';
 import { useEffect, useState } from 'react';
-import { fetchCharacters, fetchStages, fetchMoves } from './utils/api';
+import { fetchCharacters, fetchStages, fetchMoves, fetchServers } from './utils/api';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -39,6 +39,7 @@ export default function ManualMatchEntry() {
     const [characters, setCharacters] = useState([]);
     const [stages, setStages] = useState([]);
     const [moves, setMoves] = useState([]);
+    const [servers, setServers] = useState([]);
     const [submitModal, setSubmitModal] = useState({ open: false, success: false, message: '' });
     const [jsonModal, setJsonModal] = useState({ open: false, success: false, message: '' });
     const [form, setForm] = useState({
@@ -73,12 +74,34 @@ export default function ManualMatchEntry() {
         game_3_duration: -1,
         game_3_final_move_id: -1,
         final_move_id: -1,
+        server_id: -1,
+        server_issue: 0,
     });
     const handlePasteJson = (e) => {
         try {
             const json = JSON.parse(e.target.value);
             if (typeof json === 'object' && json !== null) {
-                setForm(prev => ({ ...prev, ...json }));
+                const normalized = { ...json };
+                if (normalized.server_id !== undefined) normalized.server_id = Number(normalized.server_id);
+                // JSON from parser uses match_issue (also handles server_issue alias)
+                if (normalized.match_issue !== undefined) {
+                    normalized.server_issue = normalized.match_issue ? 1 : 0;
+                    normalized.match_issue = normalized.server_issue ? 1 : 0;
+                }
+                if (normalized.matchIssue !== undefined) {
+                    normalized.server_issue = normalized.matchIssue ? 1 : 0;
+                    normalized.matchIssue = normalized.server_issue ? 1 : 0;
+                }
+                if (normalized.server_issue !== undefined) normalized.server_issue = normalized.server_issue ? 1 : 0;
+                // keep both keys in sync for backend compatibility
+                if (normalized.server_issue !== undefined) {
+                    normalized.match_issue = normalized.server_issue;
+                }
+                if (normalized.server !== undefined && normalized.server_id === undefined) {
+                    // support alternative key "server"
+                    normalized.server_id = Number(normalized.server);
+                }
+                setForm(prev => ({ ...prev, ...normalized }));
                 setJsonModal({
                     open: true,
                     success: true,
@@ -124,6 +147,7 @@ export default function ManualMatchEntry() {
         fetchCharacters().then((data) => setCharacters(data.data));
         fetchStages().then((data) => setStages(data.data));
         fetchMoves().then((data) => setMoves(data.data));
+        fetchServers().then((data) => setServers(data.data || []));
     }, []);
 
     const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
@@ -179,6 +203,8 @@ export default function ManualMatchEntry() {
                     game_3_duration: -1,
                     game_3_final_move_id: -1,
                     final_move_id: -1,
+                    server_id: -1,
+                    server_issue: 0,
                 });
             } else {
                 setSubmitModal({
@@ -318,13 +344,31 @@ export default function ManualMatchEntry() {
                      <input type="number" value={form.total_wins} onChange={e => update('total_wins', +e.target.value)} className="p-1 border rounded" />
                  </label>
                  <label className="flex flex-col">
-                     Final Move
-                     <select value={form.final_move_id} onChange={e => update('final_move_id', +e.target.value)} className="p-1 border rounded">
-                         <option value={-1}>Select Final Move</option>
-                         {moves.map(m => <option key={m.id} value={m.id}>{m.display_name}</option>)}
-                     </select>
-                 </label>
-             </div>
+                      Final Move
+                      <select value={form.final_move_id} onChange={e => update('final_move_id', +e.target.value)} className="p-1 border rounded">
+                          <option value={-1}>Select Final Move</option>
+                          {moves.map(m => <option key={m.id} value={m.id}>{m.display_name}</option>)}
+                      </select>
+                  </label>
+                  <label className="flex flex-col">
+                      Server
+                      <select value={form.server_id} onChange={e => update('server_id', +e.target.value)} className="p-1 border rounded">
+                          <option value={-1}>Select Server</option>
+                          {servers.map(s => <option key={s.id} value={s.id}>{s.display_name} ({s.country})</option>)}
+                      </select>
+                  </label>
+                  <label className="flex flex-col justify-center">
+                      Server Issue
+                      <span className="flex items-center gap-2 mt-1">
+                          <input type="checkbox" checked={!!(form.server_issue || form.match_issue)} onChange={e => {
+                              const v = e.target.checked ? 1 : 0;
+                              update('server_issue', v);
+                              update('match_issue', v);
+                          }} className="h-4 w-4" />
+                          <span className="text-xs">{(form.server_issue || form.match_issue) ? 'Had issue' : 'No issue'}</span>
+                      </span>
+                  </label>
+              </div>
 
             {/* Game Entry */}
             <div className="grid grid-cols-3 gap-2">{[1, 2, 3].map(gameBlock)}</div>
