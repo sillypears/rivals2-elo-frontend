@@ -71,7 +71,11 @@ export default function PlayerSearch() {
                   <th key={col} className="text-left px-3 py-2 text-gray-400 uppercase tracking-wider">
                     {col.replace(/_/g, ' ')}
                   </th>
+                  
                 ))}
+                <th>
+                  H2H
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +98,9 @@ export default function PlayerSearch() {
                         </td>
                       );
                     })}
+                    <td>
+                      <a href={`http://192.168.1.30:8006/head-to-head?opp=${row[1]}`} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 underline">{row[1]}</a>
+                    </td>
                   </tr>
                 ))
               )}
